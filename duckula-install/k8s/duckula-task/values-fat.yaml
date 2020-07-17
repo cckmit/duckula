@@ -1,0 +1,86 @@
+# Default values for duckula3-char.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+
+image: registry.choerodon.xforceplus.com/rjzjh/duckula3
+imageOpsTag: task.3.0.8
+imageDataTag: data.3.0.8
+#docker-run.sh docker-dump.sh
+cmd:  docker-run.sh
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+
+
+
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+#支持2层目录，暂只用一层就好了
+userconfig:
+  root:
+    configmap.properties: |-
+      #es
+      common.es.host.name=elasticsearch-ha.9-phoenix-base-fat.svc.cluster.local
+      common.es.host.name.transport=elasticsearch-ha-discover.9-phoenix-base-fat.svc.cluster.local
+      common.es.cluster.name=logging
+      common.es.cluster.userName=null
+      common.es.cluster.password=null
+      common.es.assit.colname.convert=true
+      common.es.auto.create.index.tax_goods_v3={"db":"phoenix-taxcode__dts","tb":"tax_goods","db1":"phoenix-taxcode__dts","tb1":"tax_code","rela1":"goods_code_taxno"}
+      #binlog
+      #h2数据库文件存放地点,环境变量H2_DIR可以覆盖这个值
+      #common.binlog.alone.h2.dir=.tams
+      common.binlog.alone.binlog.global.busiPluginDir=env:DUCKULA3_DATA:/plugins/duckula-plugin-es5
+      #默认的监听服务配置,如果有多套，复制此配置并修改default为其它值
+      common.binlog.alone.binlog.global.conf.host= rm-bp1d1h7bz7j7tmorkvo.mysql.rds.aliyuncs.com
+      common.binlog.alone.binlog.global.conf.port = 3306
+      common.binlog.alone.binlog.global.conf.username = v4_taxcode_dts
+      common.binlog.alone.binlog.global.conf.password = 81nr91EACjtlNI4j0vOhNGsUMzSNw_
+      common.binlog.alone.binlog.global.conf.listener = net.wicp.tams.common.es.plugin.ListenerEs5
+      common.binlog.alone.binlog.global.conf.rds = false
+      #设置了groupId表示需要做分布式锁，同一个groupId+ip就是一个集群分布式锁
+      common.binlog.alone.binlog.global.conf.groupId = 20000
+      #cur表示从当前最新位点启动，last表示从记录的最后位点启动，pos表示从上面设置的gtids启动
+      common.binlog.alone.binlog.global.conf.haType = cur      
+      #为了做HA,必须填一个，否则不能区分lastPo
+      common.binlog.alone.binlog.conf.abc.clientId=10000
+      common.binlog.alone.binlog.conf.abc.rule=phoenix-taxcode__dts`tax_goods`{'index':'tax_goods_v3','type':'phoenix-taxcode__dts-tax_goods'}&phoenix-taxcode__dts`tax_code`{'index':'tax_goods_v3','type':'phoenix-taxcode__dts-tax_code','relakey':'goods_code_taxno'}
+      

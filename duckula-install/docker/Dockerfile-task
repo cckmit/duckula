@@ -1,0 +1,56 @@
+#task and data, not exist ops 
+#FROM openjdk:8-jdk-alpine
+# the limit resource set 320M*80%=256M
+FROM rjzjh/jdk8:1
+# me
+MAINTAINER andy "rjzjh@163.com"
+#
+LABEL version="3.0"
+LABEL location="Shang Hai" author="andy" role="Data"
+
+
+RUN addgroup -S duckula && adduser -S -G duckula duckula
+RUN set -ex; \
+    mkdir -p /data/duckula-data; \
+    mkdir -p /alidata1/admin; \
+    apk update upgrade; \
+    apk add --no-cache --virtual .must  \
+         'su-exec>=0.2' \
+          mysql-client \
+          bash; \
+    apk add --no-cache --virtual .duckuladepent  \
+          tar; 
+COPY ./duckula.tar  /opt/
+COPY ./export/config.yaml  /
+COPY ./export/jmx_prometheus_javaagent-0.12.0.jar  /
+RUN tar -xf /opt/duckula.tar -C /opt/ --strip-components=0; \
+#    tar -xf /data/duckula-data.tar -C /data/ --strip-components=0; \
+    rm -rf /opt/duckula.tar; \
+#    rm -rf /data/duckula-data.tar; \
+    chmod +x -R /opt/duckula/bin; \
+    for path in \
+		 /opt/duckula \
+		 /alidata1/admin \
+	; do \
+		mkdir -p "$path"; \
+		chown -R duckula:duckula "$path"; \
+	done; 
+VOLUME /opt/userconfig/
+WORKDIR /opt/duckula
+ENV PATH /opt/duckula/bin:$PATH
+
+ENV DUCKULA3_VERSION="3.0.0"
+ENV DUCKULA3_DATA="/data/duckula-data" \
+	DUCKULA3_HOME="/opt/duckula" \
+	metricspath="/data/duckula-data/logs/metrics" \
+	DelLoggerConfig="other"
+
+COPY ./docker-entrypoint/docker-entrypoint.sh  /
+RUN set -ex; \
+    chmod  +x  /docker-entrypoint.sh; \
+    chmod  777  /config.yaml; \
+    chmod 444  /jmx_prometheus_javaagent-0.12.0.jar; 
+#2723:jmx,jmxexport:2780,2113:debug,8080:web
+EXPOSE 2723 2780 2113
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["help.sh"]

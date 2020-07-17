@@ -1,0 +1,82 @@
+# Default values for duckula3-char.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+
+image: rjzjh
+imageOpsTag: task
+imageDataTag: data
+cmd:  docker-dump.sh
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+
+
+
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+#支持2层目录，暂只用一层就好了
+userconfig:
+  root:
+    configmap.properties: |-
+      #es
+      common.es.host.name=docker.for.win.localhost
+      common.es.cluster.name=elasticsearch
+      common.es.cluster.userName=null
+      common.es.cluster.password=null
+      common.es.auto.create.index.test7={"db":"test","tb":"user_info","db1":"test","tb1":"user_addr","rela1":"user_id"}
+      #dump
+      common.binlog.alone.dump.global.enable=true
+      #\u63d2\u4ef6\u8def\u5f84
+      common.binlog.alone.dump.global.busiPluginDir=env:DUCKULA3_DATA:/plugins/duckula-plugin-es5
+      #mysql\u7684\u6e90\u6570\u636e\u914d\u7f6e
+      common.binlog.alone.dump.global.pool.host=docker.for.win.localhost
+      common.binlog.alone.dump.global.pool.port=3307
+      common.binlog.alone.dump.global.pool.username=root
+      common.binlog.alone.dump.global.pool.password=mysql
+      common.binlog.alone.dump.ori.userinfo.db=binlog_test_db
+      common.binlog.alone.dump.ori.userinfo.tb=user_info
+      common.binlog.alone.dump.ori.userinfo.busiSender=net.wicp.tams.duckula.plugin.es5.DumperEs5
+      common.binlog.alone.dump.ori.userinfo.busiPluginConfig={"index":"test4","type":"test-user_info"}
+      #user_addr
+      common.binlog.alone.dump.ori.useraddr.db=binlog_test_db
+      common.binlog.alone.dump.ori.useraddr.tb=user_addr
+      common.binlog.alone.dump.ori.useraddr.busiSender=net.wicp.tams.common.es.plugin.DumperEs5
+      common.binlog.alone.dump.ori.useraddr.busiPluginConfig={"index":"test4","type":"test-user_addr","relaColName":"user_id"}
