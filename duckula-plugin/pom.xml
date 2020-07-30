@@ -13,5 +13,6 @@
 		<module>duckula-plugin-es5</module>
 		<module>duckula-plugin-es6</module>
 		<module>duckula-plugin-es7</module>
+		<module>duckula-plugin-http</module>
 	</modules>
 </project>

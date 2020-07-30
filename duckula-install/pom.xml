@@ -26,6 +26,7 @@
 								<param>duckula-plugin-es5</param>
 								<param>duckula-plugin-es6</param>
 								<param>duckula-plugin-es7</param>
+								<param>duckula-plugin-http</param>
 							</plugs>
 						</configuration>
 					</execution>
@@ -39,11 +40,6 @@
 			<artifactId>duckula-plugin</artifactId>
 			<version>1.0.0</version>
 			<type>pom</type>
-		</dependency>
-		<dependency>
-			<groupId>net.wicp.tams</groupId>
-			<artifactId>duckula-plugin-es5</artifactId>
-			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>net.wicp.tams</groupId>
