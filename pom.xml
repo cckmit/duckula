@@ -22,7 +22,7 @@
 		<common.apiext.version>3.6.13</common.apiext.version>
 		<common.aws.version>3.6.13</common.aws.version>
 		<common.connector.version>3.6.13</common.connector.version>
-		<common.http.version>3.6.0</common.http.version>
+		<common.http.version>3.6.13</common.http.version>
 		<common.metrics.version>3.6.8</common.metrics.version>
 		<common.micro.version>4.0.0</common.micro.version>
 		<common.spring.version>3.6.1</common.spring.version>
