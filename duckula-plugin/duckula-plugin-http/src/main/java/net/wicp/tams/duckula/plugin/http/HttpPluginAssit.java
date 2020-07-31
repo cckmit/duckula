@@ -1,6 +1,6 @@
 package net.wicp.tams.duckula.plugin.http;
 
-import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 import lombok.extern.slf4j.Slf4j;
 import net.wicp.tams.common.Conf;
@@ -14,11 +14,17 @@ import net.wicp.tams.common.http.HttpResult;
 
 @Slf4j
 public abstract class HttpPluginAssit {
-	public static void sendMsg(String url, JSONArray array) {
+   /****
+    * binlog data结构：  {'optType':'update',items:[{'before':{'field1':'value1','field2':'value2'},'after':{'field1':'value1','field2':'value22'}]}
+    * 
+    * dump   data结构：  {'optType':'select',items:['after':{'field1':'value1','field2':'value22'}]}
+    * @param url
+    * @param data 
+    */
+	public static void sendMsg(String url, JSONObject data) {
 		while (true) {
 			try {
-				HttpResult ret = HttpClient.doPostCommon(url, array.toJSONString()).call();
-
+				HttpResult ret = HttpClient.doPostCommon(url, data.toJSONString()).call();
 				log.info("return:{}", ret.getBodyStr());
 				if (ret.getResult().isSuc()) {
 					// break;

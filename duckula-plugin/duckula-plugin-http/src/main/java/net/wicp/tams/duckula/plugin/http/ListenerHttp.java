@@ -1,15 +1,12 @@
 package net.wicp.tams.duckula.plugin.http;
 
-import java.util.Map;
-
-import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 import net.wicp.tams.common.Conf;
 import net.wicp.tams.common.Result;
+import net.wicp.tams.common.binlog.alone.DuckulaAssit;
 import net.wicp.tams.common.binlog.alone.ListenerConf.ColHis;
 import net.wicp.tams.common.binlog.alone.ListenerConf.DuckulaEvent;
-import net.wicp.tams.common.binlog.alone.ListenerConf.DuckulaEventItem;
-import net.wicp.tams.common.binlog.alone.ListenerConf.OptType;
 import net.wicp.tams.common.binlog.alone.binlog.bean.Rule;
 import net.wicp.tams.common.binlog.alone.binlog.bean.RuleItem;
 import net.wicp.tams.common.binlog.alone.binlog.listener.AbsBinlogListener;
@@ -28,13 +25,8 @@ public class ListenerHttp extends AbsBinlogListener {
 
 	@Override
 	public void doBusiTrue(Rule rule, DuckulaEvent duckulaEvent) {
-		JSONArray params = new JSONArray();
-		for (DuckulaEventItem duckulaEventItem : duckulaEvent.getItemsList()) {
-			Map<String, String> data = duckulaEvent.getOptType() == OptType.delete ? duckulaEventItem.getBeforeMap()
-					: duckulaEventItem.getAfterMap();
-			params.add(data);
-		}
-		HttpPluginAssit.sendMsg(HttpClient.packurl(rule.getItems().get(RuleItem.httpRela)), params);
+		JSONObject data = DuckulaAssit.convertJson(duckulaEvent);
+		HttpPluginAssit.sendMsg(HttpClient.packurl(rule.getItems().get(RuleItem.httpRela)), data);
 	}
 
 }

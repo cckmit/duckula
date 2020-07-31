@@ -1,13 +1,11 @@
 package net.wicp.tams.duckula.plugin.http;
 
-import java.util.Map;
-
 import org.apache.commons.lang3.Validate;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import net.wicp.tams.common.Conf;
+import net.wicp.tams.common.binlog.alone.DuckulaAssit;
 import net.wicp.tams.common.binlog.alone.dump.bean.Dump;
 import net.wicp.tams.common.binlog.alone.dump.bean.DumpEvent;
 import net.wicp.tams.common.binlog.alone.dump.listener.IBusiSender;
@@ -40,11 +38,8 @@ public class DumperHttp implements IBusiSender<DumpEvent> {
 
 	@Override
 	public void doSend(DumpEvent dumpEvent) {
-		JSONArray params = new JSONArray();
-		for (Map<String, String> data : dumpEvent.getDatas()) {
-			params.add(data);
-		}
-		HttpPluginAssit.sendMsg(HttpClient.packurl(this.httpRela), params);
+		JSONObject data = DuckulaAssit.convertJson(dumpEvent);
+		HttpPluginAssit.sendMsg(HttpClient.packurl(this.httpRela), data);
 	}
 
 }
