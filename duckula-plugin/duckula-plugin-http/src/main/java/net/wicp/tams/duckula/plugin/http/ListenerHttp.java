@@ -19,14 +19,14 @@ public class ListenerHttp extends AbsBinlogListener {
 	}
 
 	@Override
-	public Result doAlterTableCallBack(ColHis colHis) {
-		return Result.getSuc();// 不关心表结构的变化
-	}
-
-	@Override
 	public void doBusiTrue(Rule rule, DuckulaEvent duckulaEvent) {
 		JSONObject data = DuckulaAssit.convertJson(duckulaEvent);
 		HttpPluginAssit.sendMsg(HttpClient.packurl(rule.getItems().get(RuleItem.httpRela)), data);
+	}
+
+	@Override
+	public Result doAlterTableCallBack(Rule rule, ColHis colHis) {
+		return Result.getSuc();// 不关心表结构的变化
 	}
 
 }
