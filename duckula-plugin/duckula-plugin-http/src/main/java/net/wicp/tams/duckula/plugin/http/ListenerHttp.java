@@ -29,4 +29,9 @@ public class ListenerHttp extends AbsBinlogListener {
 		return Result.getSuc();// 不关心表结构的变化
 	}
 
+	@Override
+	public void doInit(Rule rule, int index) {
+
+	}
+
 }

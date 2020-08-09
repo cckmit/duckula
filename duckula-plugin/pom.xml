@@ -14,6 +14,5 @@
 		<module>duckula-plugin-es6</module>
 		<module>duckula-plugin-es7</module>
 		<module>duckula-plugin-http</module>
-		<module>duckula-plugin-mysql</module>
 	</modules>
 </project>
