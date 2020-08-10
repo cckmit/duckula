@@ -1,0 +1,15 @@
+server:
+  port: 8080
+
+endpoints:
+  restart:
+    enabled: true
+  shutdown:
+    enabled: true
+  refresh:
+    enabled: false
+
+hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 600000
+ribbon:
+  ConnectTimeout: 30000
+  ReadTimeout: 600000
