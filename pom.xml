@@ -10,6 +10,7 @@
 		<module>duckula-plugin</module>
 		<module>duckula-install</module>
 		<module>duckula3-dump</module>
+		<module>duckula-controller</module>
 	</modules>
 	<parent>
 		<groupId>net.wicp.tams</groupId>
