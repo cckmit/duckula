@@ -1,3 +1,4 @@
+
 server:
   port: 8080
 
@@ -14,7 +15,11 @@ spring:
     url: jdbc:mysql://localhost:3307/duckula?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=true
     username: root
     password: mysql
-    driver-class-name: com.mysql.jdbc.Driver    
+    driver-class-name: com.mysql.jdbc.Driver
+  #解决Error creating bean with name 'scopedTarget.dataSource': Requested bean is currently in creation: Is  
+  cloud:
+    refresh:
+      refreshable: none       
     
 #配置Mybatis
 mybatis:

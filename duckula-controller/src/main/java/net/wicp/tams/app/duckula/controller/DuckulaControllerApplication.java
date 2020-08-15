@@ -6,10 +6,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 
+import net.wicp.tams.common.spring.autoconfig.annotation.EnableTams;
+
 @SpringBootApplication
 @ImportResource("classpath:beanRefContext.xml")
 @Configuration
 @MapperScan("net.wicp.tams.app.duckula.controller.dao")
+@EnableTams
 public class DuckulaControllerApplication {
 
 	public static void main(String[] args) {
