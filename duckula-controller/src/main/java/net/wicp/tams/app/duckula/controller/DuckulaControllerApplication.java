@@ -1,5 +1,6 @@
 package net.wicp.tams.app.duckula.controller;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Configuration;
@@ -8,6 +9,7 @@ import org.springframework.context.annotation.ImportResource;
 @SpringBootApplication
 @ImportResource("classpath:beanRefContext.xml")
 @Configuration
+@MapperScan("net.wicp.tams.app.duckula.controller.dao")
 public class DuckulaControllerApplication {
 
 	public static void main(String[] args) {
