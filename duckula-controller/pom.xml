@@ -109,19 +109,42 @@
 			<scope>runtime</scope>
 		</dependency>
 		<!--mybatis -->
+		<!-- plus -->
 		<dependency>
-			<groupId>org.mybatis.spring.boot</groupId>
-			<artifactId>mybatis-spring-boot-starter</artifactId>
-			<version>2.1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>net.wicp.tams</groupId>
-			<artifactId>common-spring-autoconfig</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.wicp.tams</groupId>
-			<artifactId>common-jdbc</artifactId>
-		</dependency>
+	        <groupId>com.baomidou</groupId>
+	        <artifactId>mybatis-plus-boot-starter</artifactId>
+	        <version>3.3.2</version>
+	    </dependency>
+	    <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-extension</artifactId>
+            <version>3.3.2</version>
+            <exclusions>
+            	<exclusion>
+            		<groupId>org.mybatis</groupId>
+            		<artifactId>mybatis-spring</artifactId>
+            	</exclusion>
+            	<exclusion>
+            		<groupId>org.mybatis</groupId>
+            		<artifactId>mybatis</artifactId>
+            	</exclusion>
+            </exclusions>
+	    </dependency>
+	    <dependency>
+	       <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-spring</artifactId>
+            <version>2.0.4</version>	    
+	    </dependency>
+	    <dependency>
+	       <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>3.5.4</version>
+	    </dependency>
+	    <!-- 不引入common-jdbc -->
+	    <dependency>
+	    	<groupId>net.wicp.tams</groupId>
+	    	<artifactId>common-spring-autoconfig</artifactId>
+	    </dependency>
 	</dependencies>
 	<build>
 		<finalName>demo-tams-springbootsimple</finalName>
