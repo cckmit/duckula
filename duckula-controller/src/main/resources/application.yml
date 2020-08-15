@@ -13,3 +13,13 @@ hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 600000
 ribbon:
   ConnectTimeout: 30000
   ReadTimeout: 600000
+  
+  
+common:
+  jdbc:
+    datasource:
+      default:
+        host: localhost
+        port: 3307
+        username: root
+        password: mysql
