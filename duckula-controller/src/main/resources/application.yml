@@ -20,7 +20,7 @@ spring:
   cloud:
     refresh:
       refreshable: none
-mybatis:
+mybatis-plus:
   mapper-locations: classpath:mybatis/primary/sqlmap/*.xml        
     
 
