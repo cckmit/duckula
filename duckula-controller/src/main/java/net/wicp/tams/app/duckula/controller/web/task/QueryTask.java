@@ -19,7 +19,7 @@ public class QueryTask implements IBusiApp {
 	@Override
 	public CusDynaBean exe(CusDynaBean inputBean, CusDynaBean outBeanOri) throws ProjectException {
 		String name = inputBean.getStrValueByName("name");
-		CommonTask commonTask = commonTaskMapper.selectById(1);
+		CommonTask commonTask = commonTaskMapper.selectByPrimaryKey(1);
 		Result ret = Result.getSuc(commonTask.getName());
 		outBeanOri.setResult(ret);
 		outBeanOri.set("ret1", "hello " + name);
