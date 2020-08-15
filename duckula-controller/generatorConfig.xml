@@ -11,8 +11,8 @@
 		
 		<plugin type="org.mybatis.generator.plugins.MapperConfigPlugin">
 			<property name="fileName" value="sqlmap-config.xml" />
-			<property name="targetPackage" value="mybatis" />
-			<property name="targetProject" value="duckula-controller/src/main/resources" />
+			<property name="targetPackage" value="mybatis.primary" />
+			<property name="targetProject" value="duckula-controller/src/main/resources/" />
 		</plugin>
 		<commentGenerator>
 			<property name="suppressDate" value="true" />
@@ -40,7 +40,7 @@
 			<property name="constructorBased" value="true" />
 		</javaModelGenerator>
 		
-		<sqlMapGenerator targetPackage="mybatis.sqlmap"
+		<sqlMapGenerator targetPackage="mybatis.primary.sqlmap"
 			targetProject="duckula-controller/src/main/resources" />
 			
 		<!-- 
