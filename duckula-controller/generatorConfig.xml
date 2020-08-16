@@ -90,5 +90,6 @@
 		   <table tableName="agent_target_date" catalog="hammer_application_runtime"/>
 		  -->  
 		<table tableName="common_task"/>
+		<table tableName="sys_%"/>
 	</context>
 </generatorConfiguration>
