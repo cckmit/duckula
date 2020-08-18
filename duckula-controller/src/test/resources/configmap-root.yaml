@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rjzjh-configmap11
+data:
+  configmap.properties: |-
+    common.binlog.alone.dump.global.enable=true
+    common.apiext.classload.child-first=false
+    #es
+    common.es.assit.mapping.override={"*":"keyword","createTime":"","updateTime":"","redTime":"","deposeTime":""}
+    common.es.host.name=elasticsearch-ha.9-phoenix-base-fat.svc.cluster.local
+    common.es.host.name.transport=elasticsearch-ha-discover.9-phoenix-base-fat.svc.cluster.local
+    common.es.cluster.name=logging
+    common.es.cluster.userName=null
+    common.es.cluster.password=null
+    common.es.assit.colname.convert=true
+    #db
+    common.binlog.alone.dump.global.pool.host= rm-bp1d1h7bz7j7tmorkvo.mysql.rds.aliyuncs.com
+    common.binlog.alone.dump.global.pool.port = 3306
+    common.binlog.alone.dump.global.pool.username = v4_sellinv_dts
+    common.binlog.alone.dump.global.pool.password = yPftbhqpz1Xo2S2rCQvYGSuYD7onr_
+    common.binlog.alone.dump.global.busiPluginDir=env:DUCKULA3_DATA:/plugins/duckula-plugin-es5
+    common.binlog.alone.dump.global.ori.busiSender= net.wicp.tams.common.es.plugin.DumperEs5
+    #mysql的源数据配置
+    common.binlog.alone.dump.ori.inv_seller_invoice.db=sellerinvoice__dts
+    common.binlog.alone.dump.ori.inv_seller_invoice.tb=inv_seller_invoice
+    common.binlog.alone.dump.ori.inv_seller_invoice.busiPluginConfig= {'index':'seller_invoice_v4','type':'invoice'}
+    common.binlog.alone.dump.ori.inv_seller_invoice_item.db=sellerinvoice__dts
+    common.binlog.alone.dump.ori.inv_seller_invoice_item.tb=inv_seller_invoice_item
+    common.binlog.alone.dump.ori.inv_seller_invoice_item.busiPluginConfig= {'index':'seller_invoice_v4','type':'invoice_item','relaColName':'invoice_id'}

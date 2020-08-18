@@ -1,0 +1,91 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: rjzjh-duckula-dump-char33
+  labels:
+    helm.sh/chart: duckula-dump-char-0.1.0
+    app.kubernetes.io/name: duckula-dump-char
+    app.kubernetes.io/instance: rjzjh
+    app.kubernetes.io/version: "3.0.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  template:
+    metadata:
+      annotations:
+        prometheus.io/path: /
+        prometheus.io/port: "2780"
+        prometheus.io/scrape: "true"
+      labels:
+        app.kubernetes.io/name: duckula-dump-char
+        app.kubernetes.io/instance: rjzjh
+    spec:
+      restartPolicy: Never
+
+      initContainers:
+      - name: pro-data
+        image: 'registry.choerodon.xforceplus.com/rjzjh/duckula3:data.3.2.7'
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: data
+          mountPath: /data/duckula-data
+        - name: userconfig-root
+          mountPath: /opt/userconfig
+      containers:
+        - name: duckula-dump-char
+          securityContext:
+            {}
+          image: 'registry.choerodon.xforceplus.com/rjzjh/duckula3:task.3.2.7'
+          imagePullPolicy: IfNotPresent
+          env:
+          - name: taskid
+            value: rjzjh
+          #不能有command否则会覆盖ENTRYPOINT  2113为调试端口，生产环境需要关闭
+          #args: ["docker-dump.sh","$(taskid)","2723","2113"]
+          args: ["docker-dump.sh","$(taskid)","2723"]
+          ports:
+          - name: jmx
+            containerPort: 2723
+          - name: jmxexporter
+            containerPort: 2780
+          - name: debug
+            containerPort: 2113
+          livenessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - -c
+              - "/bin/echo 0"
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - -c
+              - "/bin/echo 0"
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 1
+            successThreshold: 1
+            failureThreshold: 3
+          volumeMounts:
+          - name: data
+            mountPath: /data/duckula-data
+          - name: userconfig-root
+            mountPath: /opt/userconfig
+          resources:
+            limits:
+              cpu: 4000m
+              memory: 4096Mi
+            requests:
+              cpu: 4000m
+              memory: 4096Mi
+      volumes:
+      - name: data
+        emptyDir: {}
+      - name: userconfig-root
+        configMap:
+          name: rjzjh-configmap11
