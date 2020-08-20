@@ -22,7 +22,7 @@ public abstract class ShiroAssit {
 
 	// 添加权限
 	public static void authority(Object criteria) {
-		if (ShiroAssit.isAdmin()) {
+		if (!ShiroAssit.isAdmin()) {
 			ReflectAssist.invokeMothed(criteria, "andUserIdEqualTo", curUser().getUsername());
 		}
 	}

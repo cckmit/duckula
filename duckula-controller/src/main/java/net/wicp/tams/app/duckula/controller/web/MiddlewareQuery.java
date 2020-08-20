@@ -29,7 +29,7 @@ public class MiddlewareQuery implements IBusiApp {
 		MiddlewareType middlewareType = inputBean.getByType(MiddlewareType.class, "middlewareType");
 		String version = inputBean.getStrValueByName("version");
 		List<CommonMiddleware> middlewarelist = middlewareService.queryMiddleware(middlewareType, version);
-		outBeanOri.set("middlewarelist", middlewarelist);
+		outBeanOri.set("middlewarelist", middlewarelist.toArray(new CommonMiddleware[middlewarelist.size()]));
 		return outBeanOri;
 	}
 
