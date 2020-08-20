@@ -1,5 +1,6 @@
 package net.wicp.tams.app.duckula.controller.service.shiro;
 
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -56,6 +57,8 @@ public class CustomRealm extends AuthorizingRealm {
 			// 这里验证authenticationToken和simpleAuthenticationInfo的信息
 			SimpleAuthenticationInfo simpleAuthenticationInfo = new SimpleAuthenticationInfo(name,
 					user.getPassword().toString(), getName());
+			
+			SecurityUtils.getSubject().getSession().setAttribute(ShiroAssit.UserAttribute, user);
 			return simpleAuthenticationInfo;
 		}
 	}

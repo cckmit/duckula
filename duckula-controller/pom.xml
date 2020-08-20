@@ -165,6 +165,10 @@
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>net.wicp.tams</groupId>
+			<artifactId>common-binlog-alone-api</artifactId>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>demo-tams-springbootsimple</finalName>

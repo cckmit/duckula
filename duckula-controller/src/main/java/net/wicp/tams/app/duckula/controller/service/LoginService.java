@@ -24,7 +24,7 @@ public class LoginService {
 	private SysPermissionsMapper sysPermissionsMapper;
 
 	public SysUser getUserByName(String username) {
-		SysUser sysUser = sysUserMapper.selectById(1);
+		SysUser sysUser = sysUserMapper.selectById(1l);
 		SysRole sysRole = sysRoleMapper.selectByPrimaryKey(1l);
 		SysPermissions sysPermissions = sysPermissionsMapper.selectByPrimaryKey(1l);
 		sysRole.setSysPermissionsList(Arrays.asList(new SysPermissions[] { sysPermissions }));

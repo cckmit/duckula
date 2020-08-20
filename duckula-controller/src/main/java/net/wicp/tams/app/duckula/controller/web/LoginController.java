@@ -15,33 +15,30 @@ import net.wicp.tams.app.duckula.controller.bean.models.SysUser;
 @RestController
 public class LoginController {
 
-    @RequestMapping("/login")
-    public String login(SysUser user) {
-        //添加用户认证信息
-        Subject subject = SecurityUtils.getSubject();
-        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(
-                user.getUsername(),
-                user.getPassword()
-        );
-        try {
-            //进行验证，这里可以捕获异常，然后返回对应信息
-            subject.login(usernamePasswordToken);
+	@RequestMapping("/login")
+	public String login(SysUser user) {
+		// 添加用户认证信息
+		Subject subject = SecurityUtils.getSubject();
+		UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(user.getUsername(), user.getPassword());
+		try {
+			// 进行验证，这里可以捕获异常，然后返回对应信息
+			subject.login(usernamePasswordToken);
 //            subject.checkRole("admin");
 //            subject.checkPermissions("query", "add");
-        } catch (AuthenticationException e) {
-            e.printStackTrace();
-            return "账号或密码错误！";
-        } catch (AuthorizationException e) {
-            e.printStackTrace();
-            return "没有权限";
-        }
-        return "login success";
-    }
+		} catch (AuthenticationException e) {
+			e.printStackTrace();
+			return "账号或密码错误！";
+		} catch (AuthorizationException e) {
+			e.printStackTrace();
+			return "没有权限";
+		}
+		return "login success";
+	}
 
-    @RequiresRoles("admin")
-    @RequiresPermissions("adminpermissions")
-    @RequestMapping("/index")
-    public String index() {
-        return "index!";
-    }
+	@RequiresRoles("admin")
+	@RequiresPermissions("adminpermissions")
+	@RequestMapping("/index")
+	public String index() {
+		return "index!";
+	}
 }
