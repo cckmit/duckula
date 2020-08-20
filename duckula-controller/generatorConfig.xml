@@ -19,7 +19,7 @@
 			<property name="addRemarkComments" value="true"></property>
 		</commentGenerator>
 		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
-			connectionURL="jdbc:mysql://localhost:3307/duckula" userId="root"
+			connectionURL="jdbc:mysql://localhost:3306/duckula" userId="root"
 			password="mysql" />
 		<javaTypeResolver>
 			<property name="forceBigDecimals" value="false" />
@@ -89,7 +89,7 @@
 		 <!-- 
 		   <table tableName="agent_target_date" catalog="hammer_application_runtime"/>
 		  -->  
-		<table tableName="common_task"/>
+		<table tableName="common_%"/>
 		<table tableName="sys_%"/>
 	</context>
 </generatorConfiguration>
