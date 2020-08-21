@@ -25,7 +25,7 @@ public class ListenerHttp extends AbsBinlogListener {
 	}
 
 	@Override
-	public Result doAlterTableCallBack(Rule rule, ColHis colHis) {
+	public Result doAlterTableCallBack(Rule rule, ColHis colHis,String sql) {
 		return Result.getSuc();// 不关心表结构的变化
 	}
 
