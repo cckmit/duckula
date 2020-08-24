@@ -23,7 +23,7 @@ import net.wicp.tams.common.apiext.IOUtil;
 public class TestK8s {
 	@Test
 	public void createConfigMapdDeployment() throws IOException, ApiException {
-		ApiClient apiClient = ApiClientManager.getApiClient();
+		ApiClient apiClient = ApiClientManager.getApiClient("1","dddfdafdafafa");
 		V1ConfigMapBuilder v1ConfigMapBuilder = new V1ConfigMapBuilder();
 		v1ConfigMapBuilder.withApiVersion("v1")
 				.withMetadata(new V1ObjectMetaBuilder().withName("rjzjh-duckula-dump-char-root").build());
