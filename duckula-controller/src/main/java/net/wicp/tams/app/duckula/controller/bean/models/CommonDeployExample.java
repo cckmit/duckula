@@ -432,6 +432,76 @@ public class CommonDeployExample {
 			return (Criteria) this;
 		}
 
+		public Criteria andNamespaceIsNull() {
+			addCriterion("namespace is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andNamespaceIsNotNull() {
+			addCriterion("namespace is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andNamespaceEqualTo(String value) {
+			addCriterion("namespace =", value, "namespace");
+			return (Criteria) this;
+		}
+
+		public Criteria andNamespaceNotEqualTo(String value) {
+			addCriterion("namespace <>", value, "namespace");
+			return (Criteria) this;
+		}
+
+		public Criteria andNamespaceGreaterThan(String value) {
+			addCriterion("namespace >", value, "namespace");
+			return (Criteria) this;
+		}
+
+		public Criteria andNamespaceGreaterThanOrEqualTo(String value) {
+			addCriterion("namespace >=", value, "namespace");
+			return (Criteria) this;
+		}
+
+		public Criteria andNamespaceLessThan(String value) {
+			addCriterion("namespace <", value, "namespace");
+			return (Criteria) this;
+		}
+
+		public Criteria andNamespaceLessThanOrEqualTo(String value) {
+			addCriterion("namespace <=", value, "namespace");
+			return (Criteria) this;
+		}
+
+		public Criteria andNamespaceLike(String value) {
+			addCriterion("namespace like", value, "namespace");
+			return (Criteria) this;
+		}
+
+		public Criteria andNamespaceNotLike(String value) {
+			addCriterion("namespace not like", value, "namespace");
+			return (Criteria) this;
+		}
+
+		public Criteria andNamespaceIn(List<String> values) {
+			addCriterion("namespace in", values, "namespace");
+			return (Criteria) this;
+		}
+
+		public Criteria andNamespaceNotIn(List<String> values) {
+			addCriterion("namespace not in", values, "namespace");
+			return (Criteria) this;
+		}
+
+		public Criteria andNamespaceBetween(String value1, String value2) {
+			addCriterion("namespace between", value1, value2, "namespace");
+			return (Criteria) this;
+		}
+
+		public Criteria andNamespaceNotBetween(String value1, String value2) {
+			addCriterion("namespace not between", value1, value2, "namespace");
+			return (Criteria) this;
+		}
+
 		public Criteria andUrlIsNull() {
 			addCriterion("url is null");
 			return (Criteria) this;
@@ -779,6 +849,136 @@ public class CommonDeployExample {
 
 		public Criteria andPwdNotBetween(String value1, String value2) {
 			addCriterion("pwd not between", value1, value2, "pwd");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserIdIsNull() {
+			addCriterion("user_id is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserIdIsNotNull() {
+			addCriterion("user_id is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserIdEqualTo(Long value) {
+			addCriterion("user_id =", value, "userId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserIdNotEqualTo(Long value) {
+			addCriterion("user_id <>", value, "userId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserIdGreaterThan(Long value) {
+			addCriterion("user_id >", value, "userId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserIdGreaterThanOrEqualTo(Long value) {
+			addCriterion("user_id >=", value, "userId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserIdLessThan(Long value) {
+			addCriterion("user_id <", value, "userId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserIdLessThanOrEqualTo(Long value) {
+			addCriterion("user_id <=", value, "userId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserIdIn(List<Long> values) {
+			addCriterion("user_id in", values, "userId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserIdNotIn(List<Long> values) {
+			addCriterion("user_id not in", values, "userId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserIdBetween(Long value1, Long value2) {
+			addCriterion("user_id between", value1, value2, "userId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserIdNotBetween(Long value1, Long value2) {
+			addCriterion("user_id not between", value1, value2, "userId");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsDefaultIsNull() {
+			addCriterion("is_default is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsDefaultIsNotNull() {
+			addCriterion("is_default is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsDefaultEqualTo(String value) {
+			addCriterion("is_default =", value, "isDefault");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsDefaultNotEqualTo(String value) {
+			addCriterion("is_default <>", value, "isDefault");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsDefaultGreaterThan(String value) {
+			addCriterion("is_default >", value, "isDefault");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsDefaultGreaterThanOrEqualTo(String value) {
+			addCriterion("is_default >=", value, "isDefault");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsDefaultLessThan(String value) {
+			addCriterion("is_default <", value, "isDefault");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsDefaultLessThanOrEqualTo(String value) {
+			addCriterion("is_default <=", value, "isDefault");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsDefaultLike(String value) {
+			addCriterion("is_default like", value, "isDefault");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsDefaultNotLike(String value) {
+			addCriterion("is_default not like", value, "isDefault");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsDefaultIn(List<String> values) {
+			addCriterion("is_default in", values, "isDefault");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsDefaultNotIn(List<String> values) {
+			addCriterion("is_default not in", values, "isDefault");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsDefaultBetween(String value1, String value2) {
+			addCriterion("is_default between", value1, value2, "isDefault");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsDefaultNotBetween(String value1, String value2) {
+			addCriterion("is_default not between", value1, value2, "isDefault");
 			return (Criteria) this;
 		}
 

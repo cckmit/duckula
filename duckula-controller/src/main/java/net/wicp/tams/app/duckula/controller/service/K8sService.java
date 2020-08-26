@@ -1,13 +1,24 @@
 package net.wicp.tams.app.duckula.controller.service;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import io.kubernetes.client.openapi.ApiClient;
+import io.kubernetes.client.openapi.apis.AppsV1Api;
+import io.kubernetes.client.openapi.apis.BatchV1Api;
+import io.kubernetes.client.openapi.apis.CoreV1Api;
+import io.kubernetes.client.openapi.models.V1ConfigMap;
+import io.kubernetes.client.openapi.models.V1Deployment;
+import io.kubernetes.client.openapi.models.V1Job;
+import io.kubernetes.client.util.Yaml;
 import lombok.extern.slf4j.Slf4j;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonDeploy;
 import net.wicp.tams.app.duckula.controller.config.k8s.ApiClientManager;
 import net.wicp.tams.app.duckula.controller.dao.CommonDeployMapper;
+import net.wicp.tams.common.apiext.FreemarkUtil;
+import net.wicp.tams.common.apiext.IOUtil;
 import net.wicp.tams.common.apiext.StringUtil;
 
 /***
@@ -23,9 +34,49 @@ public class K8sService {
 	@Autowired
 	private CommonDeployMapper commonDeployMapper;
 
-	public void deploy(Long deployid) {
+	public V1Job deployDump(Long deployid, String namespace, Map<String, String> params) {
 		ApiClient apiClient = getApiClient(deployid);
+		try {
+			String context = IOUtil.slurp(IOUtil.fileToInputStream("/job.yaml", K8sService.class));
+			String result = FreemarkUtil.getInst().doProcessByTemp(context, params);
+			V1Job yamlSvc = (V1Job) Yaml.load(result);
+			BatchV1Api batchV1Api = new BatchV1Api(apiClient);
+			V1Job v1Job = batchV1Api.createNamespacedJob(namespace, yamlSvc, "true", null, null);
+			return v1Job;
+		} catch (Exception e) {
+			log.error("创建job失败", e);
+			throw new RuntimeException(e);
+		}
+	}
 
+	public V1Deployment deployTask(Long deployid, String namespace, Map<String, String> params) {
+		ApiClient apiClient = getApiClient(deployid);
+		try {
+			String context = IOUtil.slurp(IOUtil.fileToInputStream("/deployment.yaml", K8sService.class));
+			String result = FreemarkUtil.getInst().doProcessByTemp(context, params);
+			V1Deployment yamlSvc = (V1Deployment) Yaml.load(result);
+			AppsV1Api appsV1Api = new AppsV1Api(apiClient);
+			V1Deployment v1Deployment = appsV1Api.createNamespacedDeployment(namespace, yamlSvc, "true", null, null);
+			return v1Deployment;
+		} catch (Exception e) {
+			log.error("创建task失败", e);
+			throw new RuntimeException(e);
+		}
+	}
+
+	public V1ConfigMap deployConfigmap(Long deployid, String namespace, Map<String, String> params) {
+		ApiClient apiClient = getApiClient(deployid);
+		try {
+			String context = IOUtil.slurp(IOUtil.fileToInputStream("/configMap.yaml", K8sService.class));
+			String result = FreemarkUtil.getInst().doProcessByTemp(context, params);
+			V1ConfigMap yamlSvc = (V1ConfigMap) Yaml.load(result);
+			CoreV1Api coreV1Api = new CoreV1Api(apiClient);
+			V1ConfigMap v1ConfigMap = coreV1Api.createNamespacedConfigMap(namespace, yamlSvc, "true", null, null);
+			return v1ConfigMap;
+		} catch (Exception e) {
+			log.error("创建V1ConfigMap失败", e);
+			throw new RuntimeException(e);
+		}
 	}
 
 	public ApiClient getApiClient(Long deployid) {
