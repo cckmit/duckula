@@ -40,6 +40,15 @@ public enum MiddlewareType {
 		return verPlugins;
 	}
 
+	public String[] getVerPluginByVersion(String version) {
+		for (String[] verPlugin : verPlugins) {
+			if (version.equalsIgnoreCase(verPlugin[0])) {
+				return verPlugin;
+			}
+		}
+		return null;
+	}
+
 	public String getDesc() {
 		return desc;
 	}

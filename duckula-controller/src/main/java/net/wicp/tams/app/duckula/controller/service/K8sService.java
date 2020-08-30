@@ -1,5 +1,6 @@
 package net.wicp.tams.app.duckula.controller.service;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,14 +35,15 @@ public class K8sService {
 	@Autowired
 	private CommonDeployMapper commonDeployMapper;
 
-	public V1Job deployDump(Long deployid, String namespace, Map<String, String> params) {
-		ApiClient apiClient = getApiClient(deployid);
+	public V1Job deployDump(Long deployid, Map<String, String> params) {
+		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployid);
+		ApiClient apiClient = getApiClient(commonDeploy);
 		try {
 			String context = IOUtil.slurp(IOUtil.fileToInputStream("/job.yaml", K8sService.class));
 			String result = FreemarkUtil.getInst().doProcessByTemp(context, params);
 			V1Job yamlSvc = (V1Job) Yaml.load(result);
 			BatchV1Api batchV1Api = new BatchV1Api(apiClient);
-			V1Job v1Job = batchV1Api.createNamespacedJob(namespace, yamlSvc, "true", null, null);
+			V1Job v1Job = batchV1Api.createNamespacedJob(commonDeploy.getNamespace(), yamlSvc, "true", null, null);
 			return v1Job;
 		} catch (Exception e) {
 			log.error("创建job失败", e);
@@ -49,14 +51,16 @@ public class K8sService {
 		}
 	}
 
-	public V1Deployment deployTask(Long deployid, String namespace, Map<String, String> params) {
-		ApiClient apiClient = getApiClient(deployid);
+	public V1Deployment deployTask(Long deployid, Map<String, String> params) {
+		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployid);
+		ApiClient apiClient = getApiClient(commonDeploy);
 		try {
 			String context = IOUtil.slurp(IOUtil.fileToInputStream("/deployment.yaml", K8sService.class));
 			String result = FreemarkUtil.getInst().doProcessByTemp(context, params);
 			V1Deployment yamlSvc = (V1Deployment) Yaml.load(result);
 			AppsV1Api appsV1Api = new AppsV1Api(apiClient);
-			V1Deployment v1Deployment = appsV1Api.createNamespacedDeployment(namespace, yamlSvc, "true", null, null);
+			V1Deployment v1Deployment = appsV1Api.createNamespacedDeployment(commonDeploy.getNamespace(), yamlSvc,
+					"true", null, null);
 			return v1Deployment;
 		} catch (Exception e) {
 			log.error("创建task失败", e);
@@ -64,14 +68,28 @@ public class K8sService {
 		}
 	}
 
-	public V1ConfigMap deployConfigmap(Long deployid, String namespace, Map<String, String> params) {
-		ApiClient apiClient = getApiClient(deployid);
+	/**
+	 * 部署configmap
+	 * 
+	 * @param deployid      部署id
+	 * @param configmapName configmap名称
+	 * @param params        key：文件名 value：文件内容，不需要考虑空格,暂时只有一个
+	 * @return
+	 */
+	public V1ConfigMap deployConfigmap(Long deployid, String configMapName, String configmapStr) {
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("configMapName", configMapName);
+		configmapStr = configmapStr.replace("\n", "\n    ");// 加4个空格用于完成map格式
+		params.put("configmap.properties", configmapStr);
+		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployid);
+		ApiClient apiClient = getApiClient(commonDeploy);
 		try {
 			String context = IOUtil.slurp(IOUtil.fileToInputStream("/configMap.yaml", K8sService.class));
 			String result = FreemarkUtil.getInst().doProcessByTemp(context, params);
 			V1ConfigMap yamlSvc = (V1ConfigMap) Yaml.load(result);
 			CoreV1Api coreV1Api = new CoreV1Api(apiClient);
-			V1ConfigMap v1ConfigMap = coreV1Api.createNamespacedConfigMap(namespace, yamlSvc, "true", null, null);
+			V1ConfigMap v1ConfigMap = coreV1Api.createNamespacedConfigMap(commonDeploy.getDeploy(), yamlSvc, "true",
+					null, null);
 			return v1ConfigMap;
 		} catch (Exception e) {
 			log.error("创建V1ConfigMap失败", e);
@@ -79,9 +97,36 @@ public class K8sService {
 		}
 	}
 
+	/***
+	 * 查询ConfigMap
+	 * 
+	 * @param deployid
+	 * @return
+	 */
+	public V1ConfigMap selectConfigMap(Long deployid, String configName) {
+		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployid);
+		ApiClient apiClient = getApiClient(commonDeploy);
+		CoreV1Api coreV1Api = new CoreV1Api(apiClient);
+		String pretty = null;
+		Boolean exact = null;
+		Boolean export = null;
+		try {
+			V1ConfigMap v1ConfigMap = coreV1Api.readNamespacedConfigMap(configName, commonDeploy.getNamespace(), pretty,
+					exact, export);
+			return v1ConfigMap;
+		} catch (Exception e) {
+			log.error("查询V1ConfigMap失败", e);
+			throw new RuntimeException(e);
+		}
+	}
+
 	public ApiClient getApiClient(Long deployid) {
 		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployid);
-		if (deployid == null || StringUtil.isNull(commonDeploy.getConfig())) {
+		return getApiClient(commonDeploy);
+	}
+
+	public ApiClient getApiClient(CommonDeploy commonDeploy) {
+		if (commonDeploy == null || StringUtil.isNull(commonDeploy.getConfig())) {
 			throw new RuntimeException("没有得到k8s相关配置");
 		}
 		ApiClient apiClient = ApiClientManager.getApiClient(String.valueOf(commonDeploy.getId()),

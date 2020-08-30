@@ -18,10 +18,6 @@
 			<artifactId>common-binlog-alone-api</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.googlecode.protobuf-java-format</groupId>
-			<artifactId>protobuf-java-format</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>net.wicp.tams</groupId>
 			<artifactId>common-binlog-alone</artifactId>
 			<scope>test</scope>

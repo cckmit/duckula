@@ -1,9 +1,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: rjzjh-duckula-task-chart-root
+  name: ${configMapName}
 data:
   configmap.properties: |-
+    ${configmap.properties}
     common.apiext.classload.child-first=false
     #es
     common.es.host.name=elasticsearch-7-ab1508.94-crc-uat.svc.cluster.local
