@@ -20,7 +20,7 @@
 	<properties>
 		<java.version>1.8</java.version>
 		<autoconfig.path>${user.home}/antx-config/${devModel}</autoconfig.path>
-		<common.apiext.version>3.6.13</common.apiext.version>
+		<common.apiext.version>3.6.14</common.apiext.version>
 		<common.aws.version>3.6.13</common.aws.version>
 		<common.connector.version>3.6.13</common.connector.version>
 		<common.http.version>3.6.13</common.http.version>
@@ -41,8 +41,8 @@
 		<common.es.client.version>7.6.2</common.es.client.version>
 		<common.kubernetes.version>3.6.7</common.kubernetes.version>
 		<common.cassandra.version>3.6.7</common.cassandra.version>
-		<common.binlog.alone.version>3.6.13</common.binlog.alone.version>
-		<common.binlog.alone.api.version>3.6.13</common.binlog.alone.api.version>
+		<common.binlog.alone.version>3.6.14</common.binlog.alone.version>
+		<common.binlog.alone.api.version>3.6.14</common.binlog.alone.api.version>
 		<common.flink.source.binlog.version>3.6.6</common.flink.source.binlog.version>
 		<common.flink.sink.influxdb.version>3.6.6</common.flink.sink.influxdb.version>
 		<common.spring.autoconfig.version>3.6.13</common.spring.autoconfig.version>

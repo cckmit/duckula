@@ -7,15 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import io.kubernetes.client.openapi.models.V1ConfigMap;
+import net.wicp.tams.app.duckula.controller.bean.models.CommonDeploy;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonMiddleware;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonTask;
+import net.wicp.tams.app.duckula.controller.config.constant.CommandType;
+import net.wicp.tams.app.duckula.controller.config.constant.DeployType;
 import net.wicp.tams.app.duckula.controller.config.constant.MiddlewareType;
-import net.wicp.tams.app.duckula.controller.config.constant.TaskType;
+import net.wicp.tams.app.duckula.controller.dao.CommonDeployMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonMiddlewareMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonTaskMapper;
 import net.wicp.tams.app.duckula.controller.service.K8sService;
 import net.wicp.tams.common.Result;
-import net.wicp.tams.common.apiext.CollectionUtil;
 
 /***
  * 服务名要与DeployType同名
@@ -32,8 +34,11 @@ public class DeployK8s implements IDeploy {
 	@Autowired
 	private CommonMiddlewareMapper commonMiddlewareMapper;
 
+	@Autowired
+	private CommonDeployMapper commonDeployMapper;
+
 	@Override
-	public Result checkExit(Long deployid, TaskType taskType, Long taskId) {
+	public Result checkExit(Long deployid, CommandType taskType, Long taskId) {
 		String configName = null;
 		switch (taskType) {
 		case task:
@@ -57,17 +62,16 @@ public class DeployK8s implements IDeploy {
 	}
 
 	@Override
-	public Result addConfig(Long deployid, TaskType taskType, Long taskId) {
+	public Result addConfig(Long deployid, CommandType commandType, Long taskId) {
 		Map<String, String> params = new HashMap<String, String>();
-		params.putAll(taskType.getDefaultconfig());// 默认配置
+		params.putAll(commandType.getDefaultconfig());// 默认配置
 		Long middlewareId = null;
 		String configName = null;
-		switch (taskType) {
+		switch (commandType) {
 		case task:
 			CommonTask selectTask = commonTaskMapper.selectById(taskId);
 			configName = String.format("task-%s", selectTask.getName());// 最大为64
 			middlewareId = selectTask.getMiddlewareId();
-			params.put("name", configName);
 			break;
 		default:
 			break;
@@ -76,29 +80,32 @@ public class DeployK8s implements IDeploy {
 		MiddlewareType middlewareType = MiddlewareType.valueOf(middleware.getMiddlewareType());
 		String[] verPluginByVersion = middlewareType.getVerPluginByVersion(middleware.getVersion());
 		params.put("common.binlog.alone.binlog.global.conf.listener",
-				taskType == TaskType.task ? verPluginByVersion[1] : verPluginByVersion[2]);// 监听器
-		String propStr = CollectionUtil.toPropString(params);
+				commandType == CommandType.task ? verPluginByVersion[1] : verPluginByVersion[2]);// 监听器
+		// 配置目标中间件
+		Map<String, String> proConfig = middlewareType.proConfig(middleware);
+		params.putAll(proConfig);
+		String propStr = DeployType.formateConfig(DeployType.k8s, commandType, params);
 		String configname = String.format("conf-%s", configName.substring(5));
 		k8sService.deployConfigmap(deployid, configname, propStr);
 		return Result.getSuc();
 	}
 
 	@Override
-	public void start(Long deployid, TaskType taskType, Long taskId) {
-		Long middlewareId = null;
+	public void start(Long deployid, CommandType taskType, Long taskId) {
 		String configName = null;
-		Map<String, String> params=new HashMap<String, String>();
+		Map<String, String> params = new HashMap<String, String>();
 		switch (taskType) {
 		case task:
 			CommonTask selectTask = commonTaskMapper.selectById(taskId);
-			configName = String.format("task-%s", selectTask.getName());// 最大为64
-			middlewareId = selectTask.getMiddlewareId();
+			configName = taskType.formateTaskName(selectTask.getName());
 			params.put("name", configName);
 			break;
 		default:
 			break;
 		}
-		
+		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployid);
+		DeployType valueOf = DeployType.valueOf(commonDeploy.getDeploy());
+
 		k8sService.deployTask(deployid, params);
 	}
 

@@ -1,5 +1,11 @@
 package net.wicp.tams.app.duckula.controller.config.constant;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+
+import net.wicp.tams.app.duckula.controller.bean.models.CommonMiddleware;
+import net.wicp.tams.common.Conf;
 import net.wicp.tams.common.apiext.CollectionUtil;
 import net.wicp.tams.common.binlog.alone.binlog.bean.RuleItem;
 
@@ -31,6 +37,26 @@ public enum MiddlewareType {
 	private final RuleItem[] ruleItems;// 可以配置的item
 
 	private final RuleItem[] commonItems = new RuleItem[] { RuleItem.colName, RuleItem.addProp, RuleItem.splitkey };// 公共配置
+
+	public Map<String, String> proConfig(CommonMiddleware commonMiddleware) {
+		Map<String, String> retmap = new HashMap<String, String>();
+		switch (this) {
+		case es:
+			retmap.put("common.es.host.name", commonMiddleware.getHost());
+			retmap.put("common.es.host.port.rest", String.valueOf(commonMiddleware.getPort()));
+			retmap.put("common.es.host.port.transport", String.valueOf(commonMiddleware.getPort2()));
+			retmap.put("common.es.cluster.name", commonMiddleware.getOpt1());// common.es.cluster.name
+			break;
+		case mysql:
+			retmap.put(String.format("common.jdbc.datasource.%s.host", commonMiddleware.getId()),
+					commonMiddleware.getHost());
+			retmap.put(String.format("common.jdbc.datasource.%s.port", commonMiddleware.getId()),
+					String.valueOf(commonMiddleware.getPort()));
+		default:
+			break;
+		}
+		return retmap;
+	}
 
 	public RuleItem[] getRuleItems() {
 		return ruleItems;
