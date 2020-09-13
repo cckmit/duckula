@@ -902,213 +902,73 @@ public class CommonMiddlewareExample {
 			return (Criteria) this;
 		}
 
-		public Criteria andOpt1IsNull() {
-			addCriterion("opt1 is null");
+		public Criteria andOptIsNull() {
+			addCriterion("opt is null");
 			return (Criteria) this;
 		}
 
-		public Criteria andOpt1IsNotNull() {
-			addCriterion("opt1 is not null");
+		public Criteria andOptIsNotNull() {
+			addCriterion("opt is not null");
 			return (Criteria) this;
 		}
 
-		public Criteria andOpt1EqualTo(String value) {
-			addCriterion("opt1 =", value, "opt1");
+		public Criteria andOptEqualTo(String value) {
+			addCriterion("opt =", value, "opt");
 			return (Criteria) this;
 		}
 
-		public Criteria andOpt1NotEqualTo(String value) {
-			addCriterion("opt1 <>", value, "opt1");
+		public Criteria andOptNotEqualTo(String value) {
+			addCriterion("opt <>", value, "opt");
 			return (Criteria) this;
 		}
 
-		public Criteria andOpt1GreaterThan(String value) {
-			addCriterion("opt1 >", value, "opt1");
+		public Criteria andOptGreaterThan(String value) {
+			addCriterion("opt >", value, "opt");
 			return (Criteria) this;
 		}
 
-		public Criteria andOpt1GreaterThanOrEqualTo(String value) {
-			addCriterion("opt1 >=", value, "opt1");
+		public Criteria andOptGreaterThanOrEqualTo(String value) {
+			addCriterion("opt >=", value, "opt");
 			return (Criteria) this;
 		}
 
-		public Criteria andOpt1LessThan(String value) {
-			addCriterion("opt1 <", value, "opt1");
+		public Criteria andOptLessThan(String value) {
+			addCriterion("opt <", value, "opt");
 			return (Criteria) this;
 		}
 
-		public Criteria andOpt1LessThanOrEqualTo(String value) {
-			addCriterion("opt1 <=", value, "opt1");
+		public Criteria andOptLessThanOrEqualTo(String value) {
+			addCriterion("opt <=", value, "opt");
 			return (Criteria) this;
 		}
 
-		public Criteria andOpt1Like(String value) {
-			addCriterion("opt1 like", value, "opt1");
+		public Criteria andOptLike(String value) {
+			addCriterion("opt like", value, "opt");
 			return (Criteria) this;
 		}
 
-		public Criteria andOpt1NotLike(String value) {
-			addCriterion("opt1 not like", value, "opt1");
+		public Criteria andOptNotLike(String value) {
+			addCriterion("opt not like", value, "opt");
 			return (Criteria) this;
 		}
 
-		public Criteria andOpt1In(List<String> values) {
-			addCriterion("opt1 in", values, "opt1");
+		public Criteria andOptIn(List<String> values) {
+			addCriterion("opt in", values, "opt");
 			return (Criteria) this;
 		}
 
-		public Criteria andOpt1NotIn(List<String> values) {
-			addCriterion("opt1 not in", values, "opt1");
+		public Criteria andOptNotIn(List<String> values) {
+			addCriterion("opt not in", values, "opt");
 			return (Criteria) this;
 		}
 
-		public Criteria andOpt1Between(String value1, String value2) {
-			addCriterion("opt1 between", value1, value2, "opt1");
+		public Criteria andOptBetween(String value1, String value2) {
+			addCriterion("opt between", value1, value2, "opt");
 			return (Criteria) this;
 		}
 
-		public Criteria andOpt1NotBetween(String value1, String value2) {
-			addCriterion("opt1 not between", value1, value2, "opt1");
-			return (Criteria) this;
-		}
-
-		public Criteria andOpt2IsNull() {
-			addCriterion("opt2 is null");
-			return (Criteria) this;
-		}
-
-		public Criteria andOpt2IsNotNull() {
-			addCriterion("opt2 is not null");
-			return (Criteria) this;
-		}
-
-		public Criteria andOpt2EqualTo(String value) {
-			addCriterion("opt2 =", value, "opt2");
-			return (Criteria) this;
-		}
-
-		public Criteria andOpt2NotEqualTo(String value) {
-			addCriterion("opt2 <>", value, "opt2");
-			return (Criteria) this;
-		}
-
-		public Criteria andOpt2GreaterThan(String value) {
-			addCriterion("opt2 >", value, "opt2");
-			return (Criteria) this;
-		}
-
-		public Criteria andOpt2GreaterThanOrEqualTo(String value) {
-			addCriterion("opt2 >=", value, "opt2");
-			return (Criteria) this;
-		}
-
-		public Criteria andOpt2LessThan(String value) {
-			addCriterion("opt2 <", value, "opt2");
-			return (Criteria) this;
-		}
-
-		public Criteria andOpt2LessThanOrEqualTo(String value) {
-			addCriterion("opt2 <=", value, "opt2");
-			return (Criteria) this;
-		}
-
-		public Criteria andOpt2Like(String value) {
-			addCriterion("opt2 like", value, "opt2");
-			return (Criteria) this;
-		}
-
-		public Criteria andOpt2NotLike(String value) {
-			addCriterion("opt2 not like", value, "opt2");
-			return (Criteria) this;
-		}
-
-		public Criteria andOpt2In(List<String> values) {
-			addCriterion("opt2 in", values, "opt2");
-			return (Criteria) this;
-		}
-
-		public Criteria andOpt2NotIn(List<String> values) {
-			addCriterion("opt2 not in", values, "opt2");
-			return (Criteria) this;
-		}
-
-		public Criteria andOpt2Between(String value1, String value2) {
-			addCriterion("opt2 between", value1, value2, "opt2");
-			return (Criteria) this;
-		}
-
-		public Criteria andOpt2NotBetween(String value1, String value2) {
-			addCriterion("opt2 not between", value1, value2, "opt2");
-			return (Criteria) this;
-		}
-
-		public Criteria andOpt3IsNull() {
-			addCriterion("opt3 is null");
-			return (Criteria) this;
-		}
-
-		public Criteria andOpt3IsNotNull() {
-			addCriterion("opt3 is not null");
-			return (Criteria) this;
-		}
-
-		public Criteria andOpt3EqualTo(String value) {
-			addCriterion("opt3 =", value, "opt3");
-			return (Criteria) this;
-		}
-
-		public Criteria andOpt3NotEqualTo(String value) {
-			addCriterion("opt3 <>", value, "opt3");
-			return (Criteria) this;
-		}
-
-		public Criteria andOpt3GreaterThan(String value) {
-			addCriterion("opt3 >", value, "opt3");
-			return (Criteria) this;
-		}
-
-		public Criteria andOpt3GreaterThanOrEqualTo(String value) {
-			addCriterion("opt3 >=", value, "opt3");
-			return (Criteria) this;
-		}
-
-		public Criteria andOpt3LessThan(String value) {
-			addCriterion("opt3 <", value, "opt3");
-			return (Criteria) this;
-		}
-
-		public Criteria andOpt3LessThanOrEqualTo(String value) {
-			addCriterion("opt3 <=", value, "opt3");
-			return (Criteria) this;
-		}
-
-		public Criteria andOpt3Like(String value) {
-			addCriterion("opt3 like", value, "opt3");
-			return (Criteria) this;
-		}
-
-		public Criteria andOpt3NotLike(String value) {
-			addCriterion("opt3 not like", value, "opt3");
-			return (Criteria) this;
-		}
-
-		public Criteria andOpt3In(List<String> values) {
-			addCriterion("opt3 in", values, "opt3");
-			return (Criteria) this;
-		}
-
-		public Criteria andOpt3NotIn(List<String> values) {
-			addCriterion("opt3 not in", values, "opt3");
-			return (Criteria) this;
-		}
-
-		public Criteria andOpt3Between(String value1, String value2) {
-			addCriterion("opt3 between", value1, value2, "opt3");
-			return (Criteria) this;
-		}
-
-		public Criteria andOpt3NotBetween(String value1, String value2) {
-			addCriterion("opt3 not between", value1, value2, "opt3");
+		public Criteria andOptNotBetween(String value1, String value2) {
+			addCriterion("opt not between", value1, value2, "opt");
 			return (Criteria) this;
 		}
 

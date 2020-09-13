@@ -40,13 +40,12 @@ public interface CommonMiddlewareMapper extends BaseMapper<CommonMiddleware> {
 	 * @mbg.generated
 	 */
 	@Insert({ "insert into common_middleware (id, name, ", "middleware_type, version, ", "user_id, com_id, host, ",
-			"port, port2, username, ", "password, opt1, ", "opt2, opt3, remark)",
+			"port, port2, username, ", "password, opt, remark)",
 			"values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, ",
 			"#{middlewareType,jdbcType=VARCHAR}, #{version,jdbcType=VARCHAR}, ",
 			"#{userId,jdbcType=VARCHAR}, #{comId,jdbcType=VARCHAR}, #{host,jdbcType=VARCHAR}, ",
 			"#{port,jdbcType=INTEGER}, #{port2,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, ",
-			"#{password,jdbcType=VARCHAR}, #{opt1,jdbcType=VARCHAR}, ",
-			"#{opt2,jdbcType=VARCHAR}, #{opt3,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR})" })
+			"#{password,jdbcType=VARCHAR}, #{opt,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR})" })
 	int insert(CommonMiddleware record);
 
 	/**
@@ -66,7 +65,7 @@ public interface CommonMiddlewareMapper extends BaseMapper<CommonMiddleware> {
 	 * @mbg.generated
 	 */
 	@Select({ "select", "id, name, middleware_type, version, user_id, com_id, host, port, port2, username, ",
-			"password, opt1, opt2, opt3, remark", "from common_middleware", "where id = #{id,jdbcType=BIGINT}" })
+			"password, opt, remark", "from common_middleware", "where id = #{id,jdbcType=BIGINT}" })
 	@ResultMap("net.wicp.tams.app.duckula.controller.dao.CommonMiddlewareMapper.BaseResultMap")
 	CommonMiddleware selectByPrimaryKey(Long id);
 
@@ -98,8 +97,7 @@ public interface CommonMiddlewareMapper extends BaseMapper<CommonMiddleware> {
 			"user_id = #{userId,jdbcType=VARCHAR},", "com_id = #{comId,jdbcType=VARCHAR},",
 			"host = #{host,jdbcType=VARCHAR},", "port = #{port,jdbcType=INTEGER},",
 			"port2 = #{port2,jdbcType=INTEGER},", "username = #{username,jdbcType=VARCHAR},",
-			"password = #{password,jdbcType=VARCHAR},", "opt1 = #{opt1,jdbcType=VARCHAR},",
-			"opt2 = #{opt2,jdbcType=VARCHAR},", "opt3 = #{opt3,jdbcType=VARCHAR},",
+			"password = #{password,jdbcType=VARCHAR},", "opt = #{opt,jdbcType=VARCHAR},",
 			"remark = #{remark,jdbcType=VARCHAR}", "where id = #{id,jdbcType=BIGINT}" })
 	int updateByPrimaryKey(CommonMiddleware record);
 }

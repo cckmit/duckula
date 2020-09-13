@@ -1,38 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: ${configMapName}
+  name: ${configmapname}
 data:
   configmap.properties: |-
-    ${configmap.properties}
-    common.apiext.classload.child-first=false
-    #es
-    common.es.host.name=elasticsearch-7-ab1508.94-crc-uat.svc.cluster.local
-    common.es.host.name.transport=elasticsearch-7-ab1508.94-crc-uat.svc.cluster.local
-    common.es.cluster.name=elasticsearch
-    common.es.cluster.userName=null
-    common.es.cluster.password=null
-    common.es.assit.colname.convert=true
-    common.es.auto.create.index.duckula_tax_goods_v1={"db":"phoenix-taxcode","tb":"tax_goods","db1":"phoenix-taxcode","tb1":"tax_code","rela1":"goods_code_taxno"}
-    #binlog
-    #h2数据库文件存放地点,环境变量H2_DIR可以覆盖这个值
-    #common.binlog.alone.h2.dir=.tams
-    common.binlog.alone.binlog.global.busiPluginDir=env:DUCKULA3_DATA:/plugins/duckula-plugin-es7
-    #默认的监听服务配置,如果有多套，复制此配置并修改default为其它值
-    common.binlog.alone.binlog.global.conf.host= application-mysql-db
-    common.binlog.alone.binlog.global.conf.port = 3306
-    common.binlog.alone.binlog.global.conf.username = 
-    common.binlog.alone.binlog.global.conf.password = 
-    common.binlog.alone.binlog.global.conf.listener = net.wicp.tams.common.es.plugin.ListenerEs7
-    common.binlog.alone.binlog.global.conf.rds = false
-    #设置了groupId表示需要做分布式锁，同一个groupId+ip就是一个集群分布式锁
-    common.binlog.alone.binlog.global.conf.groupId = 20000
-    #默认使用CheckPointH2db，还提供了CheckPointMemory的chk实现,CheckPointMysql多进程的HA机制
-    common.binlog.alone.binlog.global.chk=net.wicp.tams.common.binlog.alone.checkpoint.CheckPointMysql
-    #如果其它与配置相同就可以不配置
-    common.binlog.alone.binlog.global.chk.mysql.defaultdb=tams
-    #cur表示从当前最新位点启动，last表示从记录的最后位点启动，pos表示从上面设置的gtids启动
-    common.binlog.alone.binlog.global.conf.haType = last
-    #为了做HA,必须填一个，否则不能区分lastPo
-    common.binlog.alone.binlog.conf.abc.clientId=10040
-    common.binlog.alone.binlog.conf.abc.rule=phoenix-taxcode`tax_goods`{'index':'duckula_tax_goods_v1','primarysLogic':'goods_code_taxno'}&phoenix-taxcode`tax_code`{'index':'duckula_tax_goods_v1','relakey':'goods_code_taxno'}
+    ${filecontext}

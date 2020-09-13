@@ -46,7 +46,7 @@ public enum DeployType {
 	 * @param datamap
 	 * @return
 	 */
-	public static String formateConfig(DeployType deployType, CommandType commandType, Map<String, String> datamap) {
+	public static String formateConfig(DeployType deployType, CommandType commandType, Map<String, Object> datamap) {
 		String propString = "";
 		switch (deployType) {
 		case k8s:

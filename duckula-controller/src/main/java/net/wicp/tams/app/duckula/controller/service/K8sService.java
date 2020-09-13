@@ -16,6 +16,7 @@ import io.kubernetes.client.openapi.models.V1Job;
 import io.kubernetes.client.util.Yaml;
 import lombok.extern.slf4j.Slf4j;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonDeploy;
+import net.wicp.tams.app.duckula.controller.config.ConfigItem;
 import net.wicp.tams.app.duckula.controller.config.k8s.ApiClientManager;
 import net.wicp.tams.app.duckula.controller.dao.CommonDeployMapper;
 import net.wicp.tams.common.apiext.FreemarkUtil;
@@ -78,17 +79,22 @@ public class K8sService {
 	 */
 	public V1ConfigMap deployConfigmap(Long deployid, String configMapName, String configmapStr) {
 		Map<String, String> params = new HashMap<String, String>();
-		params.put("configMapName", configMapName);
-		configmapStr = configmapStr.replace("\n", "\n    ");// 加4个空格用于完成map格式
-		params.put("configmap.properties", configmapStr);
+		params.put(ConfigItem.configmap_name, configMapName);
+		// 保证第一行为非空字符，为了避免yaml语法检查失败
+		if (!configmapStr.startsWith("    ")) {
+			configmapStr = configmapStr.replace("\n", "\n    ");// 加4个空格用于完成map格式
+		} else {
+			configmapStr = configmapStr.substring(4);
+		}
+		params.put(ConfigItem.configmap_filecontext, configmapStr);
 		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployid);
 		ApiClient apiClient = getApiClient(commonDeploy);
 		try {
-			String context = IOUtil.slurp(IOUtil.fileToInputStream("/configMap.yaml", K8sService.class));
+			String context = IOUtil.slurp(IOUtil.fileToInputStream("/deploy/k8s/configMap.yaml", K8sService.class));
 			String result = FreemarkUtil.getInst().doProcessByTemp(context, params);
 			V1ConfigMap yamlSvc = (V1ConfigMap) Yaml.load(result);
 			CoreV1Api coreV1Api = new CoreV1Api(apiClient);
-			V1ConfigMap v1ConfigMap = coreV1Api.createNamespacedConfigMap(commonDeploy.getDeploy(), yamlSvc, "true",
+			V1ConfigMap v1ConfigMap = coreV1Api.createNamespacedConfigMap(commonDeploy.getNamespace(), yamlSvc, "true",
 					null, null);
 			return v1ConfigMap;
 		} catch (Exception e) {

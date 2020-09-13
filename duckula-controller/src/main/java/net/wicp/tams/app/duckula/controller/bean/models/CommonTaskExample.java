@@ -611,6 +611,66 @@ public class CommonTaskExample {
 			addCriterion("middleware_id not between", value1, value2, "middlewareId");
 			return (Criteria) this;
 		}
+
+		public Criteria andInstanceIdIsNull() {
+			addCriterion("instance_id is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andInstanceIdIsNotNull() {
+			addCriterion("instance_id is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andInstanceIdEqualTo(Long value) {
+			addCriterion("instance_id =", value, "instanceId");
+			return (Criteria) this;
+		}
+
+		public Criteria andInstanceIdNotEqualTo(Long value) {
+			addCriterion("instance_id <>", value, "instanceId");
+			return (Criteria) this;
+		}
+
+		public Criteria andInstanceIdGreaterThan(Long value) {
+			addCriterion("instance_id >", value, "instanceId");
+			return (Criteria) this;
+		}
+
+		public Criteria andInstanceIdGreaterThanOrEqualTo(Long value) {
+			addCriterion("instance_id >=", value, "instanceId");
+			return (Criteria) this;
+		}
+
+		public Criteria andInstanceIdLessThan(Long value) {
+			addCriterion("instance_id <", value, "instanceId");
+			return (Criteria) this;
+		}
+
+		public Criteria andInstanceIdLessThanOrEqualTo(Long value) {
+			addCriterion("instance_id <=", value, "instanceId");
+			return (Criteria) this;
+		}
+
+		public Criteria andInstanceIdIn(List<Long> values) {
+			addCriterion("instance_id in", values, "instanceId");
+			return (Criteria) this;
+		}
+
+		public Criteria andInstanceIdNotIn(List<Long> values) {
+			addCriterion("instance_id not in", values, "instanceId");
+			return (Criteria) this;
+		}
+
+		public Criteria andInstanceIdBetween(Long value1, Long value2) {
+			addCriterion("instance_id between", value1, value2, "instanceId");
+			return (Criteria) this;
+		}
+
+		public Criteria andInstanceIdNotBetween(Long value1, Long value2) {
+			addCriterion("instance_id not between", value1, value2, "instanceId");
+			return (Criteria) this;
+		}
 	}
 
 	/**

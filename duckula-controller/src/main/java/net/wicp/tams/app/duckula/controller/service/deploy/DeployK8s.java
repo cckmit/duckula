@@ -7,12 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import io.kubernetes.client.openapi.models.V1ConfigMap;
+import net.wicp.tams.app.duckula.controller.bean.models.CommonInstance;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonMiddleware;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonTask;
 import net.wicp.tams.app.duckula.controller.config.ConfigItem;
 import net.wicp.tams.app.duckula.controller.config.constant.CommandType;
 import net.wicp.tams.app.duckula.controller.config.constant.DeployType;
 import net.wicp.tams.app.duckula.controller.config.constant.MiddlewareType;
+import net.wicp.tams.app.duckula.controller.dao.CommonInstanceMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonMiddlewareMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonTaskMapper;
 import net.wicp.tams.app.duckula.controller.service.K8sService;
@@ -32,7 +34,8 @@ public class DeployK8s implements IDeploy {
 	private CommonTaskMapper commonTaskMapper;
 	@Autowired
 	private CommonMiddlewareMapper commonMiddlewareMapper;
-
+	@Autowired
+	private CommonInstanceMapper commonInstanceMapper;
 
 	@Override
 	public Result checkExit(Long deployid, CommandType taskType, Long taskId) {
@@ -59,15 +62,17 @@ public class DeployK8s implements IDeploy {
 
 	@Override
 	public Result addConfig(Long deployid, CommandType commandType, Long taskId) {
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.putAll(commandType.getDefaultconfig());// 默认配置
 		Long middlewareId = null;
 		String configName = null;
+		Long instanceId = null;
 		switch (commandType) {
 		case task:
 			CommonTask selectTask = commonTaskMapper.selectById(taskId);
 			configName = commandType.formateConfigName(selectTask.getName());
 			middlewareId = selectTask.getMiddlewareId();
+			instanceId = selectTask.getInstanceId();
 			break;
 		default:
 			break;
@@ -78,8 +83,14 @@ public class DeployK8s implements IDeploy {
 		params.put("common.binlog.alone.binlog.global.conf.listener",
 				commandType == CommandType.task ? verPluginByVersion[1] : verPluginByVersion[2]);// 监听器
 		// 配置目标中间件
-		Map<String, String> proConfig = middlewareType.proConfig(middleware);
+		Map<String, Object> proConfig = middlewareType.proConfig(middleware);
 		params.putAll(proConfig);
+		// 配置监听实例,如consumer可能就没有这个实例
+		if (instanceId != null) {
+			CommonInstance commonInstance = commonInstanceMapper.selectById(instanceId);
+			params.putAll(configInstall(commonInstance));
+		}
+
 		String propStr = DeployType.formateConfig(DeployType.k8s, commandType, params);
 		k8sService.deployConfigmap(deployid, configName, propStr);
 		return Result.getSuc();
@@ -102,7 +113,8 @@ public class DeployK8s implements IDeploy {
 		default:
 			break;
 		}
-		k8sService.deployTask(deployid, params);
+		// TODO 创建监听任务
+		// k8sService.deployTask(deployid, params);
 	}
 
 }
