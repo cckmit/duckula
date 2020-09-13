@@ -14,27 +14,29 @@ import net.wicp.tams.common.binlog.alone.binlog.bean.RuleItem;
 public enum MiddlewareType {
 	es("es搜索", "common.es.",
 			new String[][] {
-					{ "5.X", "net.wicp.tams.common.es.plugin.ListenerEs5", "net.wicp.tams.common.es.plugin.DumperEs5" },
-					{ "6.X", "net.wicp.tams.common.es.plugin.ListenerEs6", "net.wicp.tams.common.es.plugin.DumperEs6" },
-					{ "7.X", "net.wicp.tams.common.es.plugin.ListenerEs7",
-							"net.wicp.tams.common.es.plugin.DumperEs7" } },
+					{ "5.X", "net.wicp.tams.common.es.plugin.ListenerEs5", "net.wicp.tams.common.es.plugin.DumperEs5",
+							"env:DUCKULA3_DATA:/plugins/duckula-plugin-es7" },
+					{ "6.X", "net.wicp.tams.common.es.plugin.ListenerEs6", "net.wicp.tams.common.es.plugin.DumperEs6",
+							"env:DUCKULA3_DATA:/plugins/duckula-plugin-es6" },
+					{ "7.X", "net.wicp.tams.common.es.plugin.ListenerEs7", "net.wicp.tams.common.es.plugin.DumperEs7",
+							"env:DUCKULA3_DATA:/plugins/duckula-plugin-es5" } },
 			new RuleItem[] { RuleItem.index, RuleItem.type, RuleItem.relakey, RuleItem.copynum, RuleItem.partitions }),
 
 	manticore("manticore搜索", "", new String[][] { { "3.5" } }, new RuleItem[] {}),
 
-	cassandra("cassandra数据库", "", new String[][] { { "3" } }, new RuleItem[] { RuleItem.ks, RuleItem.table }),
+	cassandra("cassandra数据库",  "", new String[][] { { "3" } }, new RuleItem[] { RuleItem.ks, RuleItem.table }),
 
-	mysql("mysql数据库", "", new String[][] { { "5.6" }, { "5.7" }, { "8.0" } }, new RuleItem[] { RuleItem.dbtb }),
+	mysql("mysql数据库",  "", new String[][] { { "5.6" }, { "5.7" }, { "8.0" } }, new RuleItem[] { RuleItem.dbtb }),
 
-	kafka("kafka消息", "", new String[][] { { "1.X" }, { "2.X" } }, new RuleItem[] { RuleItem.topic }),
+	kafka("kafka消息",  "", new String[][] { { "1.X" }, { "2.X" } }, new RuleItem[] { RuleItem.topic }),
 
-	http("http服务器", "", new String[][] { { "1.1" } }, new RuleItem[] { RuleItem.httpRela }),
+	http("http服务器",  "", new String[][] { { "1.1" } }, new RuleItem[] { RuleItem.httpRela }),
 
 	;
 
 	private final String desc;
 
-	private final String[][] verPlugins;// 支持的版本,元素：0:版本 1：监听 2：全量
+	private final String[][] verPlugins;// 支持的版本,元素：0:版本 1：监听 2：全量 3:插件目录
 
 	private final RuleItem[] ruleItems;// 可以配置的item
 
@@ -66,6 +68,22 @@ public enum MiddlewareType {
 		}
 		return retmap;
 	}
+	
+	public Map<String, Object> proPluginConfig(CommandType commandType,String version) {
+		Map<String, Object> retmap = new HashMap<String, Object>();		
+		String[] verPluginByVersion = getVerPluginByVersion(version);		
+		switch (commandType) {
+		case task:
+			retmap.put("common.binlog.alone.binlog.global.conf.listener",
+					verPluginByVersion[1]);// 监听器
+			break;
+		default:
+			break;
+		}		
+		retmap.put("common.binlog.alone.binlog.global.busiPluginDir",verPluginByVersion[3]);
+		return retmap;		
+	}
+		
 
 	public RuleItem[] getRuleItems() {
 		return ruleItems;

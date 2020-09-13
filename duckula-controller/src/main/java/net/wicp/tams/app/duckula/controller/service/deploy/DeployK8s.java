@@ -63,13 +63,13 @@ public class DeployK8s implements IDeploy {
 	@Override
 	public Result addConfig(Long deployid, CommandType commandType, Long taskId) {
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.putAll(commandType.getDefaultconfig());// 默认配置
 		Long middlewareId = null;
 		String configName = null;
 		Long instanceId = null;
 		switch (commandType) {
 		case task:
 			CommonTask selectTask = commonTaskMapper.selectById(taskId);
+			params.putAll(CommandType.proTaskConfig(selectTask));//默认配置
 			configName = commandType.formateConfigName(selectTask.getName());
 			middlewareId = selectTask.getMiddlewareId();
 			instanceId = selectTask.getInstanceId();
@@ -79,9 +79,9 @@ public class DeployK8s implements IDeploy {
 		}
 		CommonMiddleware middleware = commonMiddlewareMapper.selectById(middlewareId);
 		MiddlewareType middlewareType = MiddlewareType.valueOf(middleware.getMiddlewareType());
-		String[] verPluginByVersion = middlewareType.getVerPluginByVersion(middleware.getVersion());
-		params.put("common.binlog.alone.binlog.global.conf.listener",
-				commandType == CommandType.task ? verPluginByVersion[1] : verPluginByVersion[2]);// 监听器
+		// 配置插件
+		Map<String, Object> pluginConfig = middlewareType.proPluginConfig(commandType,middleware.getVersion());
+		params.putAll(pluginConfig);
 		// 配置目标中间件
 		Map<String, Object> proConfig = middlewareType.proConfig(middleware);
 		params.putAll(proConfig);

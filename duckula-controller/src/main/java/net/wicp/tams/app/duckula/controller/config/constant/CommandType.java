@@ -1,7 +1,9 @@
 package net.wicp.tams.app.duckula.controller.config.constant;
 
+import java.util.HashMap;
 import java.util.Map;
 
+import net.wicp.tams.app.duckula.controller.bean.models.CommonTask;
 import net.wicp.tams.common.apiext.CollectionUtil;
 
 /***
@@ -16,12 +18,32 @@ public enum CommandType {
 	dump(new String[] {}, "d-%s");
 
 	// 默认配置
-	public final Map<String, String> defaultconfig;
+	public final Map<String, Object> defaultconfig;
 
 	private final String nameFormate;
 
-	public Map<String, String> getDefaultconfig() {
-		return defaultconfig;
+	public Map<String, Object> getDefaultconfig() {
+		return this.defaultconfig;
+	}
+
+	// task配置专用
+	public static Map<String, Object> proTaskConfig(CommonTask commonTask) {
+		Map<String, Object> retmap = new HashMap<String, Object>();
+		retmap.putAll(CommandType.task.getDefaultconfig());
+
+		retmap.put("common.binlog.alone.binlog.global.bufferType", commonTask.getBufferType());
+		retmap.put("common.binlog.alone.binlog.global." + commonTask.getBufferType() + ".sendNum",
+				commonTask.getSendnum());
+		retmap.put("common.binlog.alone.binlog.global.chk", commonTask.getCheckpoint());
+		if ("mysql".equals(commonTask.getCheckpoint())) {// TODO 加上mysql的配置
+
+		}
+		// TODO 业务监听器
+		retmap.put("common.binlog.alone.binlog.global.conf.groupId", commonTask.getGroupId());
+		retmap.put("common.binlog.alone.binlog.global.conf.clientId", commonTask.getClientId());
+		retmap.put("common.binlog.alone.binlog.global.conf.haType", commonTask.getHaType());
+		retmap.put("common.binlog.alone.binlog.global.conf.pos.gtids", commonTask.getGtids());
+		return retmap;
 	}
 
 	@SuppressWarnings("unchecked")
