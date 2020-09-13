@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<InterFaceMapping>
+	<PropertyIn>
+		<COL name="taskId" type="integer" isnull="false">任务id号</COL>
+	</PropertyIn>
+	<PropertyOut>
+	</PropertyOut>
+</InterFaceMapping>
+

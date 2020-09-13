@@ -17,7 +17,6 @@ import io.kubernetes.client.openapi.models.V1Job;
 import io.kubernetes.client.openapi.models.V1ObjectMetaBuilder;
 import io.kubernetes.client.util.Yaml;
 import net.wicp.tams.app.duckula.controller.config.k8s.ApiClientManager;
-import net.wicp.tams.common.apiext.FreemarkUtil;
 import net.wicp.tams.common.apiext.IOUtil;
 
 public class TestK8s {

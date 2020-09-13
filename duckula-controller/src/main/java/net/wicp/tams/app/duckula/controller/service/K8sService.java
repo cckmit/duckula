@@ -55,7 +55,7 @@ public class K8sService {
 		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployid);
 		ApiClient apiClient = getApiClient(commonDeploy);
 		try {
-			String context = IOUtil.slurp(IOUtil.fileToInputStream("/deployment.yaml", K8sService.class));
+			String context = IOUtil.slurp(IOUtil.fileToInputStream("/deploy/k8s/deployment.yaml", K8sService.class));
 			String result = FreemarkUtil.getInst().doProcessByTemp(context, params);
 			V1Deployment yamlSvc = (V1Deployment) Yaml.load(result);
 			AppsV1Api appsV1Api = new AppsV1Api(apiClient);

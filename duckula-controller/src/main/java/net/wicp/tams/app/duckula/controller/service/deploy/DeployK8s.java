@@ -7,13 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import io.kubernetes.client.openapi.models.V1ConfigMap;
-import net.wicp.tams.app.duckula.controller.bean.models.CommonDeploy;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonMiddleware;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonTask;
+import net.wicp.tams.app.duckula.controller.config.ConfigItem;
 import net.wicp.tams.app.duckula.controller.config.constant.CommandType;
 import net.wicp.tams.app.duckula.controller.config.constant.DeployType;
 import net.wicp.tams.app.duckula.controller.config.constant.MiddlewareType;
-import net.wicp.tams.app.duckula.controller.dao.CommonDeployMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonMiddlewareMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonTaskMapper;
 import net.wicp.tams.app.duckula.controller.service.K8sService;
@@ -34,8 +33,6 @@ public class DeployK8s implements IDeploy {
 	@Autowired
 	private CommonMiddlewareMapper commonMiddlewareMapper;
 
-	@Autowired
-	private CommonDeployMapper commonDeployMapper;
 
 	@Override
 	public Result checkExit(Long deployid, CommandType taskType, Long taskId) {
@@ -43,9 +40,8 @@ public class DeployK8s implements IDeploy {
 		switch (taskType) {
 		case task:
 			CommonTask selectTask = commonTaskMapper.selectById(taskId);
-			configName = String.format("task-%s", selectTask.getName());// 最大为64
+			configName = taskType.formateConfigName(selectTask.getName());
 			break;
-
 		default:
 			break;
 		}
@@ -70,7 +66,7 @@ public class DeployK8s implements IDeploy {
 		switch (commandType) {
 		case task:
 			CommonTask selectTask = commonTaskMapper.selectById(taskId);
-			configName = String.format("task-%s", selectTask.getName());// 最大为64
+			configName = commandType.formateConfigName(selectTask.getName());
 			middlewareId = selectTask.getMiddlewareId();
 			break;
 		default:
@@ -85,27 +81,27 @@ public class DeployK8s implements IDeploy {
 		Map<String, String> proConfig = middlewareType.proConfig(middleware);
 		params.putAll(proConfig);
 		String propStr = DeployType.formateConfig(DeployType.k8s, commandType, params);
-		String configname = String.format("conf-%s", configName.substring(5));
-		k8sService.deployConfigmap(deployid, configname, propStr);
+		k8sService.deployConfigmap(deployid, configName, propStr);
 		return Result.getSuc();
 	}
 
 	@Override
 	public void start(Long deployid, CommandType taskType, Long taskId) {
+		if (!checkExit(deployid, taskType, taskId).isSuc()) {
+			addConfig(deployid, taskType, taskId);
+		}
 		String configName = null;
 		Map<String, String> params = new HashMap<String, String>();
 		switch (taskType) {
 		case task:
 			CommonTask selectTask = commonTaskMapper.selectById(taskId);
 			configName = taskType.formateTaskName(selectTask.getName());
-			params.put("name", configName);
+			params.put(ConfigItem.task_name, configName);
+			params.put(ConfigItem.configmap_name, taskType.formateConfigName(selectTask.getName()));
 			break;
 		default:
 			break;
 		}
-		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployid);
-		DeployType valueOf = DeployType.valueOf(commonDeploy.getDeploy());
-
 		k8sService.deployTask(deployid, params);
 	}
 

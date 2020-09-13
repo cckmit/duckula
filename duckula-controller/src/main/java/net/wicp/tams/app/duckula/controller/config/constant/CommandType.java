@@ -30,12 +30,14 @@ public enum CommandType {
 		this.nameFormate = nameFormate;
 	}
 
+	// 62是因为configmap有前缀有2位，而task前缀只有1位，这样可以取到相同的原taskname.
 	public String formateTaskName(String taskName) {
-		String idstr = taskName.replace("_", "-");
-		if (idstr.length() >= 63) {// TODO 具63再定
-			return String.format(this.nameFormate, idstr.substring(0, 63));
-		} else {
-			return String.format(this.nameFormate, idstr);
-		}
+		String idstr = String.format(this.nameFormate, taskName.replace("_", "-"));
+		return idstr.length() >= 62 ? idstr.substring(0, 62) : idstr;
+	}
+
+	public String formateConfigName(String taskName) {
+		String idstr = formateTaskName(taskName);
+		return "c" + idstr;
 	}
 }
