@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: rjzjh-duckula-task-chart
+  name: ${name}
   labels:
     helm.sh/chart: duckula-task-chart-0.1.0
     app.kubernetes.io/name: duckula-task-chart
@@ -88,4 +88,4 @@ spec:
         emptyDir: {}
       - name: userconfig-root
         configMap:
-          name: rjzjh-duckula-task-chart-root
+          name: ${configmapname}

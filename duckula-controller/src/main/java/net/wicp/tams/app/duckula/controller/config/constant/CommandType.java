@@ -43,6 +43,9 @@ public enum CommandType {
 		retmap.put("common.binlog.alone.binlog.global.conf.clientId", commonTask.getClientId());
 		retmap.put("common.binlog.alone.binlog.global.conf.haType", commonTask.getHaType());
 		retmap.put("common.binlog.alone.binlog.global.conf.pos.gtids", commonTask.getGtids());
+
+		// 规则，使用全局的监听器
+		retmap.put("common.binlog.alone.binlog.conf._global.rule", commonTask.getRule());
 		return retmap;
 	}
 

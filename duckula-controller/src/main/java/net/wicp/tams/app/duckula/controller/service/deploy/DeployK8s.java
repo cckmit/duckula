@@ -69,7 +69,7 @@ public class DeployK8s implements IDeploy {
 		switch (commandType) {
 		case task:
 			CommonTask selectTask = commonTaskMapper.selectById(taskId);
-			params.putAll(CommandType.proTaskConfig(selectTask));//默认配置
+			params.putAll(CommandType.proTaskConfig(selectTask));// 默认配置
 			configName = commandType.formateConfigName(selectTask.getName());
 			middlewareId = selectTask.getMiddlewareId();
 			instanceId = selectTask.getInstanceId();
@@ -80,7 +80,7 @@ public class DeployK8s implements IDeploy {
 		CommonMiddleware middleware = commonMiddlewareMapper.selectById(middlewareId);
 		MiddlewareType middlewareType = MiddlewareType.valueOf(middleware.getMiddlewareType());
 		// 配置插件
-		Map<String, Object> pluginConfig = middlewareType.proPluginConfig(commandType,middleware.getVersion());
+		Map<String, Object> pluginConfig = middlewareType.proPluginConfig(commandType, middleware.getVersion());
 		params.putAll(pluginConfig);
 		// 配置目标中间件
 		Map<String, Object> proConfig = middlewareType.proConfig(middleware);
@@ -113,8 +113,7 @@ public class DeployK8s implements IDeploy {
 		default:
 			break;
 		}
-		// TODO 创建监听任务
-		// k8sService.deployTask(deployid, params);
+		k8sService.deployTask(deployid, params);
 	}
 
 }
