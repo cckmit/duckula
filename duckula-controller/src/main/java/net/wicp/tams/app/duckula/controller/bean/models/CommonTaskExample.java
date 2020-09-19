@@ -1131,6 +1131,76 @@ public class CommonTaskExample {
 			addCriterion("gtids not between", value1, value2, "gtids");
 			return (Criteria) this;
 		}
+
+		public Criteria andAttrConfigIsNull() {
+			addCriterion("attr_config is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andAttrConfigIsNotNull() {
+			addCriterion("attr_config is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andAttrConfigEqualTo(String value) {
+			addCriterion("attr_config =", value, "attrConfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andAttrConfigNotEqualTo(String value) {
+			addCriterion("attr_config <>", value, "attrConfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andAttrConfigGreaterThan(String value) {
+			addCriterion("attr_config >", value, "attrConfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andAttrConfigGreaterThanOrEqualTo(String value) {
+			addCriterion("attr_config >=", value, "attrConfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andAttrConfigLessThan(String value) {
+			addCriterion("attr_config <", value, "attrConfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andAttrConfigLessThanOrEqualTo(String value) {
+			addCriterion("attr_config <=", value, "attrConfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andAttrConfigLike(String value) {
+			addCriterion("attr_config like", value, "attrConfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andAttrConfigNotLike(String value) {
+			addCriterion("attr_config not like", value, "attrConfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andAttrConfigIn(List<String> values) {
+			addCriterion("attr_config in", values, "attrConfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andAttrConfigNotIn(List<String> values) {
+			addCriterion("attr_config not in", values, "attrConfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andAttrConfigBetween(String value1, String value2) {
+			addCriterion("attr_config between", value1, value2, "attrConfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andAttrConfigNotBetween(String value1, String value2) {
+			addCriterion("attr_config not between", value1, value2, "attrConfig");
+			return (Criteria) this;
+		}
 	}
 
 	/**

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import io.kubernetes.client.openapi.ApiClient;
+import io.kubernetes.client.openapi.ApiException;
 import io.kubernetes.client.openapi.apis.AppsV1Api;
 import io.kubernetes.client.openapi.apis.BatchV1Api;
 import io.kubernetes.client.openapi.apis.CoreV1Api;
@@ -17,11 +18,14 @@ import io.kubernetes.client.util.Yaml;
 import lombok.extern.slf4j.Slf4j;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonDeploy;
 import net.wicp.tams.app.duckula.controller.config.ConfigItem;
+import net.wicp.tams.app.duckula.controller.config.ExceptDuckula;
 import net.wicp.tams.app.duckula.controller.config.k8s.ApiClientManager;
 import net.wicp.tams.app.duckula.controller.dao.CommonDeployMapper;
 import net.wicp.tams.common.apiext.FreemarkUtil;
 import net.wicp.tams.common.apiext.IOUtil;
 import net.wicp.tams.common.apiext.StringUtil;
+import net.wicp.tams.common.exception.ExceptAll;
+import net.wicp.tams.common.exception.ProjectExceptionRuntime;
 
 /***
  * k8s接口全部在此定义
@@ -63,9 +67,15 @@ public class K8sService {
 			V1Deployment v1Deployment = appsV1Api.createNamespacedDeployment(commonDeploy.getNamespace(), yamlSvc,
 					"true", null, null);
 			return v1Deployment;
+		} catch (ApiException e) {
+			if ("Conflict".equals(e.getMessage())) {
+				throw new ProjectExceptionRuntime(ExceptAll.k8s_deploy_conflict);
+			} else {
+				throw new ProjectExceptionRuntime(ExceptAll.k8s_api_other, e.getMessage());
+			}
 		} catch (Exception e) {
-			log.error("创建task失败", e);
-			throw new RuntimeException(e);
+			log.error("部署task失败", e);
+			throw new ProjectExceptionRuntime(ExceptDuckula.duckula_deploy_excetion, e.getMessage());
 		}
 	}
 

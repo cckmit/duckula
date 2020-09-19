@@ -12,6 +12,7 @@ import net.wicp.tams.app.duckula.controller.service.deploy.IDeploy;
 import net.wicp.tams.common.Result;
 import net.wicp.tams.common.connector.beans.CusDynaBean;
 import net.wicp.tams.common.connector.executor.IBusiApp;
+import net.wicp.tams.common.exception.ExceptAll;
 import net.wicp.tams.common.exception.ProjectException;
 import net.wicp.tams.common.spring.autoconfig.SpringAssit;
 
@@ -27,7 +28,13 @@ public class StartTask implements IBusiApp {
 	public CusDynaBean exe(CusDynaBean inputBean, CusDynaBean outBeanOri) throws ProjectException {
 		long taskId = Long.parseLong(inputBean.getStrValueByName("taskId"));
 		CommonTask commonTask = commonTaskMapper.selectById(taskId);
+		if (commonTask == null) {
+			throw new ProjectException(ExceptAll.param_error, "任务没有配置");
+		}
 		CommonDeploy commonDeploy = commonDeployMapper.selectById(commonTask.getDeployId());
+		if (commonDeploy == null) {
+			throw new ProjectException(ExceptAll.param_error, "部署环境没有配置");
+		}
 		IDeploy deploy = (IDeploy) SpringAssit.context.getBean(commonDeploy.getDeploy());
 		deploy.start(commonDeploy.getId(), CommandType.task, taskId);
 		Result ret = Result.getSuc(commonTask.getName());

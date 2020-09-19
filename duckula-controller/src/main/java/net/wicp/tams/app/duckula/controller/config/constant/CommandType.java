@@ -3,8 +3,12 @@ package net.wicp.tams.app.duckula.controller.config.constant;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+
 import net.wicp.tams.app.duckula.controller.bean.models.CommonTask;
 import net.wicp.tams.common.apiext.CollectionUtil;
+import net.wicp.tams.common.apiext.StringUtil;
 
 /***
  * 3种运行模式
@@ -46,6 +50,14 @@ public enum CommandType {
 
 		// 规则，使用全局的监听器
 		retmap.put("common.binlog.alone.binlog.conf._global.rule", commonTask.getRule());
+		
+		//其它的配置,如auto.create.index
+		if(StringUtil.isNotNull(commonTask.getAttrConfig())) {
+			JSONObject attrConfig = JSON.parseObject(commonTask.getAttrConfig());
+			for (String key : attrConfig.keySet()) {
+				retmap.put(key, attrConfig.getString(key));
+			}
+		}
 		return retmap;
 	}
 

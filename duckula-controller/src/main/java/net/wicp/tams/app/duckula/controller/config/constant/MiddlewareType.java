@@ -15,11 +15,11 @@ public enum MiddlewareType {
 	es("es搜索", "common.es.",
 			new String[][] {
 					{ "5.X", "net.wicp.tams.common.es.plugin.ListenerEs5", "net.wicp.tams.common.es.plugin.DumperEs5",
-							"env:DUCKULA3_DATA:/plugins/duckula-plugin-es7" },
+							"env:DUCKULA3_DATA:/plugins/duckula-plugin-es5" },
 					{ "6.X", "net.wicp.tams.common.es.plugin.ListenerEs6", "net.wicp.tams.common.es.plugin.DumperEs6",
 							"env:DUCKULA3_DATA:/plugins/duckula-plugin-es6" },
 					{ "7.X", "net.wicp.tams.common.es.plugin.ListenerEs7", "net.wicp.tams.common.es.plugin.DumperEs7",
-							"env:DUCKULA3_DATA:/plugins/duckula-plugin-es5" } },
+							"env:DUCKULA3_DATA:/plugins/duckula-plugin-es7" } },
 			new RuleItem[] { RuleItem.index, RuleItem.type, RuleItem.relakey, RuleItem.copynum, RuleItem.partitions }),
 
 	manticore("manticore搜索", "", new String[][] { { "3.5" } }, new RuleItem[] {}),

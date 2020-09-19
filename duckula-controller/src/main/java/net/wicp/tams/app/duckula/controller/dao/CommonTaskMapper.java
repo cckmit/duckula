@@ -38,14 +38,14 @@ public interface CommonTaskMapper extends BaseMapper<CommonTask> {
 	 * @mbg.generated
 	 */
 	@Insert({ "insert into common_task (id, name, ", "version, buffer_type, ", "sendNum, rule, deploy_id, ",
-			"user_id, middleware_id, ", "instance_id, group_id, ", "checkpoint, client_id, ", "ha_type, gtids)",
-			"values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, ",
+			"user_id, middleware_id, ", "instance_id, group_id, ", "checkpoint, client_id, ",
+			"ha_type, gtids, attr_config)", "values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, ",
 			"#{version,jdbcType=VARCHAR}, #{bufferType,jdbcType=VARCHAR}, ",
 			"#{sendnum,jdbcType=INTEGER}, #{rule,jdbcType=VARCHAR}, #{deployId,jdbcType=BIGINT}, ",
 			"#{userId,jdbcType=BIGINT}, #{middlewareId,jdbcType=BIGINT}, ",
 			"#{instanceId,jdbcType=BIGINT}, #{groupId,jdbcType=INTEGER}, ",
 			"#{checkpoint,jdbcType=VARCHAR}, #{clientId,jdbcType=INTEGER}, ",
-			"#{haType,jdbcType=VARCHAR}, #{gtids,jdbcType=VARCHAR})" })
+			"#{haType,jdbcType=VARCHAR}, #{gtids,jdbcType=VARCHAR}, #{attrConfig,jdbcType=VARCHAR})" })
 	int insert(CommonTask record);
 
 	/**
@@ -65,7 +65,7 @@ public interface CommonTaskMapper extends BaseMapper<CommonTask> {
 	 * @mbg.generated
 	 */
 	@Select({ "select", "id, name, version, buffer_type, sendNum, rule, deploy_id, user_id, middleware_id, ",
-			"instance_id, group_id, checkpoint, client_id, ha_type, gtids", "from common_task",
+			"instance_id, group_id, checkpoint, client_id, ha_type, gtids, attr_config", "from common_task",
 			"where id = #{id,jdbcType=BIGINT}" })
 	@ResultMap("net.wicp.tams.app.duckula.controller.dao.CommonTaskMapper.BaseResultMap")
 	CommonTask selectByPrimaryKey(Long id);
@@ -98,8 +98,8 @@ public interface CommonTaskMapper extends BaseMapper<CommonTask> {
 			"user_id = #{userId,jdbcType=BIGINT},", "middleware_id = #{middlewareId,jdbcType=BIGINT},",
 			"instance_id = #{instanceId,jdbcType=BIGINT},", "group_id = #{groupId,jdbcType=INTEGER},",
 			"checkpoint = #{checkpoint,jdbcType=VARCHAR},", "client_id = #{clientId,jdbcType=INTEGER},",
-			"ha_type = #{haType,jdbcType=VARCHAR},", "gtids = #{gtids,jdbcType=VARCHAR}",
-			"where id = #{id,jdbcType=BIGINT}" })
+			"ha_type = #{haType,jdbcType=VARCHAR},", "gtids = #{gtids,jdbcType=VARCHAR},",
+			"attr_config = #{attrConfig,jdbcType=VARCHAR}", "where id = #{id,jdbcType=BIGINT}" })
 	int updateByPrimaryKey(CommonTask record);
 
 }
