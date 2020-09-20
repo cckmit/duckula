@@ -11,9 +11,11 @@ import org.apache.commons.collections.CollectionUtils;
 import lombok.extern.slf4j.Slf4j;
 import net.wicp.tams.common.Conf;
 import net.wicp.tams.common.apiext.IOUtil;
+import net.wicp.tams.common.apiext.LoggerUtil;
 import net.wicp.tams.common.binlog.alone.BinlogStart;
 import net.wicp.tams.common.binlog.alone.BusiAssit;
 import net.wicp.tams.common.binlog.alone.ListenerConf.ConnConf;
+import net.wicp.tams.common.constant.JvmStatus;
 
 @Slf4j
 public class MainTask {
@@ -28,7 +30,11 @@ public class MainTask {
 		if (CollectionUtils.isEmpty(confs) || confs.size() > 1) {
 			log.error("一个任务只能监听一个实例");
 		}
-		BinlogStart.listening(confs.get(0));
+		try {
+			BinlogStart.listening(confs.get(0));
+		} catch (Throwable e) {
+			LoggerUtil.exit(JvmStatus.s15);// 关机
+		}
 	}
 
 }

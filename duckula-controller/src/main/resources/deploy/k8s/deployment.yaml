@@ -28,7 +28,7 @@ spec:
 
       initContainers:
       - name: pro-data
-        image: 'registry.choerodon.xforceplus.com/rjzjh/duckula3:data.3.2.3'
+        image: 'registry.choerodon.xforceplus.com/rjzjh/duckula3:data.${version}'
         imagePullPolicy: IfNotPresent
         volumeMounts:
         - name: data
@@ -39,14 +39,18 @@ spec:
         - name: duckula-task-chart
           securityContext:
             {}
-          image: 'registry.choerodon.xforceplus.com/rjzjh/duckula3:task.3.2.3'
+          image: 'registry.choerodon.xforceplus.com/rjzjh/duckula3:task.${version}'
           imagePullPolicy: IfNotPresent
           env:
           - name: taskid
             value: rjzjh
           #不能有command否则会覆盖ENTRYPOINT  2113为调试端口，生产环境需要关闭
           #args: ["docker-run.sh","$(taskid)","2723","2113"]
+          <#if debug>
+          args: ["docker-run.sh","$(taskid)","2723","2113"]
+          <#else>
           args: ["docker-run.sh","$(taskid)","2723"]
+          </#if>
           ports:
           - name: jmx
             containerPort: 2723

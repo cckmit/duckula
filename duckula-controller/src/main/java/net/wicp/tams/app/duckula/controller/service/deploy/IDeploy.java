@@ -12,7 +12,7 @@ public interface IDeploy {
 
 	public Result addConfig(Long deployid, CommandType taskType, Long taskId);
 
-	public void start(Long deployid, CommandType taskType, Long taskId);
+	public void start(Long deployid, CommandType taskType, Long taskId,boolean isDebug);
 
 	// 配置监听实例
 	public default Map<String, Object> configInstall(CommonInstance commonInstance) {

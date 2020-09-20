@@ -36,7 +36,8 @@ public class StartTask implements IBusiApp {
 			throw new ProjectException(ExceptAll.param_error, "部署环境没有配置");
 		}
 		IDeploy deploy = (IDeploy) SpringAssit.context.getBean(commonDeploy.getDeploy());
-		deploy.start(commonDeploy.getId(), CommandType.task, taskId);
+		Boolean isdebug = Boolean.parseBoolean(inputBean.getStrValueByName("isDebug"));//  inputBean.getByType(Boolean.class, "isdebug");
+		deploy.start(commonDeploy.getId(), CommandType.task, taskId,isdebug);
 		Result ret = Result.getSuc(commonTask.getName());
 		outBeanOri.setResult(ret);
 		return outBeanOri;

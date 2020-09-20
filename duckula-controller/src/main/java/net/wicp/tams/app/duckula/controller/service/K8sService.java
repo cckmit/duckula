@@ -56,7 +56,7 @@ public class K8sService {
 		}
 	}
 
-	public V1Deployment deployTask(Long deployid, Map<String, String> params) {
+	public V1Deployment deployTask(Long deployid, Map<String, Object> params) {
 		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployid);
 		ApiClient apiClient = getApiClient(commonDeploy);
 		try {
