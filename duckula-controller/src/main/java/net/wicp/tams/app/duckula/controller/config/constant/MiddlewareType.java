@@ -27,7 +27,10 @@ public enum MiddlewareType {
 
 	cassandra("cassandra数据库", "", new String[][] { { "3" } }, new RuleItem[] { RuleItem.ks, RuleItem.table }),
 
-	mysql("mysql数据库", "", new String[][] { { "5.6" }, { "5.7" }, { "8.0" } }, new RuleItem[] { RuleItem.dbtb }),
+	mysql("mysql数据库", "common.binlog.alone.plugin.jdbc.",
+			new String[][] { { "*", "net.wicp.tams.common.binlog.plugin.jdbc.ListenerJdbc",
+					"net.wicp.tams.common.binlog.plugin.jdbc.DumperJdbc", null } }, // null不需要插件
+			new RuleItem[] { RuleItem.dbinstanceid, RuleItem.dbtb }),
 
 	kafka("kafka消息", "", new String[][] { { "1.X" }, { "2.X" } }, new RuleItem[] { RuleItem.topic }),
 
@@ -47,9 +50,9 @@ public enum MiddlewareType {
 
 	public Map<String, Object> proConfig(CommonMiddleware commonMiddleware) {
 		Map<String, Object> retmap = new HashMap<String, Object>();
+		JSONObject opt = JSON.parseObject(commonMiddleware.getOpt());
 		switch (this) {
 		case es:
-			JSONObject opt = JSON.parseObject(commonMiddleware.getOpt());
 			retmap.put("common.es.host.name", commonMiddleware.getHost());
 			retmap.put("common.es.host.port.rest", String.valueOf(commonMiddleware.getPort()));
 			retmap.put("common.es.host.port.transport", String.valueOf(commonMiddleware.getPort2()));
@@ -57,20 +60,20 @@ public enum MiddlewareType {
 				retmap.put("common.es.cluster.userName", String.valueOf(commonMiddleware.getUsername()));
 				retmap.put("common.es.cluster.password", String.valueOf(commonMiddleware.getPassword()));
 			}
-			Map<String, Object> map = JSONUtil.jsonToMap(opt, this.pre);
-			retmap.putAll(map);
-			// retmap.put("common.es.cluster.name",
-			// opt.getString(ConfigItem.middleware_es_cluster_name));//
-			// common.es.cluster.name
 			break;
 		case mysql:
-			retmap.put(String.format("common.jdbc.datasource.%s.host", commonMiddleware.getId()),
-					commonMiddleware.getHost());
-			retmap.put(String.format("common.jdbc.datasource.%s.port", commonMiddleware.getId()),
+			retmap.put(String.format("%s%s.host", this.pre, commonMiddleware.getId()), commonMiddleware.getHost());
+			retmap.put(String.format("%s%s.port", this.pre, commonMiddleware.getId()),
 					String.valueOf(commonMiddleware.getPort()));
+			retmap.put(String.format("%s%s.username", this.pre, commonMiddleware.getId()),
+					String.valueOf(commonMiddleware.getUsername()));
+			retmap.put(String.format("%s%s.password", this.pre, commonMiddleware.getId()),
+					String.valueOf(commonMiddleware.getPassword()));
 		default:
 			break;
 		}
+		Map<String, Object> map = JSONUtil.jsonToMap(opt, this.pre);
+		retmap.putAll(map);
 		return retmap;
 	}
 
@@ -84,7 +87,9 @@ public enum MiddlewareType {
 		default:
 			break;
 		}
-		retmap.put("common.binlog.alone.binlog.global.busiPluginDir", verPluginByVersion[3]);
+		if (verPluginByVersion[3] != null) {
+			retmap.put("common.binlog.alone.binlog.global.busiPluginDir", verPluginByVersion[3]);
+		}
 		return retmap;
 	}
 

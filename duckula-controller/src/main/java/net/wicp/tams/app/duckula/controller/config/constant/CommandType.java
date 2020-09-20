@@ -9,6 +9,9 @@ import com.alibaba.fastjson.JSONObject;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonTask;
 import net.wicp.tams.common.apiext.CollectionUtil;
 import net.wicp.tams.common.apiext.StringUtil;
+import net.wicp.tams.common.binlog.alone.binlog.bean.Rule;
+import net.wicp.tams.common.binlog.alone.binlog.bean.RuleItem;
+import net.wicp.tams.common.binlog.alone.binlog.bean.RuleManager;
 
 /***
  * 3种运行模式
@@ -39,6 +42,7 @@ public enum CommandType {
 		retmap.put("common.binlog.alone.binlog.global." + commonTask.getBufferType() + ".sendNum",
 				commonTask.getSendnum());
 		retmap.put("common.binlog.alone.binlog.global.chk", commonTask.getCheckpoint());
+
 		if ("mysql".equals(commonTask.getCheckpoint())) {// TODO 加上mysql的配置
 
 		}
@@ -48,11 +52,19 @@ public enum CommandType {
 		retmap.put("common.binlog.alone.binlog.global.conf.haType", commonTask.getHaType());
 		retmap.put("common.binlog.alone.binlog.global.conf.pos.gtids", commonTask.getGtids());
 
+		RuleManager ruleManager = new RuleManager(commonTask.getRule());
+		for (Rule rule : ruleManager.getRules()) {
+			// 自定义规则，如果是mysql,则需把dbinstanceid指向中间件ID，而中间件会做编码，把common.binlog.alone.plugin.jdbc.${MiddlewareId}.targetmysql.host做好编码
+			// 配置了dbtb，表示是mysql目标中间件， 见MiddlewareType.proConfig()
+			if (rule.getItems().containsKey(RuleItem.dbtb)) {
+				rule.getItems().put(RuleItem.dbinstanceid, String.valueOf(commonTask.getMiddlewareId()));
+			}
+		}
 		// 规则，使用全局的监听器
-		retmap.put("common.binlog.alone.binlog.conf._global.rule", commonTask.getRule());
-		
-		//其它的配置,如auto.create.index
-		if(StringUtil.isNotNull(commonTask.getAttrConfig())) {
+		retmap.put("common.binlog.alone.binlog.conf._global.rule", ruleManager.toString());
+
+		// 其它的配置,如auto.create.index
+		if (StringUtil.isNotNull(commonTask.getAttrConfig())) {
 			JSONObject attrConfig = JSON.parseObject(commonTask.getAttrConfig());
 			for (String key : attrConfig.keySet()) {
 				retmap.put(key, attrConfig.getString(key));

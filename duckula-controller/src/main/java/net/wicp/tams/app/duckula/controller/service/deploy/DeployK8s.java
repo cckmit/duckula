@@ -97,7 +97,7 @@ public class DeployK8s implements IDeploy {
 	}
 
 	@Override
-	public void start(Long deployid, CommandType taskType, Long taskId,boolean isDebug) {
+	public void start(Long deployid, CommandType taskType, Long taskId, boolean isDebug) {
 		if (!checkExit(deployid, taskType, taskId).isSuc()) {
 			addConfig(deployid, taskType, taskId);
 		}
@@ -110,7 +110,7 @@ public class DeployK8s implements IDeploy {
 			params.put(ConfigItem.task_name, configName);
 			params.put(ConfigItem.task_version, selectTask.getVersion());
 			params.put(ConfigItem.task_debug, isDebug);
-			params.put(ConfigItem.configmap_name, taskType.formateConfigName(selectTask.getName()));			
+			params.put(ConfigItem.configmap_name, taskType.formateConfigName(selectTask.getName()));
 			break;
 		default:
 			break;
