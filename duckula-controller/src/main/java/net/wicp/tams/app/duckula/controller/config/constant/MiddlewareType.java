@@ -8,6 +8,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import net.wicp.tams.app.duckula.controller.bean.models.CommonMiddleware;
 import net.wicp.tams.common.apiext.CollectionUtil;
+import net.wicp.tams.common.apiext.StringUtil;
 import net.wicp.tams.common.apiext.json.JSONUtil;
 import net.wicp.tams.common.binlog.alone.binlog.bean.RuleItem;
 
@@ -24,13 +25,13 @@ public enum MiddlewareType {
 
 	manticore("manticore搜索", "", new String[][] { { "3.5" } }, new RuleItem[] {}),
 
-	cassandra("cassandra数据库",  "", new String[][] { { "3" } }, new RuleItem[] { RuleItem.ks, RuleItem.table }),
+	cassandra("cassandra数据库", "", new String[][] { { "3" } }, new RuleItem[] { RuleItem.ks, RuleItem.table }),
 
-	mysql("mysql数据库",  "", new String[][] { { "5.6" }, { "5.7" }, { "8.0" } }, new RuleItem[] { RuleItem.dbtb }),
+	mysql("mysql数据库", "", new String[][] { { "5.6" }, { "5.7" }, { "8.0" } }, new RuleItem[] { RuleItem.dbtb }),
 
-	kafka("kafka消息",  "", new String[][] { { "1.X" }, { "2.X" } }, new RuleItem[] { RuleItem.topic }),
+	kafka("kafka消息", "", new String[][] { { "1.X" }, { "2.X" } }, new RuleItem[] { RuleItem.topic }),
 
-	http("http服务器",  "", new String[][] { { "1.1" } }, new RuleItem[] { RuleItem.httpRela }),
+	http("http服务器", "", new String[][] { { "1.1" } }, new RuleItem[] { RuleItem.httpRela }),
 
 	;
 
@@ -52,6 +53,10 @@ public enum MiddlewareType {
 			retmap.put("common.es.host.name", commonMiddleware.getHost());
 			retmap.put("common.es.host.port.rest", String.valueOf(commonMiddleware.getPort()));
 			retmap.put("common.es.host.port.transport", String.valueOf(commonMiddleware.getPort2()));
+			if (StringUtil.isNotNull(commonMiddleware.getUsername())) {
+				retmap.put("common.es.cluster.userName", String.valueOf(commonMiddleware.getUsername()));
+				retmap.put("common.es.cluster.password", String.valueOf(commonMiddleware.getPassword()));
+			}
 			Map<String, Object> map = JSONUtil.jsonToMap(opt, this.pre);
 			retmap.putAll(map);
 			// retmap.put("common.es.cluster.name",
@@ -68,22 +73,20 @@ public enum MiddlewareType {
 		}
 		return retmap;
 	}
-	
-	public Map<String, Object> proPluginConfig(CommandType commandType,String version) {
-		Map<String, Object> retmap = new HashMap<String, Object>();		
-		String[] verPluginByVersion = getVerPluginByVersion(version);		
+
+	public Map<String, Object> proPluginConfig(CommandType commandType, String version) {
+		Map<String, Object> retmap = new HashMap<String, Object>();
+		String[] verPluginByVersion = getVerPluginByVersion(version);
 		switch (commandType) {
 		case task:
-			retmap.put("common.binlog.alone.binlog.global.conf.listener",
-					verPluginByVersion[1]);// 监听器
+			retmap.put("common.binlog.alone.binlog.global.conf.listener", verPluginByVersion[1]);// 监听器
 			break;
 		default:
 			break;
-		}		
-		retmap.put("common.binlog.alone.binlog.global.busiPluginDir",verPluginByVersion[3]);
-		return retmap;		
+		}
+		retmap.put("common.binlog.alone.binlog.global.busiPluginDir", verPluginByVersion[3]);
+		return retmap;
 	}
-		
 
 	public RuleItem[] getRuleItems() {
 		return ruleItems;
