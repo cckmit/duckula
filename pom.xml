@@ -15,7 +15,7 @@
 	<parent>
 		<groupId>net.wicp.tams</groupId>
 		<artifactId>parent</artifactId>
-		<version>49</version>
+		<version>50</version>
 	</parent>
 	<properties>
 		<java.version>1.8</java.version>
