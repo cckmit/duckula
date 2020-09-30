@@ -1,12 +1,17 @@
 package net.wicp.tams.app.duckula.controller.service.deploy;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+
 import io.kubernetes.client.openapi.models.V1ConfigMap;
+import net.wicp.tams.app.duckula.controller.bean.Host;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonInstance;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonMiddleware;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonTask;
@@ -19,6 +24,7 @@ import net.wicp.tams.app.duckula.controller.dao.CommonMiddlewareMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonTaskMapper;
 import net.wicp.tams.app.duckula.controller.service.K8sService;
 import net.wicp.tams.common.Result;
+import net.wicp.tams.common.apiext.CollectionUtil;
 
 /***
  * 服务名要与DeployType同名
@@ -111,6 +117,10 @@ public class DeployK8s implements IDeploy {
 			params.put(ConfigItem.task_version, selectTask.getVersion());
 			params.put(ConfigItem.task_debug, isDebug);
 			params.put(ConfigItem.configmap_name, taskType.formateConfigName(selectTask.getName()));
+			// 处理中间件的hosts
+			CommonMiddleware middleware = commonMiddlewareMapper.selectById(selectTask.getMiddlewareId());
+			List<Host> jsonToHosts = Host.jsonToHosts(middleware.getHostsconfig());
+			params.put(ConfigItem.task_hosts, jsonToHosts);
 			break;
 		default:
 			break;

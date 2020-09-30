@@ -5,6 +5,7 @@ public abstract class ConfigItem {
 	public static String task_name = "name";
 	public static String task_version = "version";
 	public static String task_debug="debug";
+	public static String task_hosts="hosts";
 	// 任务的配置名称
 	public static String configmap_name = "configmapname";
 	

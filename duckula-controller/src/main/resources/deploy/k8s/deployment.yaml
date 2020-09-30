@@ -25,7 +25,14 @@ spec:
         app.kubernetes.io/instance: rjzjh
     spec:
       restartPolicy: Always
-
+      hostAliases:
+      <#list hosts as host>
+      - ip: ${host.ip}
+        hostnames: 
+       <#list host.hostnames as hostname>
+        - ${hostname}
+       </#list>
+      </#list>
       initContainers:
       - name: pro-data
         image: 'registry.choerodon.xforceplus.com/rjzjh/duckula3:data.${version}'

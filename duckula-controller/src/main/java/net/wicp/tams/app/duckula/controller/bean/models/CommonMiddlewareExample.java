@@ -902,6 +902,76 @@ public class CommonMiddlewareExample {
 			return (Criteria) this;
 		}
 
+		public Criteria andHostsconfigIsNull() {
+			addCriterion("hostsconfig is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andHostsconfigIsNotNull() {
+			addCriterion("hostsconfig is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andHostsconfigEqualTo(String value) {
+			addCriterion("hostsconfig =", value, "hostsconfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andHostsconfigNotEqualTo(String value) {
+			addCriterion("hostsconfig <>", value, "hostsconfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andHostsconfigGreaterThan(String value) {
+			addCriterion("hostsconfig >", value, "hostsconfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andHostsconfigGreaterThanOrEqualTo(String value) {
+			addCriterion("hostsconfig >=", value, "hostsconfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andHostsconfigLessThan(String value) {
+			addCriterion("hostsconfig <", value, "hostsconfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andHostsconfigLessThanOrEqualTo(String value) {
+			addCriterion("hostsconfig <=", value, "hostsconfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andHostsconfigLike(String value) {
+			addCriterion("hostsconfig like", value, "hostsconfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andHostsconfigNotLike(String value) {
+			addCriterion("hostsconfig not like", value, "hostsconfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andHostsconfigIn(List<String> values) {
+			addCriterion("hostsconfig in", values, "hostsconfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andHostsconfigNotIn(List<String> values) {
+			addCriterion("hostsconfig not in", values, "hostsconfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andHostsconfigBetween(String value1, String value2) {
+			addCriterion("hostsconfig between", value1, value2, "hostsconfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andHostsconfigNotBetween(String value1, String value2) {
+			addCriterion("hostsconfig not between", value1, value2, "hostsconfig");
+			return (Criteria) this;
+		}
+
 		public Criteria andOptIsNull() {
 			addCriterion("opt is null");
 			return (Criteria) this;
