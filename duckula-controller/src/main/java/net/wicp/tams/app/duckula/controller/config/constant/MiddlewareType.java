@@ -32,7 +32,13 @@ public enum MiddlewareType {
 					"net.wicp.tams.common.binlog.plugin.jdbc.DumperJdbc", null } }, // null不需要插件
 			new RuleItem[] { RuleItem.dbinstanceid, RuleItem.dbtb }),
 
-	kafka("kafka消息", "", new String[][] { { "1.X" }, { "2.X" } }, new RuleItem[] { RuleItem.topic }),
+	kafka("kafka消息", "common.kafka.",
+			new String[][] {
+					{ "1.X", "net.wicp.tams.common.kafka.plugin.ListenerKafka", null,
+							"env:DUCKULA3_DATA:/plugins/duckula-plugin-kafka" },
+					{ "2.X", "net.wicp.tams.common.kafka.plugin.ListenerKafka", null,
+							"env:DUCKULA3_DATA:/plugins/duckula-plugin-kafka" } },
+			new RuleItem[] { RuleItem.topic }),
 
 	http("http服务器", "", new String[][] { { "1.1" } }, new RuleItem[] { RuleItem.httpRela }),
 
@@ -69,6 +75,15 @@ public enum MiddlewareType {
 					String.valueOf(commonMiddleware.getUsername()));
 			retmap.put(String.format("%s%s.password", this.pre, commonMiddleware.getId()),
 					String.valueOf(commonMiddleware.getPassword()));
+			break;
+		case kafka:
+			String[] hosts = commonMiddleware.getHost().split(",");
+			StringBuffer buff = new StringBuffer();
+			for (int i = 0; i < hosts.length; i++) {
+				buff.append(String.format("%s:%s,", hosts[i], commonMiddleware.getPort()));
+			}
+			retmap.put(String.format("%scommon.bootstrap.servers", this.pre), buff.substring(0, buff.length() - 1));
+			break;
 		default:
 			break;
 		}

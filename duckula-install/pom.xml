@@ -27,6 +27,7 @@
 								<param>duckula-plugin-es6</param>
 								<param>duckula-plugin-es7</param>
 								<param>duckula-plugin-http</param>
+								<param>duckula-plugin-kafka</param>
 							</plugs>
 						</configuration>
 					</execution>

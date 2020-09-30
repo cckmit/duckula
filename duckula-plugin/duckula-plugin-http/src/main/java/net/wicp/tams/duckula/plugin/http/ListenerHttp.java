@@ -19,7 +19,7 @@ public class ListenerHttp extends AbsBinlogListener {
 	}
 
 	@Override
-	public void doBusiTrue(Rule rule, DuckulaEvent duckulaEvent) {
+	public void doBusiTrue(Rule rule, DuckulaEvent duckulaEvent, boolean isSplit) {
 		JSONObject data = DuckulaAssit.convertJson(duckulaEvent);
 		HttpPluginAssit.sendMsg(HttpClient.packurl(rule.getItems().get(RuleItem.httpRela)), data);
 	}
