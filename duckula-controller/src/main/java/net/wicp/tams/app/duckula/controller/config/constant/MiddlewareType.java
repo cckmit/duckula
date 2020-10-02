@@ -40,7 +40,11 @@ public enum MiddlewareType {
 							"env:DUCKULA3_DATA:/plugins/duckula-plugin-kafka" } },
 			new RuleItem[] { RuleItem.topic }),
 
-	http("http服务器", "", new String[][] { { "1.1" } }, new RuleItem[] { RuleItem.httpRela }),
+	http("http服务器", "common.http.",
+			new String[][] { { "1.1", "net.wicp.tams.duckula.plugin.http.ListenerHttp",
+					"net.wicp.tams.duckula.plugin.http.DumperHttp",
+					"env:DUCKULA3_DATA:/plugins/duckula-plugin-http" } },
+			new RuleItem[] { RuleItem.httpRela }),
 
 	;
 
@@ -83,6 +87,10 @@ public enum MiddlewareType {
 				buff.append(String.format("%s:%s,", hosts[i], commonMiddleware.getPort()));
 			}
 			retmap.put(String.format("%scommon.bootstrap.servers", this.pre), buff.substring(0, buff.length() - 1));
+			break;
+		case http:
+			retmap.put(String.format("%s.host", this.pre), commonMiddleware.getHost());
+			retmap.put(String.format("%s.port", this.pre), String.valueOf(commonMiddleware.getPort()));
 			break;
 		default:
 			break;

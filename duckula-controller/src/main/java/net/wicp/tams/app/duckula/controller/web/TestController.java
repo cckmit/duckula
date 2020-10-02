@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,17 +28,22 @@ public class TestController {
 
 	private Logger logger = LoggerFactory.getLogger(TestController.class);
 
-
+	/***
+	 * 测试http插件用的服务
+	 * 
+	 * @param body
+	 * @return
+	 */
 	@RequestMapping("exinfo")
-	String getInfo(){
-		logger.info("Start Get Info");
+	String getInfo(@RequestBody String body) {
+		logger.info("Start Get Info" + body);
 		return "bbb";
 	}
 
 	@RequestMapping("exconfig")
-	String getConfig(){
+	String getConfig() {
 		logger.info("Start Get Config");
 		return "aaa";
 	}
-	
+
 }
