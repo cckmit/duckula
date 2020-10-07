@@ -11,6 +11,7 @@
 		<module>duckula-install</module>
 		<module>duckula3-dump</module>
 		<module>duckula-controller</module>
+		<module>duckula-admin</module>
 	</modules>
 	<parent>
 		<groupId>net.wicp.tams</groupId>
