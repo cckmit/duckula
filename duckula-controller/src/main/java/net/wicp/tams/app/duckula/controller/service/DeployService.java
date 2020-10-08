@@ -9,15 +9,18 @@ import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonDeploy;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonTask;
+import net.wicp.tams.app.duckula.controller.bean.models.CommonVersion;
 import net.wicp.tams.app.duckula.controller.config.constant.CommandType;
 import net.wicp.tams.app.duckula.controller.config.constant.DeployType;
 import net.wicp.tams.app.duckula.controller.dao.CommonDeployMapper;
+import net.wicp.tams.app.duckula.controller.dao.CommonVersionMapper;
 import net.wicp.tams.app.duckula.controller.service.deploy.IDeploy;
 import net.wicp.tams.common.Result;
 import net.wicp.tams.common.apiext.IOUtil;
 import net.wicp.tams.common.apiext.StringUtil;
 import net.wicp.tams.common.beans.Host;
 import net.wicp.tams.common.constant.dic.YesOrNo;
+import net.wicp.tams.common.exception.ExceptAll;
 import net.wicp.tams.common.exception.ProjectException;
 import net.wicp.tams.common.os.SSHAssit;
 import net.wicp.tams.common.os.pool.SSHConnection;
@@ -28,6 +31,8 @@ import net.wicp.tams.common.spring.autoconfig.SpringAssit;
 public class DeployService {
 	@Autowired
 	private CommonDeployMapper commonDeployMapper;
+	@Autowired
+	private CommonVersionMapper commonVersionMapper;
 
 	public void deployTask(CommonTask commonTask) {
 		CommonDeploy commonDeploy = commonDeployMapper.selectById(commonTask.getDeployId());
@@ -90,4 +95,35 @@ public class DeployService {
 		return executeCommand;
 
 	}
+
+	public Result upgradeVersion(CommonDeploy commonDeploy, CommonVersion commonVersionNew) {
+		DeployType deployType = DeployType.valueOf(commonDeploy.getDeploy());
+		if (deployType == DeployType.k8s) {
+			return Result.getError("k8s类型不需要升级版本");
+		}
+		CommonVersion commonVersionOld = commonVersionMapper.selectById(commonDeploy.getVersion());
+		if (commonVersionOld != null) {
+			String[] newVersion = commonVersionNew.getMainVersion().split(".");
+			String[] oldVersion = commonVersionOld.getMainVersion().split(".");
+			if (Integer.parseInt(oldVersion[1]) > Integer.parseInt(newVersion[1])
+					|| Integer.parseInt(oldVersion[2]) > Integer.parseInt(newVersion[2])
+					|| Integer.parseInt(oldVersion[3]) >= Integer.parseInt(newVersion[3])) {
+				return Result.getError("新版本小于当前版本，无需更新");
+			}
+		}
+		switch (deployType) {
+		case docker:
+			// 更新data
+		case host:
+			// 更新main
+			break;
+
+		default:
+			break;
+		}
+		commonDeploy.setVersion(commonVersionNew.getId());
+		commonDeployMapper.updateById(commonDeploy);
+		return Result.getSuc();
+	}
+
 }

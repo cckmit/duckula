@@ -170,6 +170,11 @@
 			<groupId>net.wicp.tams</groupId>
 			<artifactId>common-os</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>net.wicp.tams</groupId>
+			<artifactId>common-aws</artifactId>
+			<version>3.6.13</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>demo-tams-springbootsimple</finalName>

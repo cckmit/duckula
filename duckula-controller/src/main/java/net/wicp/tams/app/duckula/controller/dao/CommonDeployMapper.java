@@ -40,14 +40,14 @@ public interface CommonDeployMapper extends BaseMapper<CommonDeploy> {
 	 * @mbg.generated
 	 */
 	@Insert({ "insert into common_deploy (id, name, ", "deploy, env, namespace, ", "url, token, user_id, ",
-			"host, port, pwd_duckula, ", "hostsconfig, is_init, ", "is_default, imagegroup, ", "remark, config)",
-			"values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, ",
+			"host, port, pwd_duckula, ", "hostsconfig, is_init, ", "is_default, imagegroup, ", "version, remark, ",
+			"config)", "values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, ",
 			"#{deploy,jdbcType=VARCHAR}, #{env,jdbcType=VARCHAR}, #{namespace,jdbcType=VARCHAR}, ",
 			"#{url,jdbcType=VARCHAR}, #{token,jdbcType=VARCHAR}, #{userId,jdbcType=BIGINT}, ",
 			"#{host,jdbcType=VARCHAR}, #{port,jdbcType=INTEGER}, #{pwdDuckula,jdbcType=VARCHAR}, ",
 			"#{hostsconfig,jdbcType=VARCHAR}, #{isInit,jdbcType=VARCHAR}, ",
 			"#{isDefault,jdbcType=VARCHAR}, #{imagegroup,jdbcType=VARCHAR}, ",
-			"#{remark,jdbcType=VARCHAR}, #{config,jdbcType=LONGVARCHAR})" })
+			"#{version,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, ", "#{config,jdbcType=LONGVARCHAR})" })
 	int insert(CommonDeploy record);
 
 	/**
@@ -73,7 +73,7 @@ public interface CommonDeployMapper extends BaseMapper<CommonDeploy> {
 	 * @mbg.generated
 	 */
 	@Select({ "select", "id, name, deploy, env, namespace, url, token, user_id, host, port, pwd_duckula, ",
-			"hostsconfig, is_init, is_default, imagegroup, remark, config", "from common_deploy",
+			"hostsconfig, is_init, is_default, imagegroup, version, remark, config", "from common_deploy",
 			"where id = #{id,jdbcType=BIGINT}" })
 	@ResultMap("net.wicp.tams.app.duckula.controller.dao.CommonDeployMapper.ResultMapWithBLOBs")
 	CommonDeploy selectByPrimaryKey(Long id);
@@ -113,8 +113,8 @@ public interface CommonDeployMapper extends BaseMapper<CommonDeploy> {
 			"port = #{port,jdbcType=INTEGER},", "pwd_duckula = #{pwdDuckula,jdbcType=VARCHAR},",
 			"hostsconfig = #{hostsconfig,jdbcType=VARCHAR},", "is_init = #{isInit,jdbcType=VARCHAR},",
 			"is_default = #{isDefault,jdbcType=VARCHAR},", "imagegroup = #{imagegroup,jdbcType=VARCHAR},",
-			"remark = #{remark,jdbcType=VARCHAR},", "config = #{config,jdbcType=LONGVARCHAR}",
-			"where id = #{id,jdbcType=BIGINT}" })
+			"version = #{version,jdbcType=INTEGER},", "remark = #{remark,jdbcType=VARCHAR},",
+			"config = #{config,jdbcType=LONGVARCHAR}", "where id = #{id,jdbcType=BIGINT}" })
 	int updateByPrimaryKeyWithBLOBs(CommonDeploy record);
 
 	/**
@@ -128,6 +128,7 @@ public interface CommonDeployMapper extends BaseMapper<CommonDeploy> {
 			"port = #{port,jdbcType=INTEGER},", "pwd_duckula = #{pwdDuckula,jdbcType=VARCHAR},",
 			"hostsconfig = #{hostsconfig,jdbcType=VARCHAR},", "is_init = #{isInit,jdbcType=VARCHAR},",
 			"is_default = #{isDefault,jdbcType=VARCHAR},", "imagegroup = #{imagegroup,jdbcType=VARCHAR},",
-			"remark = #{remark,jdbcType=VARCHAR}", "where id = #{id,jdbcType=BIGINT}" })
+			"version = #{version,jdbcType=INTEGER},", "remark = #{remark,jdbcType=VARCHAR}",
+			"where id = #{id,jdbcType=BIGINT}" })
 	int updateByPrimaryKey(CommonDeploy record);
 }
