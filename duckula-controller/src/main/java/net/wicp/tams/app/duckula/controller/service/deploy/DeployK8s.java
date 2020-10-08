@@ -7,11 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-
 import io.kubernetes.client.openapi.models.V1ConfigMap;
-import net.wicp.tams.app.duckula.controller.bean.Host;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonInstance;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonMiddleware;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonTask;
@@ -24,7 +20,7 @@ import net.wicp.tams.app.duckula.controller.dao.CommonMiddlewareMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonTaskMapper;
 import net.wicp.tams.app.duckula.controller.service.K8sService;
 import net.wicp.tams.common.Result;
-import net.wicp.tams.common.apiext.CollectionUtil;
+import net.wicp.tams.common.beans.Host;
 
 /***
  * 服务名要与DeployType同名

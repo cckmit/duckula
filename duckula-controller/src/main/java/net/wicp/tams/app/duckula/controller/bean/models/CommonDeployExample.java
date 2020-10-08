@@ -642,6 +642,66 @@ public class CommonDeployExample {
 			return (Criteria) this;
 		}
 
+		public Criteria andUserIdIsNull() {
+			addCriterion("user_id is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserIdIsNotNull() {
+			addCriterion("user_id is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserIdEqualTo(Long value) {
+			addCriterion("user_id =", value, "userId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserIdNotEqualTo(Long value) {
+			addCriterion("user_id <>", value, "userId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserIdGreaterThan(Long value) {
+			addCriterion("user_id >", value, "userId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserIdGreaterThanOrEqualTo(Long value) {
+			addCriterion("user_id >=", value, "userId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserIdLessThan(Long value) {
+			addCriterion("user_id <", value, "userId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserIdLessThanOrEqualTo(Long value) {
+			addCriterion("user_id <=", value, "userId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserIdIn(List<Long> values) {
+			addCriterion("user_id in", values, "userId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserIdNotIn(List<Long> values) {
+			addCriterion("user_id not in", values, "userId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserIdBetween(Long value1, Long value2) {
+			addCriterion("user_id between", value1, value2, "userId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserIdNotBetween(Long value1, Long value2) {
+			addCriterion("user_id not between", value1, value2, "userId");
+			return (Criteria) this;
+		}
+
 		public Criteria andHostIsNull() {
 			addCriterion("host is null");
 			return (Criteria) this;
@@ -712,133 +772,273 @@ public class CommonDeployExample {
 			return (Criteria) this;
 		}
 
-		public Criteria andPwdIsNull() {
-			addCriterion("pwd is null");
+		public Criteria andPortIsNull() {
+			addCriterion("port is null");
 			return (Criteria) this;
 		}
 
-		public Criteria andPwdIsNotNull() {
-			addCriterion("pwd is not null");
+		public Criteria andPortIsNotNull() {
+			addCriterion("port is not null");
 			return (Criteria) this;
 		}
 
-		public Criteria andPwdEqualTo(String value) {
-			addCriterion("pwd =", value, "pwd");
+		public Criteria andPortEqualTo(Integer value) {
+			addCriterion("port =", value, "port");
 			return (Criteria) this;
 		}
 
-		public Criteria andPwdNotEqualTo(String value) {
-			addCriterion("pwd <>", value, "pwd");
+		public Criteria andPortNotEqualTo(Integer value) {
+			addCriterion("port <>", value, "port");
 			return (Criteria) this;
 		}
 
-		public Criteria andPwdGreaterThan(String value) {
-			addCriterion("pwd >", value, "pwd");
+		public Criteria andPortGreaterThan(Integer value) {
+			addCriterion("port >", value, "port");
 			return (Criteria) this;
 		}
 
-		public Criteria andPwdGreaterThanOrEqualTo(String value) {
-			addCriterion("pwd >=", value, "pwd");
+		public Criteria andPortGreaterThanOrEqualTo(Integer value) {
+			addCriterion("port >=", value, "port");
 			return (Criteria) this;
 		}
 
-		public Criteria andPwdLessThan(String value) {
-			addCriterion("pwd <", value, "pwd");
+		public Criteria andPortLessThan(Integer value) {
+			addCriterion("port <", value, "port");
 			return (Criteria) this;
 		}
 
-		public Criteria andPwdLessThanOrEqualTo(String value) {
-			addCriterion("pwd <=", value, "pwd");
+		public Criteria andPortLessThanOrEqualTo(Integer value) {
+			addCriterion("port <=", value, "port");
 			return (Criteria) this;
 		}
 
-		public Criteria andPwdLike(String value) {
-			addCriterion("pwd like", value, "pwd");
+		public Criteria andPortIn(List<Integer> values) {
+			addCriterion("port in", values, "port");
 			return (Criteria) this;
 		}
 
-		public Criteria andPwdNotLike(String value) {
-			addCriterion("pwd not like", value, "pwd");
+		public Criteria andPortNotIn(List<Integer> values) {
+			addCriterion("port not in", values, "port");
 			return (Criteria) this;
 		}
 
-		public Criteria andPwdIn(List<String> values) {
-			addCriterion("pwd in", values, "pwd");
+		public Criteria andPortBetween(Integer value1, Integer value2) {
+			addCriterion("port between", value1, value2, "port");
 			return (Criteria) this;
 		}
 
-		public Criteria andPwdNotIn(List<String> values) {
-			addCriterion("pwd not in", values, "pwd");
+		public Criteria andPortNotBetween(Integer value1, Integer value2) {
+			addCriterion("port not between", value1, value2, "port");
 			return (Criteria) this;
 		}
 
-		public Criteria andPwdBetween(String value1, String value2) {
-			addCriterion("pwd between", value1, value2, "pwd");
+		public Criteria andPwdDuckulaIsNull() {
+			addCriterion("pwd_duckula is null");
 			return (Criteria) this;
 		}
 
-		public Criteria andPwdNotBetween(String value1, String value2) {
-			addCriterion("pwd not between", value1, value2, "pwd");
+		public Criteria andPwdDuckulaIsNotNull() {
+			addCriterion("pwd_duckula is not null");
 			return (Criteria) this;
 		}
 
-		public Criteria andUserIdIsNull() {
-			addCriterion("user_id is null");
+		public Criteria andPwdDuckulaEqualTo(String value) {
+			addCriterion("pwd_duckula =", value, "pwdDuckula");
 			return (Criteria) this;
 		}
 
-		public Criteria andUserIdIsNotNull() {
-			addCriterion("user_id is not null");
+		public Criteria andPwdDuckulaNotEqualTo(String value) {
+			addCriterion("pwd_duckula <>", value, "pwdDuckula");
 			return (Criteria) this;
 		}
 
-		public Criteria andUserIdEqualTo(Long value) {
-			addCriterion("user_id =", value, "userId");
+		public Criteria andPwdDuckulaGreaterThan(String value) {
+			addCriterion("pwd_duckula >", value, "pwdDuckula");
 			return (Criteria) this;
 		}
 
-		public Criteria andUserIdNotEqualTo(Long value) {
-			addCriterion("user_id <>", value, "userId");
+		public Criteria andPwdDuckulaGreaterThanOrEqualTo(String value) {
+			addCriterion("pwd_duckula >=", value, "pwdDuckula");
 			return (Criteria) this;
 		}
 
-		public Criteria andUserIdGreaterThan(Long value) {
-			addCriterion("user_id >", value, "userId");
+		public Criteria andPwdDuckulaLessThan(String value) {
+			addCriterion("pwd_duckula <", value, "pwdDuckula");
 			return (Criteria) this;
 		}
 
-		public Criteria andUserIdGreaterThanOrEqualTo(Long value) {
-			addCriterion("user_id >=", value, "userId");
+		public Criteria andPwdDuckulaLessThanOrEqualTo(String value) {
+			addCriterion("pwd_duckula <=", value, "pwdDuckula");
 			return (Criteria) this;
 		}
 
-		public Criteria andUserIdLessThan(Long value) {
-			addCriterion("user_id <", value, "userId");
+		public Criteria andPwdDuckulaLike(String value) {
+			addCriterion("pwd_duckula like", value, "pwdDuckula");
 			return (Criteria) this;
 		}
 
-		public Criteria andUserIdLessThanOrEqualTo(Long value) {
-			addCriterion("user_id <=", value, "userId");
+		public Criteria andPwdDuckulaNotLike(String value) {
+			addCriterion("pwd_duckula not like", value, "pwdDuckula");
 			return (Criteria) this;
 		}
 
-		public Criteria andUserIdIn(List<Long> values) {
-			addCriterion("user_id in", values, "userId");
+		public Criteria andPwdDuckulaIn(List<String> values) {
+			addCriterion("pwd_duckula in", values, "pwdDuckula");
 			return (Criteria) this;
 		}
 
-		public Criteria andUserIdNotIn(List<Long> values) {
-			addCriterion("user_id not in", values, "userId");
+		public Criteria andPwdDuckulaNotIn(List<String> values) {
+			addCriterion("pwd_duckula not in", values, "pwdDuckula");
 			return (Criteria) this;
 		}
 
-		public Criteria andUserIdBetween(Long value1, Long value2) {
-			addCriterion("user_id between", value1, value2, "userId");
+		public Criteria andPwdDuckulaBetween(String value1, String value2) {
+			addCriterion("pwd_duckula between", value1, value2, "pwdDuckula");
 			return (Criteria) this;
 		}
 
-		public Criteria andUserIdNotBetween(Long value1, Long value2) {
-			addCriterion("user_id not between", value1, value2, "userId");
+		public Criteria andPwdDuckulaNotBetween(String value1, String value2) {
+			addCriterion("pwd_duckula not between", value1, value2, "pwdDuckula");
+			return (Criteria) this;
+		}
+
+		public Criteria andHostsconfigIsNull() {
+			addCriterion("hostsconfig is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andHostsconfigIsNotNull() {
+			addCriterion("hostsconfig is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andHostsconfigEqualTo(String value) {
+			addCriterion("hostsconfig =", value, "hostsconfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andHostsconfigNotEqualTo(String value) {
+			addCriterion("hostsconfig <>", value, "hostsconfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andHostsconfigGreaterThan(String value) {
+			addCriterion("hostsconfig >", value, "hostsconfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andHostsconfigGreaterThanOrEqualTo(String value) {
+			addCriterion("hostsconfig >=", value, "hostsconfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andHostsconfigLessThan(String value) {
+			addCriterion("hostsconfig <", value, "hostsconfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andHostsconfigLessThanOrEqualTo(String value) {
+			addCriterion("hostsconfig <=", value, "hostsconfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andHostsconfigLike(String value) {
+			addCriterion("hostsconfig like", value, "hostsconfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andHostsconfigNotLike(String value) {
+			addCriterion("hostsconfig not like", value, "hostsconfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andHostsconfigIn(List<String> values) {
+			addCriterion("hostsconfig in", values, "hostsconfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andHostsconfigNotIn(List<String> values) {
+			addCriterion("hostsconfig not in", values, "hostsconfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andHostsconfigBetween(String value1, String value2) {
+			addCriterion("hostsconfig between", value1, value2, "hostsconfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andHostsconfigNotBetween(String value1, String value2) {
+			addCriterion("hostsconfig not between", value1, value2, "hostsconfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsInitIsNull() {
+			addCriterion("is_init is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsInitIsNotNull() {
+			addCriterion("is_init is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsInitEqualTo(String value) {
+			addCriterion("is_init =", value, "isInit");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsInitNotEqualTo(String value) {
+			addCriterion("is_init <>", value, "isInit");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsInitGreaterThan(String value) {
+			addCriterion("is_init >", value, "isInit");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsInitGreaterThanOrEqualTo(String value) {
+			addCriterion("is_init >=", value, "isInit");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsInitLessThan(String value) {
+			addCriterion("is_init <", value, "isInit");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsInitLessThanOrEqualTo(String value) {
+			addCriterion("is_init <=", value, "isInit");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsInitLike(String value) {
+			addCriterion("is_init like", value, "isInit");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsInitNotLike(String value) {
+			addCriterion("is_init not like", value, "isInit");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsInitIn(List<String> values) {
+			addCriterion("is_init in", values, "isInit");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsInitNotIn(List<String> values) {
+			addCriterion("is_init not in", values, "isInit");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsInitBetween(String value1, String value2) {
+			addCriterion("is_init between", value1, value2, "isInit");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsInitNotBetween(String value1, String value2) {
+			addCriterion("is_init not between", value1, value2, "isInit");
 			return (Criteria) this;
 		}
 
