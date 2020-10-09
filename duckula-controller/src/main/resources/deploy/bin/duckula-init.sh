@@ -76,7 +76,7 @@ init() {
     
     for path in \
 		 /opt/duckula \
-		 /opt/duckula/history \
+		 /opt/duckula-history \
 		 /data/duckula-data \
 		 /data/duckula-data/history \
 		 /data/duckula-data/logs  \

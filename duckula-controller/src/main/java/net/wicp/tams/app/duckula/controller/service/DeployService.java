@@ -136,12 +136,14 @@ public class DeployService {
 		// 2.复制文件
 		if (StringUtil.isNotNull(mainPath)) {
 			String fileName = mainPath.substring(mainPath.lastIndexOf("/") + 1);
-			conn.scp(mainPath, fileName, "~", "0744");
+			conn.scp(mainPath+".tar", fileName+".tar", "~", "0744");
 			// 3.转移历史
-			// conn.executeCommand(" mv /data/duckula-data/plugins
-			// /data/duckula-data/aaa");//TODO 怎么读版本信息
+			//String version = BusiTools.getVersion(dataPath,"/duckula-data/plugins/readme.text");
+			if(commonVersionOld!=null&&StringUtil.isNotNull(commonVersionOld.getMainVersion())) {
+				conn.executeCommand("mv /opt/duckula/  /opt/duckula-history/"+commonVersionOld.getMainVersion());
+			}
 			// 4.解压
-			conn.tarX("~/" + fileName, "/data/duckula-data");
+			conn.tarX("~/" + fileName+".tar", "/opt");
 		}
 		if (StringUtil.isNotNull(dataPath)) {
 			String fileName = dataPath.substring(dataPath.lastIndexOf("/") + 1);
