@@ -293,6 +293,76 @@ public class CommonVersionExample {
 			return (Criteria) this;
 		}
 
+		public Criteria andMainPathIsNull() {
+			addCriterion("main_path is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andMainPathIsNotNull() {
+			addCriterion("main_path is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andMainPathEqualTo(String value) {
+			addCriterion("main_path =", value, "mainPath");
+			return (Criteria) this;
+		}
+
+		public Criteria andMainPathNotEqualTo(String value) {
+			addCriterion("main_path <>", value, "mainPath");
+			return (Criteria) this;
+		}
+
+		public Criteria andMainPathGreaterThan(String value) {
+			addCriterion("main_path >", value, "mainPath");
+			return (Criteria) this;
+		}
+
+		public Criteria andMainPathGreaterThanOrEqualTo(String value) {
+			addCriterion("main_path >=", value, "mainPath");
+			return (Criteria) this;
+		}
+
+		public Criteria andMainPathLessThan(String value) {
+			addCriterion("main_path <", value, "mainPath");
+			return (Criteria) this;
+		}
+
+		public Criteria andMainPathLessThanOrEqualTo(String value) {
+			addCriterion("main_path <=", value, "mainPath");
+			return (Criteria) this;
+		}
+
+		public Criteria andMainPathLike(String value) {
+			addCriterion("main_path like", value, "mainPath");
+			return (Criteria) this;
+		}
+
+		public Criteria andMainPathNotLike(String value) {
+			addCriterion("main_path not like", value, "mainPath");
+			return (Criteria) this;
+		}
+
+		public Criteria andMainPathIn(List<String> values) {
+			addCriterion("main_path in", values, "mainPath");
+			return (Criteria) this;
+		}
+
+		public Criteria andMainPathNotIn(List<String> values) {
+			addCriterion("main_path not in", values, "mainPath");
+			return (Criteria) this;
+		}
+
+		public Criteria andMainPathBetween(String value1, String value2) {
+			addCriterion("main_path between", value1, value2, "mainPath");
+			return (Criteria) this;
+		}
+
+		public Criteria andMainPathNotBetween(String value1, String value2) {
+			addCriterion("main_path not between", value1, value2, "mainPath");
+			return (Criteria) this;
+		}
+
 		public Criteria andDataVersionIsNull() {
 			addCriterion("data_version is null");
 			return (Criteria) this;
@@ -360,6 +430,76 @@ public class CommonVersionExample {
 
 		public Criteria andDataVersionNotBetween(String value1, String value2) {
 			addCriterion("data_version not between", value1, value2, "dataVersion");
+			return (Criteria) this;
+		}
+
+		public Criteria andDataPathIsNull() {
+			addCriterion("data_path is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andDataPathIsNotNull() {
+			addCriterion("data_path is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andDataPathEqualTo(String value) {
+			addCriterion("data_path =", value, "dataPath");
+			return (Criteria) this;
+		}
+
+		public Criteria andDataPathNotEqualTo(String value) {
+			addCriterion("data_path <>", value, "dataPath");
+			return (Criteria) this;
+		}
+
+		public Criteria andDataPathGreaterThan(String value) {
+			addCriterion("data_path >", value, "dataPath");
+			return (Criteria) this;
+		}
+
+		public Criteria andDataPathGreaterThanOrEqualTo(String value) {
+			addCriterion("data_path >=", value, "dataPath");
+			return (Criteria) this;
+		}
+
+		public Criteria andDataPathLessThan(String value) {
+			addCriterion("data_path <", value, "dataPath");
+			return (Criteria) this;
+		}
+
+		public Criteria andDataPathLessThanOrEqualTo(String value) {
+			addCriterion("data_path <=", value, "dataPath");
+			return (Criteria) this;
+		}
+
+		public Criteria andDataPathLike(String value) {
+			addCriterion("data_path like", value, "dataPath");
+			return (Criteria) this;
+		}
+
+		public Criteria andDataPathNotLike(String value) {
+			addCriterion("data_path not like", value, "dataPath");
+			return (Criteria) this;
+		}
+
+		public Criteria andDataPathIn(List<String> values) {
+			addCriterion("data_path in", values, "dataPath");
+			return (Criteria) this;
+		}
+
+		public Criteria andDataPathNotIn(List<String> values) {
+			addCriterion("data_path not in", values, "dataPath");
+			return (Criteria) this;
+		}
+
+		public Criteria andDataPathBetween(String value1, String value2) {
+			addCriterion("data_path between", value1, value2, "dataPath");
+			return (Criteria) this;
+		}
+
+		public Criteria andDataPathNotBetween(String value1, String value2) {
+			addCriterion("data_path not between", value1, value2, "dataPath");
 			return (Criteria) this;
 		}
 
@@ -560,286 +700,6 @@ public class CommonVersionExample {
 
 		public Criteria andReadmeNotBetween(String value1, String value2) {
 			addCriterion("readme not between", value1, value2, "readme");
-			return (Criteria) this;
-		}
-
-		public Criteria andStoreCloudIsNull() {
-			addCriterion("store_cloud is null");
-			return (Criteria) this;
-		}
-
-		public Criteria andStoreCloudIsNotNull() {
-			addCriterion("store_cloud is not null");
-			return (Criteria) this;
-		}
-
-		public Criteria andStoreCloudEqualTo(String value) {
-			addCriterion("store_cloud =", value, "storeCloud");
-			return (Criteria) this;
-		}
-
-		public Criteria andStoreCloudNotEqualTo(String value) {
-			addCriterion("store_cloud <>", value, "storeCloud");
-			return (Criteria) this;
-		}
-
-		public Criteria andStoreCloudGreaterThan(String value) {
-			addCriterion("store_cloud >", value, "storeCloud");
-			return (Criteria) this;
-		}
-
-		public Criteria andStoreCloudGreaterThanOrEqualTo(String value) {
-			addCriterion("store_cloud >=", value, "storeCloud");
-			return (Criteria) this;
-		}
-
-		public Criteria andStoreCloudLessThan(String value) {
-			addCriterion("store_cloud <", value, "storeCloud");
-			return (Criteria) this;
-		}
-
-		public Criteria andStoreCloudLessThanOrEqualTo(String value) {
-			addCriterion("store_cloud <=", value, "storeCloud");
-			return (Criteria) this;
-		}
-
-		public Criteria andStoreCloudLike(String value) {
-			addCriterion("store_cloud like", value, "storeCloud");
-			return (Criteria) this;
-		}
-
-		public Criteria andStoreCloudNotLike(String value) {
-			addCriterion("store_cloud not like", value, "storeCloud");
-			return (Criteria) this;
-		}
-
-		public Criteria andStoreCloudIn(List<String> values) {
-			addCriterion("store_cloud in", values, "storeCloud");
-			return (Criteria) this;
-		}
-
-		public Criteria andStoreCloudNotIn(List<String> values) {
-			addCriterion("store_cloud not in", values, "storeCloud");
-			return (Criteria) this;
-		}
-
-		public Criteria andStoreCloudBetween(String value1, String value2) {
-			addCriterion("store_cloud between", value1, value2, "storeCloud");
-			return (Criteria) this;
-		}
-
-		public Criteria andStoreCloudNotBetween(String value1, String value2) {
-			addCriterion("store_cloud not between", value1, value2, "storeCloud");
-			return (Criteria) this;
-		}
-
-		public Criteria andAccesskeyIsNull() {
-			addCriterion("accessKey is null");
-			return (Criteria) this;
-		}
-
-		public Criteria andAccesskeyIsNotNull() {
-			addCriterion("accessKey is not null");
-			return (Criteria) this;
-		}
-
-		public Criteria andAccesskeyEqualTo(String value) {
-			addCriterion("accessKey =", value, "accesskey");
-			return (Criteria) this;
-		}
-
-		public Criteria andAccesskeyNotEqualTo(String value) {
-			addCriterion("accessKey <>", value, "accesskey");
-			return (Criteria) this;
-		}
-
-		public Criteria andAccesskeyGreaterThan(String value) {
-			addCriterion("accessKey >", value, "accesskey");
-			return (Criteria) this;
-		}
-
-		public Criteria andAccesskeyGreaterThanOrEqualTo(String value) {
-			addCriterion("accessKey >=", value, "accesskey");
-			return (Criteria) this;
-		}
-
-		public Criteria andAccesskeyLessThan(String value) {
-			addCriterion("accessKey <", value, "accesskey");
-			return (Criteria) this;
-		}
-
-		public Criteria andAccesskeyLessThanOrEqualTo(String value) {
-			addCriterion("accessKey <=", value, "accesskey");
-			return (Criteria) this;
-		}
-
-		public Criteria andAccesskeyLike(String value) {
-			addCriterion("accessKey like", value, "accesskey");
-			return (Criteria) this;
-		}
-
-		public Criteria andAccesskeyNotLike(String value) {
-			addCriterion("accessKey not like", value, "accesskey");
-			return (Criteria) this;
-		}
-
-		public Criteria andAccesskeyIn(List<String> values) {
-			addCriterion("accessKey in", values, "accesskey");
-			return (Criteria) this;
-		}
-
-		public Criteria andAccesskeyNotIn(List<String> values) {
-			addCriterion("accessKey not in", values, "accesskey");
-			return (Criteria) this;
-		}
-
-		public Criteria andAccesskeyBetween(String value1, String value2) {
-			addCriterion("accessKey between", value1, value2, "accesskey");
-			return (Criteria) this;
-		}
-
-		public Criteria andAccesskeyNotBetween(String value1, String value2) {
-			addCriterion("accessKey not between", value1, value2, "accesskey");
-			return (Criteria) this;
-		}
-
-		public Criteria andSecretkeyIsNull() {
-			addCriterion("secretKey is null");
-			return (Criteria) this;
-		}
-
-		public Criteria andSecretkeyIsNotNull() {
-			addCriterion("secretKey is not null");
-			return (Criteria) this;
-		}
-
-		public Criteria andSecretkeyEqualTo(String value) {
-			addCriterion("secretKey =", value, "secretkey");
-			return (Criteria) this;
-		}
-
-		public Criteria andSecretkeyNotEqualTo(String value) {
-			addCriterion("secretKey <>", value, "secretkey");
-			return (Criteria) this;
-		}
-
-		public Criteria andSecretkeyGreaterThan(String value) {
-			addCriterion("secretKey >", value, "secretkey");
-			return (Criteria) this;
-		}
-
-		public Criteria andSecretkeyGreaterThanOrEqualTo(String value) {
-			addCriterion("secretKey >=", value, "secretkey");
-			return (Criteria) this;
-		}
-
-		public Criteria andSecretkeyLessThan(String value) {
-			addCriterion("secretKey <", value, "secretkey");
-			return (Criteria) this;
-		}
-
-		public Criteria andSecretkeyLessThanOrEqualTo(String value) {
-			addCriterion("secretKey <=", value, "secretkey");
-			return (Criteria) this;
-		}
-
-		public Criteria andSecretkeyLike(String value) {
-			addCriterion("secretKey like", value, "secretkey");
-			return (Criteria) this;
-		}
-
-		public Criteria andSecretkeyNotLike(String value) {
-			addCriterion("secretKey not like", value, "secretkey");
-			return (Criteria) this;
-		}
-
-		public Criteria andSecretkeyIn(List<String> values) {
-			addCriterion("secretKey in", values, "secretkey");
-			return (Criteria) this;
-		}
-
-		public Criteria andSecretkeyNotIn(List<String> values) {
-			addCriterion("secretKey not in", values, "secretkey");
-			return (Criteria) this;
-		}
-
-		public Criteria andSecretkeyBetween(String value1, String value2) {
-			addCriterion("secretKey between", value1, value2, "secretkey");
-			return (Criteria) this;
-		}
-
-		public Criteria andSecretkeyNotBetween(String value1, String value2) {
-			addCriterion("secretKey not between", value1, value2, "secretkey");
-			return (Criteria) this;
-		}
-
-		public Criteria andPathIsNull() {
-			addCriterion("path is null");
-			return (Criteria) this;
-		}
-
-		public Criteria andPathIsNotNull() {
-			addCriterion("path is not null");
-			return (Criteria) this;
-		}
-
-		public Criteria andPathEqualTo(String value) {
-			addCriterion("path =", value, "path");
-			return (Criteria) this;
-		}
-
-		public Criteria andPathNotEqualTo(String value) {
-			addCriterion("path <>", value, "path");
-			return (Criteria) this;
-		}
-
-		public Criteria andPathGreaterThan(String value) {
-			addCriterion("path >", value, "path");
-			return (Criteria) this;
-		}
-
-		public Criteria andPathGreaterThanOrEqualTo(String value) {
-			addCriterion("path >=", value, "path");
-			return (Criteria) this;
-		}
-
-		public Criteria andPathLessThan(String value) {
-			addCriterion("path <", value, "path");
-			return (Criteria) this;
-		}
-
-		public Criteria andPathLessThanOrEqualTo(String value) {
-			addCriterion("path <=", value, "path");
-			return (Criteria) this;
-		}
-
-		public Criteria andPathLike(String value) {
-			addCriterion("path like", value, "path");
-			return (Criteria) this;
-		}
-
-		public Criteria andPathNotLike(String value) {
-			addCriterion("path not like", value, "path");
-			return (Criteria) this;
-		}
-
-		public Criteria andPathIn(List<String> values) {
-			addCriterion("path in", values, "path");
-			return (Criteria) this;
-		}
-
-		public Criteria andPathNotIn(List<String> values) {
-			addCriterion("path not in", values, "path");
-			return (Criteria) this;
-		}
-
-		public Criteria andPathBetween(String value1, String value2) {
-			addCriterion("path between", value1, value2, "path");
-			return (Criteria) this;
-		}
-
-		public Criteria andPathNotBetween(String value1, String value2) {
-			addCriterion("path not between", value1, value2, "path");
 			return (Criteria) this;
 		}
 	}

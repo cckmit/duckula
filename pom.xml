@@ -22,7 +22,7 @@
 		<java.version>1.8</java.version>
 		<autoconfig.path>${user.home}/antx-config/${devModel}</autoconfig.path>
 		<common.apiext.version>3.6.14</common.apiext.version>
-		<common.aws.version>3.6.13</common.aws.version>
+		<common.aws.version>3.6.14</common.aws.version>
 		<common.kafka.version>3.6.14</common.kafka.version>
 		<common.connector.version>3.6.14</common.connector.version>
 		<common.http.version>3.6.14</common.http.version>

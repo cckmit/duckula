@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.2.3.RELEASE</version>
+		<version>2.2.3.RELEASE</version>	
 	</parent>
 
 	<properties>
@@ -19,6 +19,7 @@
 		<jetty.version>9.4.25.v20191220</jetty.version>
 		<spring-release-version>5.2.3.RELEASE</spring-release-version>
 		<spring-boot-version>2.2.3.RELEASE</spring-boot-version>
+		<fasterxml.version>2.10.2</fasterxml.version>
 	</properties>
 
 
@@ -173,7 +174,6 @@
 		<dependency>
 			<groupId>net.wicp.tams</groupId>
 			<artifactId>common-aws</artifactId>
-			<version>3.6.13</version>
 		</dependency>
 	</dependencies>
 	<build>

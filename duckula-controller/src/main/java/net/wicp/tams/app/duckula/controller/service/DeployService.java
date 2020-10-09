@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
+import net.wicp.tams.app.duckula.controller.BusiTools;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonDeploy;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonTask;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonVersion;
@@ -19,8 +20,8 @@ import net.wicp.tams.common.Result;
 import net.wicp.tams.common.apiext.IOUtil;
 import net.wicp.tams.common.apiext.StringUtil;
 import net.wicp.tams.common.beans.Host;
+import net.wicp.tams.common.constant.PathType;
 import net.wicp.tams.common.constant.dic.YesOrNo;
-import net.wicp.tams.common.exception.ExceptAll;
 import net.wicp.tams.common.exception.ProjectException;
 import net.wicp.tams.common.os.SSHAssit;
 import net.wicp.tams.common.os.pool.SSHConnection;
@@ -103,24 +104,57 @@ public class DeployService {
 		}
 		CommonVersion commonVersionOld = commonVersionMapper.selectById(commonDeploy.getVersion());
 		if (commonVersionOld != null) {
-			String[] newVersion = commonVersionNew.getMainVersion().split(".");
-			String[] oldVersion = commonVersionOld.getMainVersion().split(".");
+			String[] newVersion = commonVersionNew.getMainVersion().split("\\.");
+			String[] oldVersion = commonVersionOld.getMainVersion().split("\\.");
 			if (Integer.parseInt(oldVersion[1]) > Integer.parseInt(newVersion[1])
 					|| Integer.parseInt(oldVersion[2]) > Integer.parseInt(newVersion[2])
 					|| Integer.parseInt(oldVersion[3]) >= Integer.parseInt(newVersion[3])) {
 				return Result.getError("新版本小于当前版本，无需更新");
 			}
 		}
+		String mainPath = null, dataPath = null;
 		switch (deployType) {
 		case docker:
 			// 更新data
+			dataPath = PathType.getPath(commonVersionNew.getDataPath(),true);
 		case host:
 			// 更新main
+			mainPath = PathType.getPath(commonVersionNew.getMainPath(),true);
 			break;
-
 		default:
 			break;
 		}
+		// 1、使用duckula登陆
+		SSHConnection conn = null;
+		try {
+			conn = SSHAssit.getConn(commonDeploy.getHost(), commonDeploy.getPort(), "duckula",
+					commonDeploy.getPwdDuckula(), 0);
+		} catch (ProjectException e) {
+			log.error("连接服务器失败", e);
+			return Result.getError("连接服务器失败：" + e.getMessage());
+		}
+		// 2.复制文件
+		if (StringUtil.isNotNull(mainPath)) {
+			String fileName = mainPath.substring(mainPath.lastIndexOf("/") + 1);
+			conn.scp(mainPath, fileName, "~", "0744");
+			// 3.转移历史
+			// conn.executeCommand(" mv /data/duckula-data/plugins
+			// /data/duckula-data/aaa");//TODO 怎么读版本信息
+			// 4.解压
+			conn.tarX("~/" + fileName, "/data/duckula-data");
+		}
+		if (StringUtil.isNotNull(dataPath)) {
+			String fileName = dataPath.substring(dataPath.lastIndexOf("/") + 1);
+			conn.scp(dataPath+".tar", fileName+".tar", "~", "0744");
+			// 3.转移历史
+			//String version = BusiTools.getVersion(dataPath,"/duckula-data/plugins/readme.text");
+			if(commonVersionOld!=null&&StringUtil.isNotNull(commonVersionOld.getDataVersion())) {
+				conn.executeCommand("mv /data/duckula-data/plugins/  /data/duckula-data/history/"+commonVersionOld.getDataVersion());
+			}
+			// 4.解压
+			conn.tarX("~/" + fileName+".tar", "/data");
+		}
+		conn.close();
 		commonDeploy.setVersion(commonVersionNew.getId());
 		commonDeployMapper.updateById(commonDeploy);
 		return Result.getSuc();
