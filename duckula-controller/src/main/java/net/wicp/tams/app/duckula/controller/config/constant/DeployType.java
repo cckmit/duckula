@@ -3,6 +3,7 @@ package net.wicp.tams.app.duckula.controller.config.constant;
 import java.util.Map;
 
 import net.wicp.tams.common.apiext.CollectionUtil;
+import net.wicp.tams.common.constant.dic.intf.IEnumCombobox;
 
 /***
  * 3种运行模式
@@ -10,12 +11,12 @@ import net.wicp.tams.common.apiext.CollectionUtil;
  * @author Andy.zhou
  *
  */
-public enum DeployType {
-	k8s,
+public enum DeployType implements IEnumCombobox {
+	k8s("k8s环境"),
 
-	docker,
+	docker("docker环境"),
 
-	host;
+	host("centos7主机");
 
 	/****
 	 * 必须要英文
@@ -59,5 +60,29 @@ public enum DeployType {
 			break;
 		}
 		return propString;
+	}
+
+	private final String desc;
+
+	private DeployType(String desc) {
+		this.desc = desc;
+	}
+
+	public String getDesc() {
+		return desc;
+	}
+
+	public String getName() {
+		return this.name();
+	}
+
+	@Override
+	public String getDesc_zh() {
+		return this.desc;
+	}
+
+	@Override
+	public String getDesc_en() {
+		return this.name();
 	}
 }

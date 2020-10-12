@@ -12,6 +12,7 @@ import net.wicp.tams.common.apiext.StringUtil;
 import net.wicp.tams.common.binlog.alone.binlog.bean.Rule;
 import net.wicp.tams.common.binlog.alone.binlog.bean.RuleItem;
 import net.wicp.tams.common.binlog.alone.binlog.bean.RuleManager;
+import net.wicp.tams.common.constant.dic.intf.IEnumCombobox;
 
 /***
  * 3种运行模式
@@ -19,10 +20,10 @@ import net.wicp.tams.common.binlog.alone.binlog.bean.RuleManager;
  * @author Andy.zhou
  *
  */
-public enum CommandType {
-	task(new String[] {}, "t-%s"),
+public enum CommandType implements IEnumCombobox {
+	task("监听任务", new String[] {}, "t-%s"),
 
-	dump(new String[] {}, "d-%s");
+	dump("全量导入", new String[] {}, "d-%s");
 
 	// 默认配置
 	public final Map<String, Object> defaultconfig;
@@ -74,9 +75,10 @@ public enum CommandType {
 	}
 
 	@SuppressWarnings("unchecked")
-	private CommandType(String[] configs, String nameFormate) {
+	private CommandType(String desc, String[] configs, String nameFormate) {
 		this.defaultconfig = CollectionUtil.newMap(configs);
 		this.nameFormate = nameFormate;
+		this.desc = desc;
 	}
 
 	// 62是因为configmap有前缀有2位，而task前缀只有1位，这样可以取到相同的原taskname.
@@ -88,5 +90,25 @@ public enum CommandType {
 	public String formateConfigName(String taskName) {
 		String idstr = formateTaskName(taskName);
 		return "c" + idstr;
+	}
+
+	private final String desc;
+
+	public String getDesc() {
+		return desc;
+	}
+
+	public String getName() {
+		return this.name();
+	}
+
+	@Override
+	public String getDesc_zh() {
+		return this.desc;
+	}
+
+	@Override
+	public String getDesc_en() {
+		return this.name();
 	}
 }

@@ -11,8 +11,9 @@ import net.wicp.tams.common.apiext.CollectionUtil;
 import net.wicp.tams.common.apiext.StringUtil;
 import net.wicp.tams.common.apiext.json.JSONUtil;
 import net.wicp.tams.common.binlog.alone.binlog.bean.RuleItem;
+import net.wicp.tams.common.constant.dic.intf.IEnumCombobox;
 
-public enum MiddlewareType {
+public enum MiddlewareType implements IEnumCombobox{
 	es("es搜索", "common.es.",
 			new String[][] {
 					{ "5.X", "net.wicp.tams.common.es.plugin.ListenerEs5", "net.wicp.tams.common.es.plugin.DumperEs5",
@@ -48,7 +49,6 @@ public enum MiddlewareType {
 
 	;
 
-	private final String desc;
 
 	private final String[][] verPlugins;// 支持的版本,元素：0:版本 1：监听 2：全量 3:插件目录
 
@@ -137,14 +137,33 @@ public enum MiddlewareType {
 		return null;
 	}
 
-	public String getDesc() {
-		return desc;
-	}
-
+	
 	private MiddlewareType(String desc, String pre, String[][] verPlugins, RuleItem[] ruleItems) {
 		this.desc = desc;
 		this.pre = pre;
 		this.verPlugins = verPlugins;
 		this.ruleItems = CollectionUtil.arrayMerge(RuleItem[].class, ruleItems, commonItems);
+	}
+	
+	private final String desc;
+
+	
+
+	public String getDesc() {
+		return desc;
+	}
+
+	public String getName() {
+		return this.name();
+	}
+
+	@Override
+	public String getDesc_zh() {
+		return this.desc;
+	}
+
+	@Override
+	public String getDesc_en() {
+		return this.name();
 	}
 }
