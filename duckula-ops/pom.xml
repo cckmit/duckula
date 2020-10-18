@@ -13,7 +13,7 @@
     <name>duckula-ops Tapestry 5 Application</name>
 	<properties>
         <java.version>1.8</java.version>
-        <tapestry-version>5.6.0</tapestry-version>
+        <tapestry-version>5.6.1</tapestry-version>
         <tapestry-testify-version>1.0.4</tapestry-testify-version>
         <tapestry-xpath-version>1.0.1</tapestry-xpath-version>
         <jackson-version>2.9.6</jackson-version>
@@ -193,6 +193,11 @@
             <artifactId>javax.servlet-api</artifactId>
             <version>${servlet-api-version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+        	<groupId>net.wicp.tams</groupId>
+        	<artifactId>tams-component</artifactId>
+        	<version>1.2.6</version>
         </dependency>
     </dependencies>
 	<build>

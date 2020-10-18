@@ -34,7 +34,7 @@
                     </ul>
                     <span class="navbar-right">
                         <li>
-                            <t:pagelink page="login" class="btn btn-default navbar-btn">Sign in</t:pagelink>
+                            <t:pagelink page="login" class="btn btn-default navbar-btn">Signddd in</t:pagelink>
                         </li>
                     </span>
                 </div>
