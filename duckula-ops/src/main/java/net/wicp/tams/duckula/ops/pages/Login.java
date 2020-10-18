@@ -1,56 +1,47 @@
 package net.wicp.tams.duckula.ops.pages;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.tapestry5.alerts.AlertManager;
-import org.apache.tapestry5.annotations.InjectComponent;
+import org.apache.tapestry5.annotations.Import;
 import org.apache.tapestry5.annotations.Property;
-import org.apache.tapestry5.corelib.components.Form;
-import org.apache.tapestry5.corelib.components.PasswordField;
-import org.apache.tapestry5.corelib.components.TextField;
+import org.apache.tapestry5.annotations.SessionState;
 import org.apache.tapestry5.ioc.annotations.Inject;
+import org.apache.tapestry5.services.Request;
+import org.apache.tapestry5.util.TextStreamResponse;
+import org.slf4j.Logger;
 
-public class Login
-{
-    private static final Logger logger = LogManager.getLogger(Login.class);
+import net.wicp.tams.common.Result;
+import net.wicp.tams.common.apiext.StringUtil;
+import net.wicp.tams.common.constant.dic.YesOrNo;
+import net.wicp.tams.component.tools.TapestryAssist;
+import net.wicp.tams.duckula.ops.beans.SessionBean;
 
-    @Inject
-    private AlertManager alertManager;
+@Import(stack = "easyuistack")
+public class Login {
+	@Inject
+	private Logger logger;
 
-    @InjectComponent
-    private Form login;
+	@Inject
+	protected Request request;
 
-    @InjectComponent("email")
-    private TextField emailField;
+	@SessionState
+	private SessionBean sessionBean;
 
-    @InjectComponent("password")
-    private PasswordField passwordField;
+	@Property
+	@SessionState
+	private String namespace;
 
-    @Property
-    private String email;
+	public TextStreamResponse onLogin() {
+		String userName = request.getParameter("userName");
+		String pwd = request.getParameter("pwd");
+		if (StringUtil.isNull(userName) || StringUtil.isNull(pwd)) {
+			return TapestryAssist.getTextStreamResponse(Result.getError("请输入用户名和密码!"));
+		}
+		if (!"admin".equals(userName) || !"admin123".equals(pwd)) {
+			return TapestryAssist.getTextStreamResponse(Result.getError("用户名或密码错误!"));
+		}
+		sessionBean = new SessionBean();
+		sessionBean.setIsLogin(YesOrNo.yes);
+		namespace = "all";
+		return TapestryAssist.getTextStreamResponse(Result.getSuc());
+	}
 
-    @Property
-    private String password;
-
-    void onValidateFromLogin()
-    {
-        if (!email.equals("users@tapestry.apache.org"))
-            login.recordError(emailField, "Try with user: users@tapestry.apache.org");
-
-        if (!password.equals("Tapestry5"))
-            login.recordError(passwordField, "Try with password: Tapestry5");
-    }
-
-    Object onSuccessFromLogin()
-    {
-        logger.info("Login successful!");
-        alertManager.success("Welcome aboard!");
-        return Index.class;
-    }
-
-    void onFailureFromLogin()
-    {
-        logger.warn("Login error!");
-        alertManager.error("I'm sorry but I can't log you in!");
-    }
 }
