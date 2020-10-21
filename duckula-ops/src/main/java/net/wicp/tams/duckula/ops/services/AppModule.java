@@ -136,4 +136,8 @@ public class AppModule
 
         configuration.add("Timing", filter);
     }
+    
+    public static void contributeIgnoredPathsFilter(org.apache.tapestry5.ioc.Configuration<String> configuration) {
+		configuration.add("/connector");
+	}
 }

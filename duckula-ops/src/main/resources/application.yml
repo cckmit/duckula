@@ -22,5 +22,9 @@ spring:
     refresh:
       refreshable: none
 mybatis-plus:
-  mapper-locations: classpath:mybatis/primary/sqlmap/*.xml
+  mapper-locations: classpath:mybatis/primary/sqlmap/*.xml 
+#打印SQL日志
+logging:
+  level:
+    net.wicp.tams.app.duckula.controller.dao: DEBUG  
 
