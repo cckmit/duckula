@@ -1,15 +1,8 @@
+server:
+    port: 8080
 spring:
   application:
-    name: duckula-ops
-
-#会自动引入    
-common:
-  aws:
-    profile:
-      accessKey: AKIAPPWLYIDXUN6VJC5A
-      secretKey: Jb0Y903ZFOtlb4VaW2BK+2kE6nBtcxGE6DxMrIv4
-
-        
+    name: duckula-ops      
 # we support dev env config, and read them word by word if you want do it in your local machine
 # you can release below configuration if you want put your local service on consul as service provider
 # and isTagPrefer is conception of client-end, you can get special service from consul if you define

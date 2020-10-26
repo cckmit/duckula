@@ -10,7 +10,7 @@
 		<module>duckula-plugin</module>
 		<module>duckula-install</module>
 		<module>duckula3-dump</module>
-		<module>duckula-controller</module>
+		<module>duckula-ops</module>
 	</modules>
 	<parent>
 		<groupId>net.wicp.tams</groupId>
@@ -46,7 +46,7 @@
 		<common.binlog.alone.api.version>3.6.14</common.binlog.alone.api.version>
 		<common.flink.source.binlog.version>3.6.6</common.flink.source.binlog.version>
 		<common.flink.sink.influxdb.version>3.6.6</common.flink.sink.influxdb.version>
-		<common.spring.autoconfig.version>3.6.13</common.spring.autoconfig.version>
+		<common.spring.autoconfig.version>3.6.14</common.spring.autoconfig.version>
 
 		<tams.component>1.2.5</tams.component>
 		<!-- 与parent不同 -->

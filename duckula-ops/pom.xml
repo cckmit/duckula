@@ -304,10 +304,25 @@
 
 	</dependencies>
 	<build>
+		<finalName>duckula-ops</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<!-- 简单复制 -->
+			<plugin>
+				<groupId>net.wicp.tams</groupId>
+				<artifactId>ts-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>dkops</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>dkops3</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
