@@ -31,7 +31,7 @@ import net.wicp.tams.duckula.ops.beans.SessionBean;
 public class Index {
 
 	@Inject
-	@Path("context:/menu.properties")
+	@Path("menu.properties")
 	private Asset asset;
 
 	@SessionState

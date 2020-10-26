@@ -19,7 +19,7 @@
   <tr>
     <td><table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_welcome">
       <tr>
-        <td width="158" rowspan="2"><img src="${context:resource/images/welcome/wel_ico.jpg}" width="158" height="97" /></td>
+        <td width="158" rowspan="2"><img src="${asset:resource/images/welcome/wel_ico.jpg}" width="158" height="97" /></td>
         <td class="text_welcometitle">欢迎使用数据实时推送中间件duckula<a class="text_introduce_en">(V2.0.0)</a></td>
       </tr>
       <tr>
@@ -34,11 +34,11 @@
       <tr>
         <td width="50%" valign="top"><table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_introduce">
           <tr>
-            <td align="center"><img src="${context:resource/images/welcome/setting.jpg}" width="50" height="50" title="任务管理"/></td>
+            <td align="center"><img src="${asset:resource/images/welcome/setting.jpg}" width="50" height="50" title="任务管理"/></td>
             <td>配置binlog监听任务及任务所依赖信息</td>
           </tr>
           <tr>
-            <td width="19%" align="center"><img src="${context:resource/images/welcome/ma_b.png}" width="50" height="50" title="ES管理"/></td>
+            <td width="19%" align="center"><img src="${asset:resource/images/welcome/ma_b.png}" width="50" height="50" title="ES管理"/></td>
             <td width="81%">ES同步及相关监听任务</td>
           </tr>
           <tr>
@@ -48,7 +48,7 @@
         </table></td>
         <td width="50%" valign="top"><table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_introduce">
           <tr>
-            <td align="center"><img src="${context:resource/images/welcome/report_b.png}" width="50" height="50" title="监控"/></td>
+            <td align="center"><img src="${asset:resource/images/welcome/report_b.png}" width="50" height="50" title="监控"/></td>
             <td>各任务运行情况监控</td>
           </tr>
           <tr>

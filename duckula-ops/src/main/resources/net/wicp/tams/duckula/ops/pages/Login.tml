@@ -88,28 +88,28 @@
         <section class="top">
             <section class="logo">
                 <i>2</i>
-                <img src="${context:resource/images/login/logo_01.png}"  height="38"/>
+                <img src="${asset:resource/images/login/logo_01.png}"  height="38"/>
             </section>
             <section class="info">
-                <img src="${context:resource/images/login/logo_02.png}" height="44"/>
+                <img src="${asset:resource/images/login/logo_02.png}" height="44"/>
             </section>
         </section>
 
         <section class="main">
             <section class="pic">
-            <img src="${context:resource/images/login/pic_03.png}" height="300"/>
+            <img src="${asset:resource/images/login/pic_03.png}" height="300"/>
             </section>
             <section class="pic">
                 <form class="form-inline">
                     <div class="input-group">
                         <div class="input-group-prepend">
-                            <div class="input-group-text"><img style="padding-top:8px;"  src="${context:resource/images/login/use.png}" height="28"/></div>
+                            <div class="input-group-text"><img style="padding-top:8px;"  src="${asset:resource/images/login/use.png}" height="28"/></div>
                         </div>
                         <input id="username" type="text" class="form-control" name="name" placeholder="Username"/>
                     </div>
                     <div class="input-group">
                         <div class="input-group-prepend">
-                            <div class="input-group-text"><img style="padding-top:10px;" src="${context:resource/images/login/mima.png}"  height="24"/></div>
+                            <div class="input-group-text"><img style="padding-top:10px;" src="${asset:resource/images/login/mima.png}"  height="24"/></div>
                         </div>
                         <input id="password"  type="password" class="form-control" name="password" placeholder="password"/>
                     </div>
@@ -126,9 +126,9 @@
                 <div>Copyright © 2016-2019 Duckula. All rights reserved.</div>
                 <ul>
                     <li class="more">
-                        <div class="wei"><img src="${context:resource/images/login/weiLarge.png}" width="130"/></div>
-                        <img style="padding-top: 9px;" src="${context:resource/images/login/wei.png}" width="23"/></li>
-                    <li><img style="padding-top: 8px;" src="${context:resource/images/login/github.png}" width="20"/></li>
+                        <div class="wei"><img src="${asset:resource/images/login/weiLarge.png}" width="130"/></div>
+                        <img style="padding-top: 9px;" src="${asset:resource/images/login/wei.png}" width="23"/></li>
+                    <li><img style="padding-top: 8px;" src="${asset:resource/images/login/github.png}" width="20"/></li>
                 </ul>
             </div>
         </section>
