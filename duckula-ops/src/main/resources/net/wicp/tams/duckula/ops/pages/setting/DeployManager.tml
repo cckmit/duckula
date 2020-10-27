@@ -56,7 +56,7 @@
    
 <script>	
     function showopt(value,row,index){
-            var optCan=row.taskNum=='0'?false:true;
+            var optCan=false;//row.taskNum=='0'?false:true;
             var initCan=row.isInit=='yes'?false:true;
        	    var update= '<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit"  data-options="disabled:'+optCan+'"  style="margin-right:10px" onclick="_doUpdate('+index+') ">'+msg.update+'</a>';
        	    var deletebut= '<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" data-options="disabled:'+optCan+'" style="margin-right:10px" onclick="_doDelete('+index+') ">'+msg.delete_+'</a>'; 
