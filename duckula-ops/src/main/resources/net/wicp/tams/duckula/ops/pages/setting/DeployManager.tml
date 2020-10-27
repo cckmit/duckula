@@ -8,7 +8,7 @@
 <body>
    <r:query id="q"  qBlock="query" queryUrl="/setting/DeployManager:query"  uBlock="save"   saveUrl="/setting/DeployManager:save" deleteUrl="/setting/DeployManager:del" opFormatter="showopt" 
         columns="[[{field:'name',width:200,title:'发布名'},{field:'deploy',width:100,title:'发布类型'},{field:'env',width:100,title:'环境'},{field:'isInit',width:50,title:'是否初始化'},{field:'op',width:320,title:'操作'}]]" 
-        dialogStyle="width:800px;height:460px;" initAddHandle="initAdd" initSaveHandle="initUpdate"  pagination="false"/>
+        dialogStyle="width:800px;height:460px;" initAddHandle="initAdd" initSaveHandle="initUpdate"  pagination="true"/>
    <t:block id="query">
        <table class="frame_table_list_4">
 		 <tr>

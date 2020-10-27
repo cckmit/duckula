@@ -1,21 +1,21 @@
 package net.wicp.tams.duckula.ops.pages.setting;
 
-import java.util.List;
-
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.Request;
 import org.apache.tapestry5.services.RequestGlobals;
 import org.apache.tapestry5.util.TextStreamResponse;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+
 import lombok.extern.slf4j.Slf4j;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonDeploy;
-import net.wicp.tams.app.duckula.controller.bean.models.CommonDeployExample;
-import net.wicp.tams.app.duckula.controller.bean.models.CommonDeployExample.Criteria;
 import net.wicp.tams.app.duckula.controller.dao.CommonDeployMapper;
 import net.wicp.tams.common.Result;
 import net.wicp.tams.common.apiext.json.EasyUiAssist;
 import net.wicp.tams.component.services.IReq;
 import net.wicp.tams.component.tools.TapestryAssist;
+import net.wicp.tams.duckula.ops.WebTools;
 import net.wicp.tams.duckula.ops.ajax.IAjax;
 
 @Slf4j
@@ -35,11 +35,13 @@ public class DeployManager {
 	private CommonDeployMapper commonDeployMapper;
 
 	public TextStreamResponse onQuery() {
-		//ajax.req(key, params);		
-		CommonDeployExample commonDeployExample = new CommonDeployExample();
-		Criteria criteria = commonDeployExample.createCriteria();
-		List<CommonDeploy> allDeploys = commonDeployMapper.selectByExample(commonDeployExample);
-		String retstr = EasyUiAssist.getJsonForGridAlias(allDeploys, allDeploys.size());
+		// ajax.req(key, params);
+		QueryWrapper<CommonDeploy> queryWrapper = new QueryWrapper<CommonDeploy>();
+		Page<CommonDeploy> selectPage = commonDeployMapper.selectPage(WebTools.buildPage(request), queryWrapper);
+		String retstr = EasyUiAssist.getJsonForGrid(
+				selectPage.getRecords(), new String[] { "id", "name", "deploy", "env", "namespace", "host", "port",
+						"pwdDuckula", "isInit", "isDefault", "imagegroup", "version", "remark" },
+				selectPage.getTotal());
 		return TapestryAssist.getTextStreamResponse(retstr);
 	}
 
