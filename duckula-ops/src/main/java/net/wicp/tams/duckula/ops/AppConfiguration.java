@@ -1,6 +1,13 @@
 package net.wicp.tams.duckula.ops;
 
-import org.apache.tapestry5.TapestryFilter;
+import java.util.EnumSet;
+
+import javax.servlet.DispatcherType;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.SessionTrackingMode;
+
+import org.apache.tapestry5.spring.TapestrySpringFilter;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.server.ErrorPage;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
@@ -9,12 +16,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
-
-import javax.servlet.DispatcherType;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.SessionTrackingMode;
-import java.util.EnumSet;
 
 @Configuration
 @ComponentScan({ "net.wicp.tams.duckula.ops" })
@@ -31,9 +32,9 @@ public class AppConfiguration
                 servletContext.setInitParameter("tapestry.app-package", "net.wicp.tams.duckula.ops");
                 servletContext.setInitParameter("tapestry.development-modules", "net.wicp.tams.duckula.ops.services.DevelopmentModule");
                 servletContext.setInitParameter("tapestry.qa-modules", "com.foo.services.QaModule");
-                //servletContext.setInitParameter("tapestry.use-external-spring-context", "true");
-                servletContext.addFilter("app", TapestryFilter.class).addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.ERROR), false, "/*");
-                //servletContext.addFilter("app", TapestrySpringFilter.class).addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.ERROR), false, "/*");
+                servletContext.setInitParameter("tapestry.use-external-spring-context", "true");
+               // servletContext.addFilter("app", TapestryFilter.class).addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.ERROR), false, "/*");
+                servletContext.addFilter("app", TapestrySpringFilter.class).addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.ERROR), false, "/*");
                 servletContext.setSessionTrackingModes(EnumSet.of(SessionTrackingMode.COOKIE));
             }
         };

@@ -139,6 +139,12 @@
 			<version>${tapestry-version}</version>
 			<scope>compile</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.tapestry</groupId>
+			<artifactId>tapestry-spring</artifactId>
+			<version>${tapestry-version}</version>
+		</dependency>
+
 		<!-- Uncomment this to add support for hibernate, bean validation and file 
 			uploads -->
 		<!-- <dependency> <groupId>org.apache.tapestry</groupId> <artifactId>tapestry-hibernate</artifactId> 
@@ -302,6 +308,10 @@
 		</dependency>
 		<!--end mybatis plus -->
 
+		<dependency>
+			<groupId>net.wicp.tams</groupId>
+			<artifactId>common-http</artifactId>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>duckula-ops</finalName>

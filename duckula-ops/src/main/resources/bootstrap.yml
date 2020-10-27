@@ -1,8 +1,9 @@
 server:
-    port: 8080
+    port: 8085
+common.http.url.context: http://localhost:8085    
 spring:
   application:
-    name: duckula-ops      
+    name: duckula-ops
 # we support dev env config, and read them word by word if you want do it in your local machine
 # you can release below configuration if you want put your local service on consul as service provider
 # and isTagPrefer is conception of client-end, you can get special service from consul if you define
