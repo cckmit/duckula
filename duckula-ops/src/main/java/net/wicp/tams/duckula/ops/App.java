@@ -8,7 +8,6 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import net.wicp.tams.common.Conf;
 import net.wicp.tams.common.spring.autoconfig.annotation.EnableTams;
@@ -18,7 +17,6 @@ import net.wicp.tams.common.spring.autoconfig.annotation.EnableTams;
 @ImportResource("classpath:beanRefContext.xml")
 @MapperScan("net.wicp.tams.app.duckula.controller.dao")
 @EnableTams
-@EnableWebMvc
 public class App extends SpringBootServletInitializer {
 
 	@Override
