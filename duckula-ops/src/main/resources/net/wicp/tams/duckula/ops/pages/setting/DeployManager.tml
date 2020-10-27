@@ -7,7 +7,7 @@
 </head>
 <body>
    <r:query id="q"  qBlock="query" queryUrl="/setting/DeployManager:query"  uBlock="save"   saveUrl="/setting/DeployManager:save" deleteUrl="/setting/DeployManager:del" opFormatter="showopt" 
-        columns="[[{field:'name',width:200,title:'发布名'},{field:'deploy',width:100,title:'发布类型'},{field:'env',width:100,title:'环境'},{field:'isInit',width:50,title:'是否初始化'},{field:'op',width:320,title:'操作'}]]" 
+        columns="[[{field:'name',width:200,title:'发布名'},{field:'deploy',width:100,title:'发布类型'},{field:'env',width:100,title:'环境'},{field:'isInit2',width:70,title:'是否初始化'},{field:'version',width:50,title:'版本'},{field:'namespace',width:150,title:'名称空间'},{field:'host',width:120,title:'主机'},{field:'op',width:320,title:'操作'}]]" 
         dialogStyle="width:800px;height:460px;" initAddHandle="initAdd" initSaveHandle="initUpdate"  pagination="true"/>
    <t:block id="query">
        <table class="frame_table_list_4">
@@ -29,6 +29,7 @@
 			      <tr>
 			 	  	 <td class="frame_table_list_2_righttext">发布名</td>
 			 	     <td>
+			 	       <input type="hidden" name="id"/>
 			 	       <r:validatebox name="name" style="width:250px;" required="true"/>
 			 	     </td>
 			 	      <td class="frame_table_list_2_righttext">发布类型</td>
@@ -37,16 +38,45 @@
 			          </td>
 			      </tr>
 			      <tr>			      
-			      <td class="frame_table_list_2_righttext">环境</td>
+			         <td class="frame_table_list_2_righttext">环境</td>
 			         <td>
 			            <r:validatebox name="env" style="width:250px;" required="true"/>
-			            <input type="hidden" name="id"/>
+			            
 	                 </td>			        
-			 	  	 <td class="frame_table_list_2_righttext">锁IP</td>
+			 	  	 <td class="frame_table_list_2_righttext">备注</td>
 			 	     <td>
-			 	       <r:comboboxenum id="isInit_save"  name="isInit" enumClass="net.wicp.tams.common.constant.dic.YesOrNo" required="true"></r:comboboxenum>
-			 	     </td>
-			 	     
+			 	        <r:validatebox name="remark" style="width:250px;" required="false"/>
+			 	     </td>			 	     
+			      </tr>
+			      <tr>			      
+			         <td class="frame_table_list_2_righttext">镜像组</td>
+			         <td>
+			            <r:validatebox name="imagegroup" style="width:250px;" required="false"/>
+	                 </td>			        
+			 	  	 <td class="frame_table_list_2_righttext">版本</td>
+			 	     <td>
+			 	        <r:validatebox  id="version_save" name="version" style="width:250px;" required="false"/>
+			 	     </td>			 	     
+			      </tr>
+			      <tr>			      
+			         <td class="frame_table_list_2_righttext">主机</td>
+			         <td>
+			            <r:validatebox name="host" style="width:250px;" required="false"/>
+	                 </td>			        
+			 	  	 <td class="frame_table_list_2_righttext">端口</td>
+			 	     <td>
+			 	        <r:validatebox name="port" style="width:250px;" required="false"/>
+			 	     </td>			 	     
+			      </tr>
+			      <tr>			      
+			         <td class="frame_table_list_2_righttext">duckula密码</td>
+			         <td>
+			            <r:validatebox name="pwdDuckula" style="width:250px;" required="false" readonly="true"/>
+	                 </td>			        
+			 	  	 <td class="frame_table_list_2_righttext">是否初始化</td>
+			 	     <td>
+			 	        <r:comboboxenum  name="isInit" enumClass="net.wicp.tams.common.constant.dic.YesOrNo" required="false" readonly="true"></r:comboboxenum>
+			 	     </td>			 	     
 			      </tr>
 			      
 	 </table>
@@ -57,11 +87,22 @@
 <script>	
     function showopt(value,row,index){
             var optCan=false;//row.taskNum=='0'?false:true;
-            var initCan=row.isInit=='yes'?false:true;
+            var isK8s=row.deploy=='k8s'?true:false;
+            var initNot=row.isInit=='yes'?true:false;
        	    var update= '<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit"  data-options="disabled:'+optCan+'"  style="margin-right:10px" onclick="_doUpdate('+index+') ">'+msg.update+'</a>';
        	    var deletebut= '<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" data-options="disabled:'+optCan+'" style="margin-right:10px" onclick="_doDelete('+index+') ">'+msg.delete_+'</a>'; 
        	    var initbut='<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-role" data-options="disabled:false" style="margin-right:10px" onclick="initServer(\''+index+'\') ">初始化</a>';
-			return update+deletebut+initbut;
+       	    var upbut='<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" data-options="disabled:false" style="margin-right:10px" onclick="upServer(\''+index+'\') ">版本升级</a>';
+       	    if(or(isK8s,initNot)){
+       	       if(initNot){
+       	          return update+deletebut+upbut;
+       	       }else{
+       	          return update+deletebut;
+       	       }
+       	    }else{
+       	       return update+deletebut+initbut;
+       	    }
+			
      }
 
    function initAdd(){
@@ -69,6 +110,8 @@
    }
    function initUpdate(){
       //$('#ip2').textbox('readonly',true);
+      //$('#version_save').textbox('readonly',true);
+      
    }
 
    
@@ -92,6 +135,29 @@
            }
 		});
    }
+   
+   function upServer(index){
+       var row=getRow(index);
+       $.rjzjh.prompt('你要更新哪个版本？',function(versionNew){
+           versionNew=versionNew.replace(/^\s+|\s+$/g,"");
+           if(gt(versionNew.length,0)){
+               row.versionNew=versionNew;
+               $.messager.progress({
+			    	title:window.msg.hintwaiting,
+			    	msg:window.msg.hinthandling
+	            }); 
+               $.post($.rjzjh.packurl('/setting/DeployManager:upServer'),row,function(data){
+                 $.messager.progress('close');
+	             $.rjzjh.opt2(data,function(){
+	                $.rjzjh.alert("版本升级成功");
+				    jQuery('#q_grid').datagrid('reload');
+		         }); 
+		       },'json');
+           }
+		});
+   }
+   
+   
    
 
      
