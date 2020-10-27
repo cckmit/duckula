@@ -15,6 +15,7 @@ import net.wicp.tams.app.duckula.controller.dao.CommonDeployMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonVersionMapper;
 import net.wicp.tams.app.duckula.controller.service.DeployService;
 import net.wicp.tams.common.Result;
+import net.wicp.tams.common.apiext.StringUtil;
 import net.wicp.tams.common.apiext.json.EasyUiAssist;
 import net.wicp.tams.common.callback.IConvertValue;
 import net.wicp.tams.common.callback.impl.convertvalue.ConvertValueEnum;
@@ -45,7 +46,11 @@ public class DeployManager {
 
 	public TextStreamResponse onQuery() {
 		// ajax.req(key, params);
+		final CommonDeploy commonDeploy = TapestryAssist.getBeanFromPage(CommonDeploy.class, requestGlobals);
 		QueryWrapper<CommonDeploy> queryWrapper = new QueryWrapper<CommonDeploy>();
+		if(StringUtil.isNotNull(commonDeploy.getName())) {
+			queryWrapper.likeRight("name", commonDeploy.getName());
+		}
 		Page<CommonDeploy> selectPage = commonDeployMapper.selectPage(WebTools.buildPage(request), queryWrapper);
 		String retstr = EasyUiAssist.getJsonForGrid(selectPage.getRecords(),
 				new String[] { "id", "name", "deploy", "env", "namespace", "host", "port", "pwdDuckula", "isInit",
