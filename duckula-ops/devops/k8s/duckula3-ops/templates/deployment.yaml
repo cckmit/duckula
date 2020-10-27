@@ -3,8 +3,6 @@ kind: Deployment
 metadata:
   name: {{ include "duckula3-char.fullname" . }}
   labels:
-    appname: duckula-ops
-    version: 3.0.0
     {{- include "duckula3-char.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
@@ -18,34 +16,16 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       labels:
+        appname: duckula-ops
+        version: 3.0.0
         {{- include "duckula3-char.selectorLabels" . | nindent 8 }}
     spec:
-      initContainers:
-      - name: pro-data
-        image: '{{ .Values.image }}:{{ .Values.imageDataTag }}'
-        imagePullPolicy: IfNotPresent
-        volumeMounts:
-        - name: data
-          mountPath: /data/duckula-data
-      {{- if .Values.userconfig.root }}
-        - name: userconfig-root
-          mountPath: /opt/userconfig
-      {{- end }}
-      {{- if .Values.userconfig.es }}
-        - name: userconfig-es
-          mountPath: /opt/userconfig/es
-      {{- end }}   
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: '{{ .Values.image }}:{{ .Values.imageOpsTag | default .Chart.AppVersion }}'
           imagePullPolicy: IfNotPresent
-          args: [{{ .Values.cmd |quote }},"$(taskid)","2723"]
           ports:
           - name: jmx
             containerPort: 2723
@@ -53,6 +33,8 @@ spec:
             containerPort: 2780
           - name: debug
             containerPort: 2113
+          - name: http
+            containerPort: 8080
           livenessProbe:
             exec:
               command:

@@ -6,12 +6,8 @@ replicaCount: 1
 
 
 image: registry.choerodon.xforceplus.com/rjzjh/duckula3
-imageOpsTag: task.3.0.8
-imageDataTag: data.3.0.8
-#docker-run.sh docker-dump.sh
-cmd:  docker-run.sh
+imageOpsTag: ops.3.0.0
 
-imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
@@ -62,7 +58,7 @@ userconfig:
       spring.datasource.dynamic.strict=false
       spring.datasource.dynamic.datasource.master.url=jdbc:mysql://docker.for.win.localhost:3306/duckula?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
       spring.datasource.dynamic.datasource.master.username=root
-      spring.datasource.dynamic.datasource.master.password=mysql
+      spring.datasource.dynamic.datasource.master.password=mysql     
       spring.datasource.dynamic.datasource.master.driver-class-name=com.mysql.jdbc.Driver
       spring.cloud.refresh.refreshable=none
       mybatis-plus.mapper-locations=classpath:mybatis/primary/sqlmap/*.xml
