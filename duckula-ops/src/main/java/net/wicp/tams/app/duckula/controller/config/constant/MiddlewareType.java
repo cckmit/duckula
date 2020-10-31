@@ -136,6 +136,17 @@ public enum MiddlewareType implements IEnumCombobox{
 		}
 		return null;
 	}
+	/**
+	 * 得到插件的所有版本
+	 * @return
+	 */
+	public String[] getPluginVers() {
+		String[] retAry=new String[verPlugins.length];
+		for (int i = 0; i < retAry.length; i++) {
+			retAry[i]=verPlugins[i][0];
+		}
+		return retAry;
+	}
 
 	
 	private MiddlewareType(String desc, String pre, String[][] verPlugins, RuleItem[] ruleItems) {
