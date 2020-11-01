@@ -41,7 +41,7 @@ public enum CommandType implements IEnumCombobox {
 
 		retmap.put("common.binlog.alone.binlog.global.bufferType", commonTask.getBufferType());
 		retmap.put("common.binlog.alone.binlog.global." + commonTask.getBufferType() + ".sendNum",
-				commonTask.getSendnum());
+				commonTask.getSendNum());
 		retmap.put("common.binlog.alone.binlog.global.chk", commonTask.getCheckpoint());
 
 		if ("mysql".equals(commonTask.getCheckpoint())) {// TODO 加上mysql的配置

@@ -292,76 +292,6 @@ public class CommonTaskExample {
 			return (Criteria) this;
 		}
 
-		public Criteria andVersionIsNull() {
-			addCriterion("version is null");
-			return (Criteria) this;
-		}
-
-		public Criteria andVersionIsNotNull() {
-			addCriterion("version is not null");
-			return (Criteria) this;
-		}
-
-		public Criteria andVersionEqualTo(String value) {
-			addCriterion("version =", value, "version");
-			return (Criteria) this;
-		}
-
-		public Criteria andVersionNotEqualTo(String value) {
-			addCriterion("version <>", value, "version");
-			return (Criteria) this;
-		}
-
-		public Criteria andVersionGreaterThan(String value) {
-			addCriterion("version >", value, "version");
-			return (Criteria) this;
-		}
-
-		public Criteria andVersionGreaterThanOrEqualTo(String value) {
-			addCriterion("version >=", value, "version");
-			return (Criteria) this;
-		}
-
-		public Criteria andVersionLessThan(String value) {
-			addCriterion("version <", value, "version");
-			return (Criteria) this;
-		}
-
-		public Criteria andVersionLessThanOrEqualTo(String value) {
-			addCriterion("version <=", value, "version");
-			return (Criteria) this;
-		}
-
-		public Criteria andVersionLike(String value) {
-			addCriterion("version like", value, "version");
-			return (Criteria) this;
-		}
-
-		public Criteria andVersionNotLike(String value) {
-			addCriterion("version not like", value, "version");
-			return (Criteria) this;
-		}
-
-		public Criteria andVersionIn(List<String> values) {
-			addCriterion("version in", values, "version");
-			return (Criteria) this;
-		}
-
-		public Criteria andVersionNotIn(List<String> values) {
-			addCriterion("version not in", values, "version");
-			return (Criteria) this;
-		}
-
-		public Criteria andVersionBetween(String value1, String value2) {
-			addCriterion("version between", value1, value2, "version");
-			return (Criteria) this;
-		}
-
-		public Criteria andVersionNotBetween(String value1, String value2) {
-			addCriterion("version not between", value1, value2, "version");
-			return (Criteria) this;
-		}
-
 		public Criteria andBufferTypeIsNull() {
 			addCriterion("buffer_type is null");
 			return (Criteria) this;
@@ -432,63 +362,63 @@ public class CommonTaskExample {
 			return (Criteria) this;
 		}
 
-		public Criteria andSendnumIsNull() {
-			addCriterion("sendNum is null");
+		public Criteria andSendNumIsNull() {
+			addCriterion("send_num is null");
 			return (Criteria) this;
 		}
 
-		public Criteria andSendnumIsNotNull() {
-			addCriterion("sendNum is not null");
+		public Criteria andSendNumIsNotNull() {
+			addCriterion("send_num is not null");
 			return (Criteria) this;
 		}
 
-		public Criteria andSendnumEqualTo(Integer value) {
-			addCriterion("sendNum =", value, "sendnum");
+		public Criteria andSendNumEqualTo(Integer value) {
+			addCriterion("send_num =", value, "sendNum");
 			return (Criteria) this;
 		}
 
-		public Criteria andSendnumNotEqualTo(Integer value) {
-			addCriterion("sendNum <>", value, "sendnum");
+		public Criteria andSendNumNotEqualTo(Integer value) {
+			addCriterion("send_num <>", value, "sendNum");
 			return (Criteria) this;
 		}
 
-		public Criteria andSendnumGreaterThan(Integer value) {
-			addCriterion("sendNum >", value, "sendnum");
+		public Criteria andSendNumGreaterThan(Integer value) {
+			addCriterion("send_num >", value, "sendNum");
 			return (Criteria) this;
 		}
 
-		public Criteria andSendnumGreaterThanOrEqualTo(Integer value) {
-			addCriterion("sendNum >=", value, "sendnum");
+		public Criteria andSendNumGreaterThanOrEqualTo(Integer value) {
+			addCriterion("send_num >=", value, "sendNum");
 			return (Criteria) this;
 		}
 
-		public Criteria andSendnumLessThan(Integer value) {
-			addCriterion("sendNum <", value, "sendnum");
+		public Criteria andSendNumLessThan(Integer value) {
+			addCriterion("send_num <", value, "sendNum");
 			return (Criteria) this;
 		}
 
-		public Criteria andSendnumLessThanOrEqualTo(Integer value) {
-			addCriterion("sendNum <=", value, "sendnum");
+		public Criteria andSendNumLessThanOrEqualTo(Integer value) {
+			addCriterion("send_num <=", value, "sendNum");
 			return (Criteria) this;
 		}
 
-		public Criteria andSendnumIn(List<Integer> values) {
-			addCriterion("sendNum in", values, "sendnum");
+		public Criteria andSendNumIn(List<Integer> values) {
+			addCriterion("send_num in", values, "sendNum");
 			return (Criteria) this;
 		}
 
-		public Criteria andSendnumNotIn(List<Integer> values) {
-			addCriterion("sendNum not in", values, "sendnum");
+		public Criteria andSendNumNotIn(List<Integer> values) {
+			addCriterion("send_num not in", values, "sendNum");
 			return (Criteria) this;
 		}
 
-		public Criteria andSendnumBetween(Integer value1, Integer value2) {
-			addCriterion("sendNum between", value1, value2, "sendnum");
+		public Criteria andSendNumBetween(Integer value1, Integer value2) {
+			addCriterion("send_num between", value1, value2, "sendNum");
 			return (Criteria) this;
 		}
 
-		public Criteria andSendnumNotBetween(Integer value1, Integer value2) {
-			addCriterion("sendNum not between", value1, value2, "sendnum");
+		public Criteria andSendNumNotBetween(Integer value1, Integer value2) {
+			addCriterion("send_num not between", value1, value2, "sendNum");
 			return (Criteria) this;
 		}
 
@@ -559,6 +489,66 @@ public class CommonTaskExample {
 
 		public Criteria andRuleNotBetween(String value1, String value2) {
 			addCriterion("rule not between", value1, value2, "rule");
+			return (Criteria) this;
+		}
+
+		public Criteria andVersionIsNull() {
+			addCriterion("version is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andVersionIsNotNull() {
+			addCriterion("version is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andVersionEqualTo(Long value) {
+			addCriterion("version =", value, "version");
+			return (Criteria) this;
+		}
+
+		public Criteria andVersionNotEqualTo(Long value) {
+			addCriterion("version <>", value, "version");
+			return (Criteria) this;
+		}
+
+		public Criteria andVersionGreaterThan(Long value) {
+			addCriterion("version >", value, "version");
+			return (Criteria) this;
+		}
+
+		public Criteria andVersionGreaterThanOrEqualTo(Long value) {
+			addCriterion("version >=", value, "version");
+			return (Criteria) this;
+		}
+
+		public Criteria andVersionLessThan(Long value) {
+			addCriterion("version <", value, "version");
+			return (Criteria) this;
+		}
+
+		public Criteria andVersionLessThanOrEqualTo(Long value) {
+			addCriterion("version <=", value, "version");
+			return (Criteria) this;
+		}
+
+		public Criteria andVersionIn(List<Long> values) {
+			addCriterion("version in", values, "version");
+			return (Criteria) this;
+		}
+
+		public Criteria andVersionNotIn(List<Long> values) {
+			addCriterion("version not in", values, "version");
+			return (Criteria) this;
+		}
+
+		public Criteria andVersionBetween(Long value1, Long value2) {
+			addCriterion("version between", value1, value2, "version");
+			return (Criteria) this;
+		}
+
+		public Criteria andVersionNotBetween(Long value1, Long value2) {
+			addCriterion("version not between", value1, value2, "version");
 			return (Criteria) this;
 		}
 

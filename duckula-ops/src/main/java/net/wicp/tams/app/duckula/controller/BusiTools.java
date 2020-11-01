@@ -1,15 +1,23 @@
 package net.wicp.tams.app.duckula.controller;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
+import org.mvel2.templates.TemplateRuntime;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 import lombok.extern.slf4j.Slf4j;
+import net.wicp.tams.common.apiext.CollectionUtil;
 import net.wicp.tams.common.apiext.IOUtil;
 
 @Slf4j
 public abstract class BusiTools {
-	public static String getVersion(String dirPath,String relaPath) {
+	public static String getVersion(String dirPath, String relaPath) {
 		try {
 			String context = FileUtils.readFileToString(new File(IOUtil.mergeFolderAndFilePath(dirPath, relaPath)));
 			int indexOf = context.indexOf("\r\n");
@@ -19,5 +27,24 @@ public abstract class BusiTools {
 			log.error("解析tar文件失败", e);
 			return "last";
 		}
+	}
+
+
+	public static <T1, T2> Map<Integer, String> convertValues(List<T1> oriList, BaseMapper<T2> maper, String oriColName,
+			String colName) {
+		Set<String> ids = CollectionUtil.getColSetFromObj(oriList, oriColName);
+		List<T2> retListObj = maper.selectBatchIds(ids);
+		Map<Integer, String> retmap = new HashMap<Integer, String>();
+		for (T2 t2 : retListObj) {
+			
+			//@{'{"name":"'+name+'","id":"'+id+'",
+		//	String jsonTempStr = "@['{label:\"'+" + nameFiled + "+'\",value:\"'+"
+		//			+ codeFiled + "+'\",id:\"'+" + idName + "+'\"},']";
+		
+			String value = String.valueOf(TemplateRuntime.eval(String.format("@{id}~~~@{%s}",  colName), t2));
+			String[] tempAry = value.split("~~~");
+			retmap.put(Integer.parseInt(tempAry[0]), tempAry[1]);
+		}
+		return retmap;
 	}
 }
