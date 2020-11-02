@@ -1,12 +1,8 @@
 package net.wicp.tams.duckula.ops.pages.setting;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.Request;
 import org.apache.tapestry5.services.RequestGlobals;
@@ -47,9 +43,22 @@ public class MiddlewareManager {
 		if (StringUtil.isNotNull(commonMiddleware.getName())) {
 			queryWrapper.likeRight("name", commonMiddleware.getName());
 		}
-		Page<CommonMiddleware> selectPage = commonMiddlewareMapper.selectPage(WebTools.buildPage(request),
-				queryWrapper);
-		String retstr = EasyUiAssist.getJsonForGridAlias(selectPage.getRecords(), selectPage.getTotal());
+		
+		
+		String needpage = request.getParameter("needpage");
+		boolean isPage = StringUtil.isNotNull(needpage) && !Boolean.parseBoolean(needpage) ? false : true;
+		List<CommonMiddleware> selectList = null;
+		long size = 0;
+		if (isPage) {// 需要分页，默认
+			Page<CommonMiddleware> selectPage = commonMiddlewareMapper.selectPage(WebTools.buildPage(request),
+					queryWrapper);
+			selectList = selectPage.getRecords();
+			size = selectPage.getTotal();
+		} else {
+			selectList = commonMiddlewareMapper.selectList(queryWrapper);
+			size = selectList.size();
+		}
+		String retstr = EasyUiAssist.getJsonForGridAlias(selectList, size);
 		return TapestryAssist.getTextStreamResponse(retstr);
 	}
 

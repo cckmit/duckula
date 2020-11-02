@@ -31,17 +31,27 @@ public abstract class BusiTools {
 
 
 	public static <T1, T2> Map<Integer, String> convertValues(List<T1> oriList, BaseMapper<T2> maper, String oriColName,
-			String colName) {
+			String... colNames) {
 		Set<String> ids = CollectionUtil.getColSetFromObj(oriList, oriColName);
 		List<T2> retListObj = maper.selectBatchIds(ids);
 		Map<Integer, String> retmap = new HashMap<Integer, String>();
+		String tempstr="@{id}~~~";
+		
+		for (int i = 0; i < colNames.length; i++) {
+			if(i==0) {
+				tempstr+="@{"+colNames[i]+"}";
+			}else {
+				tempstr+="【@{"+colNames[i]+"}】";
+			}
+		}
+		
 		for (T2 t2 : retListObj) {
 			
 			//@{'{"name":"'+name+'","id":"'+id+'",
 		//	String jsonTempStr = "@['{label:\"'+" + nameFiled + "+'\",value:\"'+"
 		//			+ codeFiled + "+'\",id:\"'+" + idName + "+'\"},']";
 		
-			String value = String.valueOf(TemplateRuntime.eval(String.format("@{id}~~~@{%s}",  colName), t2));
+			String value = String.valueOf(TemplateRuntime.eval(tempstr, t2));
 			String[] tempAry = value.split("~~~");
 			retmap.put(Integer.parseInt(tempAry[0]), tempAry[1]);
 		}

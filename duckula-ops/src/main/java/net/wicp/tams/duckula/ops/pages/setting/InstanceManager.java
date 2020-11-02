@@ -1,5 +1,7 @@
 package net.wicp.tams.duckula.ops.pages.setting;
 
+import java.util.List;
+
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.Request;
 import org.apache.tapestry5.services.RequestGlobals;
@@ -37,8 +39,23 @@ public class InstanceManager {
 		if (StringUtil.isNotNull(commonInstance.getName())) {
 			queryWrapper.likeRight("name", commonInstance.getName());
 		}
-		Page<CommonInstance> selectPage = commonInstanceMapper.selectPage(WebTools.buildPage(request), queryWrapper);
-		String retstr = EasyUiAssist.getJsonForGridAlias(selectPage.getRecords(), selectPage.getTotal());
+		
+		
+		String needpage = request.getParameter("needpage");
+		boolean isPage = StringUtil.isNotNull(needpage) && !Boolean.parseBoolean(needpage) ? false : true;
+		
+		List<CommonInstance> selectList = null;
+		long size = 0;
+		if (isPage) {// 需要分页，默认
+			Page<CommonInstance> selectPage = commonInstanceMapper.selectPage(WebTools.buildPage(request), queryWrapper);
+			selectList = selectPage.getRecords();
+			size = selectPage.getTotal();
+		} else {
+			selectList = commonInstanceMapper.selectList(queryWrapper);
+			size = selectList.size();
+		}
+		
+		String retstr = EasyUiAssist.getJsonForGridAlias(selectList, size);
 		return TapestryAssist.getTextStreamResponse(retstr);
 	}
 

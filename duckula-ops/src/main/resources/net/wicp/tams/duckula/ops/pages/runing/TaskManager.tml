@@ -7,7 +7,7 @@
 </head>
 <body>
    <r:query id="q"  qBlock="query" queryUrl="/runing/TaskManager:query"  uBlock="save"   saveUrl="/runing/TaskManager:save" deleteUrl="/runing/TaskManager:del" opFormatter="showopt" 
-        columns="[[{field:'name',width:200,title:'监听任务名'},{field:'version1',width:200,title:'版本'},{field:'deployId1',width:150,title:'布署环境'},{field:'middlewareId1',width:150,title:'目的中间件'},{field:'instanceId1',width:100,title:'监听实例'},{field:'checkpoint1',width:150,title:'检查点'},{field:'op',width:320,title:'操作'}]]" 
+        columns="[[{field:'name',width:200,title:'监听任务名'},{field:'version1',width:200,title:'版本'},{field:'deployId1',width:150,title:'布署环境'},{field:'middlewareId1',width:150,title:'目的中间件'},{field:'instanceId1',width:350,title:'监听实例'},{field:'checkpoint1',width:150,title:'检查点'},{field:'op',width:320,title:'操作'}]]" 
         dialogStyle="width:800px;height:460px;" initAddHandle="initAdd" initSaveHandle="initUpdate"  pagination="true"/>
    <t:block id="query">
        <table class="frame_table_list_4">
@@ -34,33 +34,33 @@
 			 	     </td>
 			 	     <td class="frame_table_list_2_righttext">版本</td>
 			 	     <td>
-			 	        <r:validatebox name="version" style="width:250px;" required="true"/>
-			 	     </td>	
+			 	        <r:combogrid id="version_save" name="version"  columns="[[{field:'mainVersion',width:70,title:'主程序版本'},{field:'dataVersion',width:70,title:'数据版本'},{field:'updateTimeStr',width:150,title:'升级时间'},{field:'author',width:70,title:'作者'}]]" idfield="id" panelWidth="400" panelHeight="300" textfield="mainVersion" width="180" pagination="false" url="/setting/VersionManager:query?needpage=false"></r:combogrid>
+	                 </td>	
 			      </tr>
 			      <tr>	
-			 	      <td class="frame_table_list_2_righttext">布署环境</td>
-			         <td>
-			            <r:validatebox name="deployId" style="width:250px;" required="true"/>
-			          </td>		      
 			         <td class="frame_table_list_2_righttext">目的中间件</td>
 			         <td>
-			           <r:validatebox name="middlewareId" style="width:250px;" required="true"/>
-	                 </td>			 	  	 		 	     
+			           <r:combogrid id="middlewareId_save" name="middlewareId"  columns="[[{field:'name',width:100,title:'实例名'},{field:'middlewareType',width:70,title:'类型'},{field:'version',width:70,title:'版本'},{field:'host',width:250,title:'主机'},{field:'port',width:70,title:'端口'},{field:'username',width:70,title:'用户名'},{field:'remark',width:150,title:'备注'}]]" idfield="id" panelWidth="900" panelHeight="300" textfield="name" width="180" pagination="false" url="/setting/MiddlewareManager:query?needpage=false"></r:combogrid>
+			         </td>
+			 	      <td class="frame_table_list_2_righttext">布署环境</td>
+			         <td>
+			            <r:combogrid id="deployId_save" name="deployId"  columns="[[{field:'name',width:200,title:'发布名'},{field:'deploy',width:100,title:'发布类型'},{field:'env',width:100,title:'环境'},{field:'namespace',width:150,title:'名称空间'},{field:'host',width:120,title:'主机'}]]" idfield="id" panelWidth="700" panelHeight="300" textfield="name" width="180" pagination="false" url="/setting/DeployManager:query?needpage=false"></r:combogrid>
+			        </td>		 	  	 		 	     
 			      </tr>
 			      <tr>	
 			 	      <td class="frame_table_list_2_righttext">监听实例</td>
 			         <td>
-			            <r:validatebox name="instanceId" style="width:250px;" required="false"/>
-			          </td>		      
+			            <r:combogrid id="instanceId_save" name="instanceId"  columns="[[{field:'name',width:200,title:'实例名'},{field:'host',width:350,title:'主机'},{field:'port',width:70,title:'端口'},{field:'username',width:100,title:'用户名'}]]" idfield="id" panelWidth="750" panelHeight="700" textfield="name" width="180" pagination="false" url="/setting/InstanceManager:query?needpage=false"></r:combogrid>
+			         </td>		      
 			         <td class="frame_table_list_2_righttext">检查点</td>
 			         <td>
-			             <r:validatebox name="checkpoint" style="width:250px;" required="false"/>
+			             <r:combogrid id="checkpoint_save" name="checkpoint"  columns="[[{field:'name',width:200,title:'检查点名'},{field:'checkpointType',width:70,title:'检查点类型'},{field:'host',width:200,title:'主机'},{field:'port',width:60,title:'端口'},{field:'username',width:100,title:'用户名'}]]" idfield="id" panelWidth="700" panelHeight="700" textfield="name" width="180" pagination="false" url="/setting/CheckpointManager:query?needpage=false"></r:combogrid>
 			         </td>			 	  	 		 	     
 			      </tr>
 			      <tr>	
 			          <td class="frame_table_list_2_righttext">ha类型</td>
 			 	     <td>
-			 	        <r:validatebox name="haType" style="width:250px;" required="false"/>
+			 	        <r:comboboxenum id="haType_save"  name="haType" enumClass="net.wicp.tams.app.duckula.controller.config.constant.HaType" required="true" panelHeight="120" panelWidth="160" width="160"></r:comboboxenum>
 			 	     </td>			      
 			         <td class="frame_table_list_2_righttext">启动的gtid</td>
 			         <td>
@@ -83,8 +83,7 @@
             var optCan=false;
        	    var update= '<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit"  data-options="disabled:'+optCan+'"  style="margin-right:10px" onclick="_doUpdate('+index+') ">'+msg.update+'</a>';
        	    var deletebut= '<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" data-options="disabled:'+optCan+'" style="margin-right:10px" onclick="_doDelete('+index+') ">'+msg.delete_+'</a>'; 
-       	    return update+deletebut;
-			
+       	    return update+deletebut;			
      }
 
    function initAdd(){
@@ -95,12 +94,6 @@
       //$('#version_save').textbox('readonly',true);
       
    }
-
-   
-   
-   
-   
-
      
    function getRow(index){
      	 var rows = jQuery('#q_grid').datagrid('getRows');

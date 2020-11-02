@@ -1,5 +1,7 @@
 package net.wicp.tams.duckula.ops.pages.setting;
 
+import java.util.List;
+
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.Request;
 import org.apache.tapestry5.services.RequestGlobals;
@@ -37,8 +39,19 @@ public class CheckpointManager {
 		if (StringUtil.isNotNull(commonCheckpoint.getName())) {
 			queryWrapper.likeRight("name", commonCheckpoint.getName());
 		}
-		Page<CommonCheckpoint> selectPage = commonCheckpointMapper.selectPage(WebTools.buildPage(request), queryWrapper);
-		String retstr = EasyUiAssist.getJsonForGridAlias(selectPage.getRecords(), selectPage.getTotal());
+		String needpage = request.getParameter("needpage");
+		boolean isPage = StringUtil.isNotNull(needpage) && !Boolean.parseBoolean(needpage) ? false : true;
+		List<CommonCheckpoint> selectList = null;
+		long size = 0;
+		if (isPage) {// 需要分页，默认
+			Page<CommonCheckpoint> selectPage = commonCheckpointMapper.selectPage(WebTools.buildPage(request), queryWrapper);
+			selectList = selectPage.getRecords();
+			size = selectPage.getTotal();
+		} else {
+			selectList = commonCheckpointMapper.selectList(queryWrapper);
+			size = selectList.size();
+		}		
+		String retstr = EasyUiAssist.getJsonForGridAlias(selectList, size);
 		return TapestryAssist.getTextStreamResponse(retstr);
 	}
 

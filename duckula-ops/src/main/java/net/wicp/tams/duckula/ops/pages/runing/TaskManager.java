@@ -71,7 +71,7 @@ public class TaskManager {
 
 		IConvertValue<String> deployConvert = new IConvertValue<String>() {
 			private Map<Integer, String> datamap = BusiTools.convertValues(selectPage.getRecords(), commonDeployMapper,
-					"deployId", "name");
+					"deployId", "name","deploy");
 
 			@Override
 			public String getStr(String keyObj) {
@@ -80,7 +80,7 @@ public class TaskManager {
 		};
 		IConvertValue<String> middlewareConvert = new IConvertValue<String>() {
 			private Map<Integer, String> datamap = BusiTools.convertValues(selectPage.getRecords(),
-					commonMiddlewareMapper, "middlewareId", "name");
+					commonMiddlewareMapper, "middlewareId", "name","middlewareType");
 
 			@Override
 			public String getStr(String keyObj) {
@@ -90,7 +90,7 @@ public class TaskManager {
 
 		IConvertValue<String> instanceConvert = new IConvertValue<String>() {
 			private Map<Integer, String> datamap = BusiTools.convertValues(selectPage.getRecords(),
-					commonInstanceMapper, "instanceId", "name");
+					commonInstanceMapper, "instanceId", "name","host");
 
 			@Override
 			public String getStr(String keyObj) {

@@ -1,5 +1,7 @@
 package net.wicp.tams.duckula.ops.pages.setting;
 
+import java.util.List;
+
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.Request;
 import org.apache.tapestry5.services.RequestGlobals;
@@ -48,16 +50,29 @@ public class DeployManager {
 		// ajax.req(key, params);
 		final CommonDeploy commonDeploy = TapestryAssist.getBeanFromPage(CommonDeploy.class, requestGlobals);
 		QueryWrapper<CommonDeploy> queryWrapper = new QueryWrapper<CommonDeploy>();
-		if(StringUtil.isNotNull(commonDeploy.getName())) {
+		if (StringUtil.isNotNull(commonDeploy.getName())) {
 			queryWrapper.likeRight("name", commonDeploy.getName());
 		}
-		Page<CommonDeploy> selectPage = commonDeployMapper.selectPage(WebTools.buildPage(request), queryWrapper);
-		String retstr = EasyUiAssist.getJsonForGrid(selectPage.getRecords(),
+
+		String needpage = request.getParameter("needpage");
+		boolean isPage = StringUtil.isNotNull(needpage) && !Boolean.parseBoolean(needpage) ? false : true;
+
+		List<CommonDeploy> selectList = null;
+		long size = 0;
+		if (isPage) {// 需要分页，默认
+			Page<CommonDeploy> selectPage = commonDeployMapper.selectPage(WebTools.buildPage(request), queryWrapper);
+			selectList = selectPage.getRecords();
+			size = selectPage.getTotal();
+		} else {
+			selectList = commonDeployMapper.selectList(queryWrapper);
+			size = selectList.size();
+		}
+		String retstr = EasyUiAssist.getJsonForGrid(selectList,
 				new String[] { "id", "name", "deploy", "env", "namespace", "host", "port", "pwdDuckula", "isInit",
 						"isDefault", "imagegroup", "version", "remark", "isInit,isInit2" },
 				new IConvertValue[] { null, null, null, null, null, null, null, null, null, null, null, null, null,
 						new ConvertValueEnum(YesOrNo.class) },
-				selectPage.getTotal());
+				size);
 		return TapestryAssist.getTextStreamResponse(retstr);
 	}
 
