@@ -6,6 +6,7 @@ import java.util.Map;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
+import net.wicp.tams.app.duckula.controller.bean.models.CommonCheckpoint;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonTask;
 import net.wicp.tams.common.apiext.CollectionUtil;
 import net.wicp.tams.common.apiext.StringUtil;
@@ -35,16 +36,16 @@ public enum CommandType implements IEnumCombobox {
 	}
 
 	// task配置专用
-	public static Map<String, Object> proTaskConfig(CommonTask commonTask) {
+	public static Map<String, Object> proTaskConfig(CommonTask commonTask,CommonCheckpoint commonCheckpoint) {
 		Map<String, Object> retmap = new HashMap<String, Object>();
 		retmap.putAll(CommandType.task.getDefaultconfig());
 
 		retmap.put("common.binlog.alone.binlog.global.bufferType", commonTask.getBufferType());
 		retmap.put("common.binlog.alone.binlog.global." + commonTask.getBufferType() + ".sendNum",
 				commonTask.getSendNum());
-		retmap.put("common.binlog.alone.binlog.global.chk", commonTask.getCheckpoint());
+		retmap.put("common.binlog.alone.binlog.global.chk",commonCheckpoint.getCheckpointType());
 
-		if ("mysql".equals(commonTask.getCheckpoint())) {// TODO 加上mysql的配置
+		if ("mysql".equals(commonCheckpoint.getCheckpointType())) {// TODO 加上mysql的配置
 
 		}
 		// TODO 业务监听器

@@ -492,63 +492,63 @@ public class CommonTaskExample {
 			return (Criteria) this;
 		}
 
-		public Criteria andVersionIsNull() {
-			addCriterion("version is null");
+		public Criteria andVersionIdIsNull() {
+			addCriterion("version_id is null");
 			return (Criteria) this;
 		}
 
-		public Criteria andVersionIsNotNull() {
-			addCriterion("version is not null");
+		public Criteria andVersionIdIsNotNull() {
+			addCriterion("version_id is not null");
 			return (Criteria) this;
 		}
 
-		public Criteria andVersionEqualTo(Long value) {
-			addCriterion("version =", value, "version");
+		public Criteria andVersionIdEqualTo(Long value) {
+			addCriterion("version_id =", value, "versionId");
 			return (Criteria) this;
 		}
 
-		public Criteria andVersionNotEqualTo(Long value) {
-			addCriterion("version <>", value, "version");
+		public Criteria andVersionIdNotEqualTo(Long value) {
+			addCriterion("version_id <>", value, "versionId");
 			return (Criteria) this;
 		}
 
-		public Criteria andVersionGreaterThan(Long value) {
-			addCriterion("version >", value, "version");
+		public Criteria andVersionIdGreaterThan(Long value) {
+			addCriterion("version_id >", value, "versionId");
 			return (Criteria) this;
 		}
 
-		public Criteria andVersionGreaterThanOrEqualTo(Long value) {
-			addCriterion("version >=", value, "version");
+		public Criteria andVersionIdGreaterThanOrEqualTo(Long value) {
+			addCriterion("version_id >=", value, "versionId");
 			return (Criteria) this;
 		}
 
-		public Criteria andVersionLessThan(Long value) {
-			addCriterion("version <", value, "version");
+		public Criteria andVersionIdLessThan(Long value) {
+			addCriterion("version_id <", value, "versionId");
 			return (Criteria) this;
 		}
 
-		public Criteria andVersionLessThanOrEqualTo(Long value) {
-			addCriterion("version <=", value, "version");
+		public Criteria andVersionIdLessThanOrEqualTo(Long value) {
+			addCriterion("version_id <=", value, "versionId");
 			return (Criteria) this;
 		}
 
-		public Criteria andVersionIn(List<Long> values) {
-			addCriterion("version in", values, "version");
+		public Criteria andVersionIdIn(List<Long> values) {
+			addCriterion("version_id in", values, "versionId");
 			return (Criteria) this;
 		}
 
-		public Criteria andVersionNotIn(List<Long> values) {
-			addCriterion("version not in", values, "version");
+		public Criteria andVersionIdNotIn(List<Long> values) {
+			addCriterion("version_id not in", values, "versionId");
 			return (Criteria) this;
 		}
 
-		public Criteria andVersionBetween(Long value1, Long value2) {
-			addCriterion("version between", value1, value2, "version");
+		public Criteria andVersionIdBetween(Long value1, Long value2) {
+			addCriterion("version_id between", value1, value2, "versionId");
 			return (Criteria) this;
 		}
 
-		public Criteria andVersionNotBetween(Long value1, Long value2) {
-			addCriterion("version not between", value1, value2, "version");
+		public Criteria andVersionIdNotBetween(Long value1, Long value2) {
+			addCriterion("version_id not between", value1, value2, "versionId");
 			return (Criteria) this;
 		}
 
@@ -792,63 +792,63 @@ public class CommonTaskExample {
 			return (Criteria) this;
 		}
 
-		public Criteria andCheckpointIsNull() {
-			addCriterion("checkpoint is null");
+		public Criteria andCheckpointIdIsNull() {
+			addCriterion("checkpoint_id is null");
 			return (Criteria) this;
 		}
 
-		public Criteria andCheckpointIsNotNull() {
-			addCriterion("checkpoint is not null");
+		public Criteria andCheckpointIdIsNotNull() {
+			addCriterion("checkpoint_id is not null");
 			return (Criteria) this;
 		}
 
-		public Criteria andCheckpointEqualTo(Long value) {
-			addCriterion("checkpoint =", value, "checkpoint");
+		public Criteria andCheckpointIdEqualTo(Long value) {
+			addCriterion("checkpoint_id =", value, "checkpointId");
 			return (Criteria) this;
 		}
 
-		public Criteria andCheckpointNotEqualTo(Long value) {
-			addCriterion("checkpoint <>", value, "checkpoint");
+		public Criteria andCheckpointIdNotEqualTo(Long value) {
+			addCriterion("checkpoint_id <>", value, "checkpointId");
 			return (Criteria) this;
 		}
 
-		public Criteria andCheckpointGreaterThan(Long value) {
-			addCriterion("checkpoint >", value, "checkpoint");
+		public Criteria andCheckpointIdGreaterThan(Long value) {
+			addCriterion("checkpoint_id >", value, "checkpointId");
 			return (Criteria) this;
 		}
 
-		public Criteria andCheckpointGreaterThanOrEqualTo(Long value) {
-			addCriterion("checkpoint >=", value, "checkpoint");
+		public Criteria andCheckpointIdGreaterThanOrEqualTo(Long value) {
+			addCriterion("checkpoint_id >=", value, "checkpointId");
 			return (Criteria) this;
 		}
 
-		public Criteria andCheckpointLessThan(Long value) {
-			addCriterion("checkpoint <", value, "checkpoint");
+		public Criteria andCheckpointIdLessThan(Long value) {
+			addCriterion("checkpoint_id <", value, "checkpointId");
 			return (Criteria) this;
 		}
 
-		public Criteria andCheckpointLessThanOrEqualTo(Long value) {
-			addCriterion("checkpoint <=", value, "checkpoint");
+		public Criteria andCheckpointIdLessThanOrEqualTo(Long value) {
+			addCriterion("checkpoint_id <=", value, "checkpointId");
 			return (Criteria) this;
 		}
 
-		public Criteria andCheckpointIn(List<Long> values) {
-			addCriterion("checkpoint in", values, "checkpoint");
+		public Criteria andCheckpointIdIn(List<Long> values) {
+			addCriterion("checkpoint_id in", values, "checkpointId");
 			return (Criteria) this;
 		}
 
-		public Criteria andCheckpointNotIn(List<Long> values) {
-			addCriterion("checkpoint not in", values, "checkpoint");
+		public Criteria andCheckpointIdNotIn(List<Long> values) {
+			addCriterion("checkpoint_id not in", values, "checkpointId");
 			return (Criteria) this;
 		}
 
-		public Criteria andCheckpointBetween(Long value1, Long value2) {
-			addCriterion("checkpoint between", value1, value2, "checkpoint");
+		public Criteria andCheckpointIdBetween(Long value1, Long value2) {
+			addCriterion("checkpoint_id between", value1, value2, "checkpointId");
 			return (Criteria) this;
 		}
 
-		public Criteria andCheckpointNotBetween(Long value1, Long value2) {
-			addCriterion("checkpoint not between", value1, value2, "checkpoint");
+		public Criteria andCheckpointIdNotBetween(Long value1, Long value2) {
+			addCriterion("checkpoint_id not between", value1, value2, "checkpointId");
 			return (Criteria) this;
 		}
 

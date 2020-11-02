@@ -8,16 +8,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import io.kubernetes.client.openapi.models.V1ConfigMap;
+import net.wicp.tams.app.duckula.controller.bean.models.CommonCheckpoint;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonInstance;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonMiddleware;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonTask;
+import net.wicp.tams.app.duckula.controller.bean.models.CommonVersion;
 import net.wicp.tams.app.duckula.controller.config.ConfigItem;
 import net.wicp.tams.app.duckula.controller.config.constant.CommandType;
 import net.wicp.tams.app.duckula.controller.config.constant.DeployType;
 import net.wicp.tams.app.duckula.controller.config.constant.MiddlewareType;
+import net.wicp.tams.app.duckula.controller.dao.CommonCheckpointMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonInstanceMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonMiddlewareMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonTaskMapper;
+import net.wicp.tams.app.duckula.controller.dao.CommonVersionMapper;
 import net.wicp.tams.app.duckula.controller.service.K8sService;
 import net.wicp.tams.common.Result;
 import net.wicp.tams.common.beans.Host;
@@ -38,6 +42,10 @@ public class DeployK8s implements IDeploy {
 	private CommonMiddlewareMapper commonMiddlewareMapper;
 	@Autowired
 	private CommonInstanceMapper commonInstanceMapper;
+	@Autowired
+	private CommonVersionMapper commonVersionMapper;	
+	@Autowired
+	private CommonCheckpointMapper commonCheckpointMapper;
 
 	@Override
 	public Result checkExit(Long deployid, CommandType taskType, Long taskId) {
@@ -71,7 +79,8 @@ public class DeployK8s implements IDeploy {
 		switch (commandType) {
 		case task:
 			CommonTask selectTask = commonTaskMapper.selectById(taskId);
-			params.putAll(CommandType.proTaskConfig(selectTask));// 默认配置
+			CommonCheckpoint commonCheckpoint = commonCheckpointMapper.selectById(selectTask.getCheckpointId());
+			params.putAll(CommandType.proTaskConfig(selectTask,commonCheckpoint));// 默认配置
 			configName = commandType.formateConfigName(selectTask.getName());
 			middlewareId = selectTask.getMiddlewareId();
 			instanceId = selectTask.getInstanceId();
@@ -110,7 +119,8 @@ public class DeployK8s implements IDeploy {
 			CommonTask selectTask = commonTaskMapper.selectById(taskId);
 			configName = taskType.formateTaskName(selectTask.getName());
 			params.put(ConfigItem.task_name, configName);
-			params.put(ConfigItem.task_version, selectTask.getVersion());
+			CommonVersion commonVersion = commonVersionMapper.selectById(selectTask.getVersionId());
+			params.put(ConfigItem.task_version,   commonVersion.getMainVersion());
 			params.put(ConfigItem.task_debug, isDebug);
 			params.put(ConfigItem.configmap_name, taskType.formateConfigName(selectTask.getName()));
 			// 处理中间件的hosts

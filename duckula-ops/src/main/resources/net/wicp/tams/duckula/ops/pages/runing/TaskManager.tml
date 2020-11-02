@@ -54,7 +54,7 @@
 			         </td>		      
 			         <td class="frame_table_list_2_righttext">检查点</td>
 			         <td>
-			             <r:combogrid id="checkpoint_save" name="checkpoint"  columns="[[{field:'name',width:200,title:'检查点名'},{field:'checkpointType',width:70,title:'检查点类型'},{field:'host',width:200,title:'主机'},{field:'port',width:60,title:'端口'},{field:'username',width:100,title:'用户名'}]]" idfield="id" panelWidth="700" panelHeight="700" textfield="name" width="180" pagination="false" url="/setting/CheckpointManager:query?needpage=false"></r:combogrid>
+			             <r:combogrid id="checkpoint_save" name="checkpoint"  columns="[[{field:'name',width:200,title:'检查点名'},{field:'checkpointType',width:70,title:'检查点类型'},{field:'host',width:200,title:'主机'},{field:'port',width:60,title:'端口'},{field:'username',width:100,title:'用户名'}]]" idfield="id" panelWidth="700" panelHeight="300" textfield="name" width="180" pagination="false" url="/setting/CheckpointManager:query?needpage=false"></r:combogrid>
 			         </td>			 	  	 		 	     
 			      </tr>
 			      <tr>	

@@ -61,7 +61,7 @@ public class TaskManager {
 		Page<CommonTask> selectPage = commonTaskMapper.selectPage(WebTools.buildPage(request), queryWrapper);
 		IConvertValue<String> versionConvert = new IConvertValue<String>() {
 			private Map<Integer, String> datamap = BusiTools.convertValues(selectPage.getRecords(), commonVersionMapper,
-					"version", "mainVersion");
+					"versionId", "mainVersion");
 
 			@Override
 			public String getStr(String keyObj) {
@@ -100,7 +100,7 @@ public class TaskManager {
 
 		IConvertValue<String> checkpointConvert = new IConvertValue<String>() {
 			private Map<Integer, String> datamap = BusiTools.convertValues(selectPage.getRecords(),
-					commonCheckpointMapper, "checkpoint", "name");
+					commonCheckpointMapper, "checkpointId", "name");
 
 			@Override
 			public String getStr(String keyObj) {
@@ -109,8 +109,8 @@ public class TaskManager {
 		};
 
 		String retstr = EasyUiAssist.getJsonForGridAlias2(selectPage.getRecords(),
-				new String[] { "version,version1", "deployId,deployId1", "middlewareId,middlewareId1",
-						"instanceId,instanceId1", "checkpoint,checkpoint1" },
+				new String[] { "versionId,version1", "deployId,deployId1", "middlewareId,middlewareId1",
+						"instanceId,instanceId1", "checkpointId,checkpoint1" },
 				CollectionUtil.newMap("version1", versionConvert, "deployId1", deployConvert, "middlewareId1",
 						middlewareConvert, "instanceId1", instanceConvert, "checkpoint1", checkpointConvert),
 				selectPage.getTotal());
