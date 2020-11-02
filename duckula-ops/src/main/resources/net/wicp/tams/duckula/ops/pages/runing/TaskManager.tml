@@ -8,7 +8,7 @@
 <body>
    <r:query id="q"  qBlock="query" queryUrl="/runing/TaskManager:query"  uBlock="save"   saveUrl="/runing/TaskManager:save" deleteUrl="/runing/TaskManager:del" opFormatter="showopt" 
         columns="[[{field:'name',width:200,title:'监听任务名'},{field:'version1',width:200,title:'版本'},{field:'deployId1',width:150,title:'布署环境'},{field:'middlewareId1',width:150,title:'目的中间件'},{field:'instanceId1',width:350,title:'监听实例'},{field:'checkpoint1',width:150,title:'检查点'},{field:'op',width:320,title:'操作'}]]" 
-        dialogStyle="width:800px;height:460px;" initAddHandle="initAdd" initSaveHandle="initUpdate"  pagination="true"/>
+        dialogStyle="width:900px;height:560px;" initAddHandle="initAdd" initSaveHandle="initUpdate"  pagination="true"/>
    <t:block id="query">
        <table class="frame_table_list_4">
 		 <tr>
@@ -40,7 +40,7 @@
 			      <tr>	
 			         <td class="frame_table_list_2_righttext">目的中间件</td>
 			         <td>
-			           <r:combogrid id="middlewareId_save" name="middlewareId"  columns="[[{field:'name',width:100,title:'实例名'},{field:'middlewareType',width:70,title:'类型'},{field:'version',width:70,title:'版本'},{field:'host',width:250,title:'主机'},{field:'port',width:70,title:'端口'},{field:'username',width:70,title:'用户名'},{field:'remark',width:150,title:'备注'}]]" idfield="id" panelWidth="900" panelHeight="300" textfield="name" width="180" pagination="false" url="/setting/MiddlewareManager:query?needpage=false"></r:combogrid>
+			           <r:combogrid id="middlewareId_save" name="middlewareId"   changeHandle="selectMiddleware" columns="[[{field:'name',width:100,title:'实例名'},{field:'middlewareType',width:70,title:'类型'},{field:'version',width:70,title:'版本'},{field:'host',width:250,title:'主机'},{field:'port',width:70,title:'端口'},{field:'username',width:70,title:'用户名'},{field:'remark',width:150,title:'备注'}]]" idfield="id" panelWidth="900" panelHeight="300" textfield="name" width="180" pagination="false" url="/setting/MiddlewareManager:query?needpage=false"></r:combogrid>
 			         </td>
 			 	      <td class="frame_table_list_2_righttext">布署环境</td>
 			         <td>
@@ -50,7 +50,7 @@
 			      <tr>	
 			 	      <td class="frame_table_list_2_righttext">监听实例</td>
 			         <td>
-			            <r:combogrid id="instanceId_save" name="instanceId"  columns="[[{field:'name',width:200,title:'实例名'},{field:'host',width:350,title:'主机'},{field:'port',width:70,title:'端口'},{field:'username',width:100,title:'用户名'}]]" idfield="id" panelWidth="750" panelHeight="700" textfield="name" width="180" pagination="false" url="/setting/InstanceManager:query?needpage=false"></r:combogrid>
+			            <r:combogrid id="instanceId_save" name="instanceId"   changeHandle="selectInstance"   columns="[[{field:'name',width:200,title:'实例名'},{field:'host',width:350,title:'主机'},{field:'port',width:70,title:'端口'},{field:'username',width:100,title:'用户名'}]]" idfield="id" panelWidth="750" panelHeight="700" textfield="name" width="180" pagination="false" url="/setting/InstanceManager:query?needpage=false"></r:combogrid>
 			         </td>		      
 			         <td class="frame_table_list_2_righttext">检查点</td>
 			         <td>
@@ -67,6 +67,52 @@
 			            <r:validatebox name="gtids" style="width:250px;" required="false"/>
 	                 </td>			        			 	  	 		 	     
 			     </tr>
+			     <tr name="showmodel">
+			        <td colspan="4">
+				        <table id="dg" title="规则编辑" style="width:98%;height:180px"
+					            toolbar="#toolbar" pagination="false" idField="id"
+					            rownumbers="false" fitColumns="true" singleSelect="true">
+					        <thead>
+					            <tr>
+					                <th field="dbPattern" width="15%"  editor="{type:'validatebox',destroy:'updateRuleInput',options:{required:true}}">库名模式</th>
+					                <th field="tbPattern" width="30%" editor="{type:'validatebox',options:{required:true}}">表名模式</th>
+					                <th field="drds" width="13%" editor="{type:'combobox',options:{required:false,valueField:'value',textField:'label',panelHeight:80,data:[{label:'分库也分表',value:'dbtb'},{label:'只分库',value:'db'},{label:'不分库分表',value:'no'}]}}">drds分表模式</th>
+					                
+					                <th field="topic" width="20%" editor="{type:'validatebox',options:{required:false}}">消息主题</th>
+					                <th field="key" width="15%" editor="{type:'validatebox',options:{required:false}}">主键</th>
+					                <th field="relakey" width="12%" editor="{type:'validatebox',options:{required:false}}">关联字段</th>
+					                <th field="index" width="12%" editor="{type:'validatebox',options:{required:false}}">es索引</th>
+					                <th field="splitkey" width="12%" editor="{type:'validatebox',options:{required:false}}">分隔字段</th>
+					                
+					                <th field="redisurl" width="12%" editor="{type:'validatebox',options:{required:false}}">缓存地址</th>
+					                 <th field="appid" width="12%" editor="{type:'validatebox',options:{required:false}}">appid</th>
+					                <th field="type" width="12%" editor="{type:'validatebox',options:{required:false}}">索引类型</th>
+					                <th field="middleware" width="12%" editor="{type:'validatebox',options:{required:false}}">中间件实例</th>
+					                <th field="dbinstanceid" width="12%" editor="{type:'validatebox',options:{required:false}}">数据库</th>
+					                <th field="dbtb" width="12%" editor="{type:'validatebox',options:{required:false}}">库名表名</th>
+					                <th field="partitions" width="12%" editor="{type:'validatebox',options:{required:false}}">分区数</th>
+					                <th field="copynum" width="12%" editor="{type:'validatebox',options:{required:false}}">复制份数</th>					                
+					                <th field="ks" width="12%" editor="{type:'validatebox',options:{required:false}}">名称空间</th>
+					                <th field="table" width="12%" editor="{type:'validatebox',options:{required:false}}">表名</th>	
+					                
+					                <th field="colName" width="12%" editor="{type:'validatebox',options:{required:false}}">附加列</th>
+					                <th field="addProp" width="12%" editor="{type:'validatebox',options:{required:false}}">静态属性</th>
+					                
+					                				                			               
+					                <th field="other" width="12%" editor="{type:'validatebox',options:{required:false}}">其它配置</th>
+					            </tr>
+					        </thead>
+					    </table>
+					     <div id="toolbar">
+					        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="javascript:$('#dg').edatagrid('addRow')">新增规则</a>
+					        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="javascript:$('#dg').edatagrid('destroyRow')">删除</a>
+					        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="javascript:$('#dg').edatagrid('cancelRow')">取消</a>
+					        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-save" plain="true" onclick="javascript:$('#dg').edatagrid('saveRow')">保存</a>	
+					        <font color="red" style="font-weight:bold;"> &emsp;&msp;&emsp;&emsp;&emsp;     请选择接收者，编辑完成后请“保存”,配置以输入框内容为准，界面只是辅助输入	</font>			        
+					        <r:validatebox id="ruleEdit"  name="rule" style="width:735px;" required="true"/>
+					    </div>
+			        </td>
+			     </tr>	
 			     <tr>
 			         <td class="frame_table_list_2_righttext">附加配置</td>
 			         <td colspan="3">
@@ -81,10 +127,15 @@
 <script>	
     function showopt(value,row,index){
             var optCan=false;
-       	    var update= '<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit"  data-options="disabled:'+optCan+'"  style="margin-right:10px" onclick="_doUpdate('+index+') ">'+msg.update+'</a>';
+       	    var update= '<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit"  data-options="disabled:'+optCan+'"  style="margin-right:10px" onclick="doUpdateTrue('+index+') ">'+msg.update+'</a>';
        	    var deletebut= '<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" data-options="disabled:'+optCan+'" style="margin-right:10px" onclick="_doDelete('+index+') ">'+msg.delete_+'</a>'; 
        	    return update+deletebut;			
      }
+     
+     
+   function doUpdateTrue(index){
+      _doUpdate(index);
+   }
 
    function initAdd(){
       //$('#os_save').combobox('setValue','Linux');
@@ -92,7 +143,7 @@
    function initUpdate(){
       //$('#ip2').textbox('readonly',true);
       //$('#version_save').textbox('readonly',true);
-      
+      syncRule();
    }
      
    function getRow(index){
@@ -100,9 +151,96 @@
      	 return rows[index];
    }
    
+   
+   
+    var allcolumn=["topic","key","relakey","appid","redisurl","splitkey","index","type","middleware","dbinstanceid","dbtb","partitions","copynum","ks","table","colName","addProp","other"];
+    function showRuleColumn(showcolumns){           
+        for (var item of allcolumn) {
+           $('#dg').edatagrid("hideColumn", item);
+		   //$('#dg').edatagrid("showColumn", item);
+		}
+		
+		for (var item of showcolumns) {
+		   $('#dg').edatagrid("showColumn", item);
+		}
+	 }
+   
+   
+   function syncRule(){
+	   var rules= $('#ruleEdit').val();
+       $.post($.rjzjh.packurl('/runing/TaskManager:ruleData'),{'ruleData':rules},function(data){
+	         //alert(data);//更新edatagrid
+	     $('#dg').edatagrid("loadData", data);
+	   },'json');
+	}
+	
+	function  updateRuleInput(index,data,changes){
+      	var middlewareIdSel=  $('#middlewareId_save').combobox('getValue');     	
+				   //数据检查
+      	var dgdata= $('#dg').edatagrid('getData');
+                   //提交后端进行格式化
+				   //onSave有时会不起作用，故用onBeforeSave
+      	var datastr=JSON.stringify(dgdata);	
+      	$.post($.rjzjh.packurl('/runing/TaskManager:dataConvert'),{'saveData':datastr},function(data){
+	      	$.rjzjh.opt2(data,function(){
+	      	if("操作成功"==data.msg){
+		      	jQuery('#ruleEdit').val("");
+		     }else{
+				jQuery('#ruleEdit').val(data.msg);					      
+			 }
+			 syncRule();//用于切换drds时同步做更新模式
+			});
+		},'json');		   
+	}
+	
+	
+	function selectMiddleware(val){
+	    var middlewareType= $.rjzjh.getcombogrid('middlewareId_save','middlewareType');	  
+	    // 选择规则
+        if('kafka'==middlewareType){
+           showRuleColumn(["topic","splitkey"]);
+        }else if('es' == middlewareType){
+            showRuleColumn(["index"]);
+        }else if('redis'==middlewareType){
+            showRuleColumn(["key","splitkey","appid","redisurl"]);
+        }else if('cassandra'==middlewareType){
+            showRuleColumn(["ks","table"]);
+        }
+	}
+	function selectInstance(val){
+	    var isDrds= $.rjzjh.getcombogrid('instanceId_save','isDrds');
+	    if('yes'==isDrds){
+           $('#dg').edatagrid("showColumn", "drds");
+        }else{
+           $('#dg').edatagrid("hideColumn", "drds");
+        }
+	}
+	
+   
   $(function(){
-
-   });
+      $('#ruleEdit').blur(function(){
+          syncRule();
+      });
+       $('#dg').edatagrid({
+			    data: [
+					{db:'value11', tb:'value12'},
+					{db:'value21', tb:'value22'}
+				],
+				destroyMsg: {
+					norecord:{	// when no record is selected
+						title:'警告',
+						msg:'没有选择记录.'
+					},
+					confirm:{	// when select a row
+						title:'确认',
+						msg:'您确定要删除此监听规则吗?'
+					}
+				},
+				autoSave: false,
+				onDestroy: updateRuleInput,
+				onAfterEdit: updateRuleInput
+      });
+  });
    
     
 </script>

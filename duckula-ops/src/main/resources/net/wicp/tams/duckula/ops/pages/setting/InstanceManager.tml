@@ -32,9 +32,9 @@
 			 	       <input type="hidden" name="id"/>
 			 	       <r:validatebox name="name" style="width:250px;" required="true"/>
 			 	     </td>
-			 	     <td class="frame_table_list_2_righttext">是否rds</td>
+			 	     <td class="frame_table_list_2_righttext">是否drds</td>
 			 	     <td>
-			 	        <r:comboboxenum id="isRds_save"  name="isRds" enumClass="net.wicp.tams.common.constant.dic.YesOrNo" required="true" panelHeight="60"></r:comboboxenum>
+			 	        <r:comboboxenum id="isDrds_save"  name="isDrds" enumClass="net.wicp.tams.common.constant.dic.YesOrNo" required="true" panelHeight="60"></r:comboboxenum>
 			 	     </td>	
 			      </tr>
 			      <tr>	

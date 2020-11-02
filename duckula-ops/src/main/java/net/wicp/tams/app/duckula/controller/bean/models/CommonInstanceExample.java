@@ -562,73 +562,73 @@ public class CommonInstanceExample {
 			return (Criteria) this;
 		}
 
-		public Criteria andIsRdsIsNull() {
-			addCriterion("is_rds is null");
+		public Criteria andIsDrdsIsNull() {
+			addCriterion("is_drds is null");
 			return (Criteria) this;
 		}
 
-		public Criteria andIsRdsIsNotNull() {
-			addCriterion("is_rds is not null");
+		public Criteria andIsDrdsIsNotNull() {
+			addCriterion("is_drds is not null");
 			return (Criteria) this;
 		}
 
-		public Criteria andIsRdsEqualTo(String value) {
-			addCriterion("is_rds =", value, "isRds");
+		public Criteria andIsDrdsEqualTo(String value) {
+			addCriterion("is_drds =", value, "isDrds");
 			return (Criteria) this;
 		}
 
-		public Criteria andIsRdsNotEqualTo(String value) {
-			addCriterion("is_rds <>", value, "isRds");
+		public Criteria andIsDrdsNotEqualTo(String value) {
+			addCriterion("is_drds <>", value, "isDrds");
 			return (Criteria) this;
 		}
 
-		public Criteria andIsRdsGreaterThan(String value) {
-			addCriterion("is_rds >", value, "isRds");
+		public Criteria andIsDrdsGreaterThan(String value) {
+			addCriterion("is_drds >", value, "isDrds");
 			return (Criteria) this;
 		}
 
-		public Criteria andIsRdsGreaterThanOrEqualTo(String value) {
-			addCriterion("is_rds >=", value, "isRds");
+		public Criteria andIsDrdsGreaterThanOrEqualTo(String value) {
+			addCriterion("is_drds >=", value, "isDrds");
 			return (Criteria) this;
 		}
 
-		public Criteria andIsRdsLessThan(String value) {
-			addCriterion("is_rds <", value, "isRds");
+		public Criteria andIsDrdsLessThan(String value) {
+			addCriterion("is_drds <", value, "isDrds");
 			return (Criteria) this;
 		}
 
-		public Criteria andIsRdsLessThanOrEqualTo(String value) {
-			addCriterion("is_rds <=", value, "isRds");
+		public Criteria andIsDrdsLessThanOrEqualTo(String value) {
+			addCriterion("is_drds <=", value, "isDrds");
 			return (Criteria) this;
 		}
 
-		public Criteria andIsRdsLike(String value) {
-			addCriterion("is_rds like", value, "isRds");
+		public Criteria andIsDrdsLike(String value) {
+			addCriterion("is_drds like", value, "isDrds");
 			return (Criteria) this;
 		}
 
-		public Criteria andIsRdsNotLike(String value) {
-			addCriterion("is_rds not like", value, "isRds");
+		public Criteria andIsDrdsNotLike(String value) {
+			addCriterion("is_drds not like", value, "isDrds");
 			return (Criteria) this;
 		}
 
-		public Criteria andIsRdsIn(List<String> values) {
-			addCriterion("is_rds in", values, "isRds");
+		public Criteria andIsDrdsIn(List<String> values) {
+			addCriterion("is_drds in", values, "isDrds");
 			return (Criteria) this;
 		}
 
-		public Criteria andIsRdsNotIn(List<String> values) {
-			addCriterion("is_rds not in", values, "isRds");
+		public Criteria andIsDrdsNotIn(List<String> values) {
+			addCriterion("is_drds not in", values, "isDrds");
 			return (Criteria) this;
 		}
 
-		public Criteria andIsRdsBetween(String value1, String value2) {
-			addCriterion("is_rds between", value1, value2, "isRds");
+		public Criteria andIsDrdsBetween(String value1, String value2) {
+			addCriterion("is_drds between", value1, value2, "isDrds");
 			return (Criteria) this;
 		}
 
-		public Criteria andIsRdsNotBetween(String value1, String value2) {
-			addCriterion("is_rds not between", value1, value2, "isRds");
+		public Criteria andIsDrdsNotBetween(String value1, String value2) {
+			addCriterion("is_drds not between", value1, value2, "isDrds");
 			return (Criteria) this;
 		}
 

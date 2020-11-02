@@ -7,6 +7,8 @@ import org.apache.tapestry5.services.Request;
 import org.apache.tapestry5.services.RequestGlobals;
 import org.apache.tapestry5.util.TextStreamResponse;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
@@ -22,11 +24,15 @@ import net.wicp.tams.common.Result;
 import net.wicp.tams.common.apiext.CollectionUtil;
 import net.wicp.tams.common.apiext.StringUtil;
 import net.wicp.tams.common.apiext.json.EasyUiAssist;
+import net.wicp.tams.common.binlog.alone.binlog.bean.RuleManager;
 import net.wicp.tams.common.callback.IConvertValue;
+import net.wicp.tams.component.annotation.HtmlJs;
+import net.wicp.tams.component.constant.EasyUIAdd;
 import net.wicp.tams.component.services.IReq;
 import net.wicp.tams.component.tools.TapestryAssist;
 import net.wicp.tams.duckula.ops.WebTools;
 
+@HtmlJs(easyuiadd = { EasyUIAdd.edatagrid })
 public class TaskManager {
 	@Inject
 	protected RequestGlobals requestGlobals;
@@ -65,36 +71,36 @@ public class TaskManager {
 
 			@Override
 			public String getStr(String keyObj) {
-				return StringUtil.isNull(keyObj)?"":datamap.get(Integer.parseInt(keyObj));
+				return StringUtil.isNull(keyObj) ? "" : datamap.get(Integer.parseInt(keyObj));
 			}
 		};
 
 		IConvertValue<String> deployConvert = new IConvertValue<String>() {
 			private Map<Integer, String> datamap = BusiTools.convertValues(selectPage.getRecords(), commonDeployMapper,
-					"deployId", "name","deploy");
+					"deployId", "name", "deploy");
 
 			@Override
 			public String getStr(String keyObj) {
-				return StringUtil.isNull(keyObj)?"":datamap.get(Integer.parseInt(keyObj));
+				return StringUtil.isNull(keyObj) ? "" : datamap.get(Integer.parseInt(keyObj));
 			}
 		};
 		IConvertValue<String> middlewareConvert = new IConvertValue<String>() {
 			private Map<Integer, String> datamap = BusiTools.convertValues(selectPage.getRecords(),
-					commonMiddlewareMapper, "middlewareId", "name","middlewareType");
+					commonMiddlewareMapper, "middlewareId", "name", "middlewareType");
 
 			@Override
 			public String getStr(String keyObj) {
-				return StringUtil.isNull(keyObj)?"":datamap.get(Integer.parseInt(keyObj));
+				return StringUtil.isNull(keyObj) ? "" : datamap.get(Integer.parseInt(keyObj));
 			}
 		};
 
 		IConvertValue<String> instanceConvert = new IConvertValue<String>() {
 			private Map<Integer, String> datamap = BusiTools.convertValues(selectPage.getRecords(),
-					commonInstanceMapper, "instanceId", "name","host");
+					commonInstanceMapper, "instanceId", "name", "host");
 
 			@Override
 			public String getStr(String keyObj) {
-				return StringUtil.isNull(keyObj)?"":datamap.get(Integer.parseInt(keyObj));
+				return StringUtil.isNull(keyObj) ? "" : datamap.get(Integer.parseInt(keyObj));
 			}
 		};
 
@@ -104,7 +110,7 @@ public class TaskManager {
 
 			@Override
 			public String getStr(String keyObj) {
-				return  StringUtil.isNull(keyObj)?"":datamap.get(Integer.parseInt(keyObj));
+				return StringUtil.isNull(keyObj) ? "" : datamap.get(Integer.parseInt(keyObj));
 			}
 		};
 
@@ -131,5 +137,20 @@ public class TaskManager {
 		String id = request.getParameter("id");
 		commonTaskMapper.deleteById(id);
 		return TapestryAssist.getTextStreamResponse(Result.getSuc());
+	}
+
+	public TextStreamResponse onDataConvert() {
+		String saveDataStr = request.getParameter("saveData");
+		JSONObject dgAll = JSONObject.parseObject(saveDataStr);
+		com.alibaba.fastjson.JSONArray rows = dgAll.getJSONArray("rows");
+		RuleManager ruleManager = new RuleManager(rows);
+		return TapestryAssist.getTextStreamResponse(Result.getSuc(ruleManager.toString()));
+	}
+
+	public TextStreamResponse onRuleData() {
+		String commandtypeStr = request.getParameter("ruleData");
+		RuleManager ruleManager=new RuleManager(commandtypeStr);
+		JSONArray retAry = ruleManager.toJsonAry();
+		return TapestryAssist.getTextStreamResponse(retAry.toJSONString());
 	}
 }

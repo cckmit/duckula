@@ -21,7 +21,7 @@ public interface IDeploy {
 		tempmap.put("common.binlog.alone.binlog.global.conf.port", commonInstance.getPort());
 		tempmap.put("common.binlog.alone.binlog.global.conf.username", commonInstance.getUsername());
 		tempmap.put("common.binlog.alone.binlog.global.conf.password", commonInstance.getPassword());
-		tempmap.put("common.binlog.alone.binlog.global.conf.rds", commonInstance.getIsRds());
+		tempmap.put("common.binlog.alone.binlog.global.conf.rds", "false");//写死为false,不理rds
 		tempmap.put("common.apiext.classload.child-first", false);// 不明白为什么是true，还没查到原因，写死为false
 		return tempmap;
 	}
