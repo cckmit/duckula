@@ -34,7 +34,7 @@
 			 	     </td>
 			 	     <td class="frame_table_list_2_righttext">版本</td>
 			 	     <td>
-			 	        <r:combogrid id="version_save" name="version"  columns="[[{field:'mainVersion',width:70,title:'主程序版本'},{field:'dataVersion',width:70,title:'数据版本'},{field:'updateTimeStr',width:150,title:'升级时间'},{field:'author',width:70,title:'作者'}]]" idfield="id" panelWidth="400" panelHeight="300" textfield="mainVersion" width="180" pagination="false" url="/setting/VersionManager:query?needpage=false"></r:combogrid>
+			 	        <r:combogrid id="versionId_save" name="versionId"  columns="[[{field:'mainVersion',width:70,title:'主程序版本'},{field:'dataVersion',width:70,title:'数据版本'},{field:'updateTimeStr',width:150,title:'升级时间'},{field:'author',width:70,title:'作者'}]]" idfield="id" panelWidth="400" panelHeight="300" textfield="mainVersion" width="180" pagination="false" url="/setting/VersionManager:query?needpage=false"></r:combogrid>
 	                 </td>	
 			      </tr>
 			      <tr>	
@@ -54,7 +54,7 @@
 			         </td>		      
 			         <td class="frame_table_list_2_righttext">检查点</td>
 			         <td>
-			             <r:combogrid id="checkpoint_save" name="checkpoint"  columns="[[{field:'name',width:200,title:'检查点名'},{field:'checkpointType',width:70,title:'检查点类型'},{field:'host',width:200,title:'主机'},{field:'port',width:60,title:'端口'},{field:'username',width:100,title:'用户名'}]]" idfield="id" panelWidth="700" panelHeight="300" textfield="name" width="180" pagination="false" url="/setting/CheckpointManager:query?needpage=false"></r:combogrid>
+			             <r:combogrid id="checkpointId_save" name="checkpointId"  columns="[[{field:'name',width:200,title:'检查点名'},{field:'checkpointType',width:70,title:'检查点类型'},{field:'host',width:200,title:'主机'},{field:'port',width:60,title:'端口'},{field:'username',width:100,title:'用户名'}]]" idfield="id" panelWidth="700" panelHeight="300" textfield="name" width="180" pagination="false" url="/setting/CheckpointManager:query?needpage=false"></r:combogrid>
 			         </td>			 	  	 		 	     
 			      </tr>
 			      <tr>	
