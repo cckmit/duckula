@@ -36,17 +36,23 @@ public enum CommandType implements IEnumCombobox {
 	}
 
 	// task配置专用
-	public static Map<String, Object> proTaskConfig(CommonTask commonTask,CommonCheckpoint commonCheckpoint) {
+	public static Map<String, Object> proTaskConfig(CommonTask commonTask, CommonCheckpoint commonCheckpoint) {
 		Map<String, Object> retmap = new HashMap<String, Object>();
 		retmap.putAll(CommandType.task.getDefaultconfig());
 
 		retmap.put("common.binlog.alone.binlog.global.bufferType", commonTask.getBufferType());
 		retmap.put("common.binlog.alone.binlog.global." + commonTask.getBufferType() + ".sendNum",
 				commonTask.getSendNum());
-		retmap.put("common.binlog.alone.binlog.global.chk",commonCheckpoint.getCheckpointType());
 
-		if ("mysql".equals(commonCheckpoint.getCheckpointType())) {// TODO 加上mysql的配置
+		CheckpointType checkpointType = CheckpointType.valueOf(commonCheckpoint.getCheckpointType());
+		retmap.put("common.binlog.alone.binlog.global.chk", checkpointType.getSaveCheckPointClassName());
+		switch (checkpointType) {
+		case Mysql:
+			// TODO 加上mysql的配置
+			break;
 
+		default:
+			break;
 		}
 		// TODO 业务监听器
 		retmap.put("common.binlog.alone.binlog.global.conf.groupId", commonTask.getGroupId());

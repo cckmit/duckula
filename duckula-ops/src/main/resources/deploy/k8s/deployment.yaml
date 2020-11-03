@@ -35,7 +35,7 @@ spec:
       </#list>
       initContainers:
       - name: pro-data
-        image: 'registry.choerodon.xforceplus.com/rjzjh/duckula3:data.${version}'
+        image: '${task_image}:${data_version}'
         imagePullPolicy: IfNotPresent
         volumeMounts:
         - name: data
@@ -46,7 +46,7 @@ spec:
         - name: duckula-task-chart
           securityContext:
             {}
-          image: 'registry.choerodon.xforceplus.com/rjzjh/duckula3:task.${version}'
+          image: '${task_image}:${task_version}'
           imagePullPolicy: IfNotPresent
           env:
           - name: taskid

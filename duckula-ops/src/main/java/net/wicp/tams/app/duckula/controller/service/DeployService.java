@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
-import net.wicp.tams.app.duckula.controller.BusiTools;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonDeploy;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonTask;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonVersion;
@@ -35,6 +34,11 @@ public class DeployService {
 	@Autowired
 	private CommonVersionMapper commonVersionMapper;
 
+	/**
+	 * 把配置信息部署上去
+	 * 
+	 * @param commonTask
+	 */
 	public void deployTask(CommonTask commonTask) {
 		CommonDeploy commonDeploy = commonDeployMapper.selectById(commonTask.getDeployId());
 		DeployType deployType = DeployType.valueOf(commonDeploy.getDeploy());
@@ -45,6 +49,31 @@ public class DeployService {
 		}
 		// deploy.start();
 		log.info("the task:{} start sucess", commonTask.getName());
+	}
+
+	/***
+	 * 启动监听任务
+	 * 
+	 * @param commonTask
+	 * @param isdebug
+	 * @return
+	 */
+	public Result startTask(CommonTask commonTask, boolean isdebug) {
+		if (commonTask == null) {
+			return Result.getError("任务没有配置");
+		}
+		CommonDeploy commonDeploy = commonDeployMapper.selectById(commonTask.getDeployId());
+		if (commonDeploy == null) {
+			return Result.getError("部署环境没有配置");
+		}
+		IDeploy deploy = (IDeploy) SpringAssit.context.getBean(commonDeploy.getDeploy());
+		try {
+			deploy.start(commonDeploy.getId(), CommandType.task, commonTask.getId(), isdebug);
+		} catch (Throwable e) {
+			return Result.getError(e.getMessage());
+		}
+		Result ret = Result.getSuc(commonTask.getName());
+		return ret;
 	}
 
 	public Result initHost(CommonDeploy commonDeploy, String pwd) {
@@ -116,10 +145,10 @@ public class DeployService {
 		switch (deployType) {
 		case docker:
 			// 更新data
-			dataPath = PathType.getPath(commonVersionNew.getDataPath(),true);
+			dataPath = PathType.getPath(commonVersionNew.getDataPath(), true);
 		case host:
 			// 更新main
-			mainPath = PathType.getPath(commonVersionNew.getMainPath(),true);
+			mainPath = PathType.getPath(commonVersionNew.getMainPath(), true);
 			break;
 		default:
 			break;
@@ -136,25 +165,28 @@ public class DeployService {
 		// 2.复制文件
 		if (StringUtil.isNotNull(mainPath)) {
 			String fileName = mainPath.substring(mainPath.lastIndexOf("/") + 1);
-			conn.scp(mainPath+".tar", fileName+".tar", "~", "0744");
+			conn.scp(mainPath + ".tar", fileName + ".tar", "~", "0744");
 			// 3.转移历史
-			//String version = BusiTools.getVersion(dataPath,"/duckula-data/plugins/readme.text");
-			if(commonVersionOld!=null&&StringUtil.isNotNull(commonVersionOld.getMainVersion())) {
-				conn.executeCommand("mv /opt/duckula/  /opt/duckula-history/"+commonVersionOld.getMainVersion());
+			// String version =
+			// BusiTools.getVersion(dataPath,"/duckula-data/plugins/readme.text");
+			if (commonVersionOld != null && StringUtil.isNotNull(commonVersionOld.getMainVersion())) {
+				conn.executeCommand("mv /opt/duckula/  /opt/duckula-history/" + commonVersionOld.getMainVersion());
 			}
 			// 4.解压
-			conn.tarX("~/" + fileName+".tar", "/opt");
+			conn.tarX("~/" + fileName + ".tar", "/opt");
 		}
 		if (StringUtil.isNotNull(dataPath)) {
 			String fileName = dataPath.substring(dataPath.lastIndexOf("/") + 1);
-			conn.scp(dataPath+".tar", fileName+".tar", "~", "0744");
+			conn.scp(dataPath + ".tar", fileName + ".tar", "~", "0744");
 			// 3.转移历史
-			//String version = BusiTools.getVersion(dataPath,"/duckula-data/plugins/readme.text");
-			if(commonVersionOld!=null&&StringUtil.isNotNull(commonVersionOld.getDataVersion())) {
-				conn.executeCommand("mv /data/duckula-data/plugins/  /data/duckula-data/history/"+commonVersionOld.getDataVersion());
+			// String version =
+			// BusiTools.getVersion(dataPath,"/duckula-data/plugins/readme.text");
+			if (commonVersionOld != null && StringUtil.isNotNull(commonVersionOld.getDataVersion())) {
+				conn.executeCommand("mv /data/duckula-data/plugins/  /data/duckula-data/history/"
+						+ commonVersionOld.getDataVersion());
 			}
 			// 4.解压
-			conn.tarX("~/" + fileName+".tar", "/data");
+			conn.tarX("~/" + fileName + ".tar", "/data");
 		}
 		conn.close();
 		commonDeploy.setVersion(commonVersionNew.getId());

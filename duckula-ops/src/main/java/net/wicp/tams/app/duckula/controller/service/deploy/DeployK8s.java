@@ -43,7 +43,7 @@ public class DeployK8s implements IDeploy {
 	@Autowired
 	private CommonInstanceMapper commonInstanceMapper;
 	@Autowired
-	private CommonVersionMapper commonVersionMapper;	
+	private CommonVersionMapper commonVersionMapper;
 	@Autowired
 	private CommonCheckpointMapper commonCheckpointMapper;
 
@@ -80,7 +80,7 @@ public class DeployK8s implements IDeploy {
 		case task:
 			CommonTask selectTask = commonTaskMapper.selectById(taskId);
 			CommonCheckpoint commonCheckpoint = commonCheckpointMapper.selectById(selectTask.getCheckpointId());
-			params.putAll(CommandType.proTaskConfig(selectTask,commonCheckpoint));// 默认配置
+			params.putAll(CommandType.proTaskConfig(selectTask, commonCheckpoint));// 默认配置
 			configName = commandType.formateConfigName(selectTask.getName());
 			middlewareId = selectTask.getMiddlewareId();
 			instanceId = selectTask.getInstanceId();
@@ -120,7 +120,9 @@ public class DeployK8s implements IDeploy {
 			configName = taskType.formateTaskName(selectTask.getName());
 			params.put(ConfigItem.task_name, configName);
 			CommonVersion commonVersion = commonVersionMapper.selectById(selectTask.getVersionId());
-			params.put(ConfigItem.task_version,   commonVersion.getMainVersion());
+			params.put(ConfigItem.task_version, commonVersion.getMainVersion());
+			params.put(ConfigItem.task_data_version, commonVersion.getDataVersion());
+			params.put(ConfigItem.task_image, commonVersion.getImage());
 			params.put(ConfigItem.task_debug, isDebug);
 			params.put(ConfigItem.configmap_name, taskType.formateConfigName(selectTask.getName()));
 			// 处理中间件的hosts

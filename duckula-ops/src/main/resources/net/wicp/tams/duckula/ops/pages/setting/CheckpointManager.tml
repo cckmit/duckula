@@ -40,11 +40,11 @@
 			      <tr>	
 			 	      <td class="frame_table_list_2_righttext">主机</td>
 			         <td>
-			            <r:validatebox name="host" style="width:250px;" required="true"/>
+			            <r:validatebox name="host" style="width:250px;" required="false"/>
 			          </td>		      
 			         <td class="frame_table_list_2_righttext">端口</td>
 			         <td>
-			            <r:numberbox id="port_save" name="port" style="width:250px;" min="1024" max="65536" missingMessage="端口必填，大于1024小于65536" required="true"/>
+			            <r:numberbox id="port_save" name="port" style="width:250px;" min="1024" max="65536" missingMessage="端口必填，大于1024小于65536" required="false"/>
 	                 </td>			 	  	 		 	     
 			      </tr>
 			      <tr>	

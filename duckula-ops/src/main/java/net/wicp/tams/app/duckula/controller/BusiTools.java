@@ -30,11 +30,11 @@ public abstract class BusiTools {
 	}
 
 
-	public static <T1, T2> Map<Integer, String> convertValues(List<T1> oriList, BaseMapper<T2> maper, String oriColName,
+	public static <T1, T2> Map<Long, String> convertValues(List<T1> oriList, BaseMapper<T2> maper, String oriColName,
 			String... colNames) {
 		Set<String> ids = CollectionUtil.getColSetFromObj(oriList, oriColName);
 		List<T2> retListObj = maper.selectBatchIds(ids);
-		Map<Integer, String> retmap = new HashMap<Integer, String>();
+		Map<Long, String> retmap = new HashMap<Long, String>();
 		String tempstr="@{id}~~~";
 		
 		for (int i = 0; i < colNames.length; i++) {
@@ -53,7 +53,7 @@ public abstract class BusiTools {
 		
 			String value = String.valueOf(TemplateRuntime.eval(tempstr, t2));
 			String[] tempAry = value.split("~~~");
-			retmap.put(Integer.parseInt(tempAry[0]), tempAry[1]);
+			retmap.put(Long.parseLong(tempAry[0]), tempAry[1]);
 		}
 		return retmap;
 	}

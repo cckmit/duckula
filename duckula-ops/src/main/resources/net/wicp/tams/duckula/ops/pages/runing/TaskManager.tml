@@ -7,8 +7,8 @@
 </head>
 <body>
    <r:query id="q"  qBlock="query" queryUrl="/runing/TaskManager:query"  uBlock="save"   saveUrl="/runing/TaskManager:save" deleteUrl="/runing/TaskManager:del" opFormatter="showopt" 
-        columns="[[{field:'name',width:200,title:'监听任务名'},{field:'version1',width:200,title:'版本'},{field:'deployId1',width:150,title:'布署环境'},{field:'middlewareId1',width:150,title:'目的中间件'},{field:'instanceId1',width:350,title:'监听实例'},{field:'checkpoint1',width:150,title:'检查点'},{field:'op',width:320,title:'操作'}]]" 
-        dialogStyle="width:900px;height:560px;" initAddHandle="initAdd" initSaveHandle="initUpdate"  pagination="true"/>
+        columns="[[{field:'name',width:200,title:'监听任务名'},{field:'version1',width:100,title:'版本'},{field:'deployId1',width:150,title:'布署环境'},{field:'middlewareId1',width:150,title:'目的中间件'},{field:'instanceId1',width:350,title:'监听实例'},{field:'checkpoint1',width:200,title:'检查点'},{field:'op',width:320,title:'操作'}]]" 
+        dialogStyle="width:900px;height:560px;" initAddHandle="initAdd" initSaveHandle="initUpdate"   saveCheckHandle="saveCheck" pagination="true"/>
    <t:block id="query">
        <table class="frame_table_list_4">
 		 <tr>
@@ -60,13 +60,19 @@
 			      <tr>	
 			          <td class="frame_table_list_2_righttext">ha类型</td>
 			 	     <td>
-			 	        <r:comboboxenum id="haType_save"  name="haType" enumClass="net.wicp.tams.app.duckula.controller.config.constant.HaType" required="true" panelHeight="120" panelWidth="160" width="160"></r:comboboxenum>
+			 	        <r:comboboxenum id="haType_save"  name="haType" enumClass="net.wicp.tams.app.duckula.controller.config.constant.HaType" required="true" panelHeight="120" panelWidth="160" width="180"></r:comboboxenum>
 			 	     </td>			      
 			         <td class="frame_table_list_2_righttext">启动的gtid</td>
 			         <td>
-			            <r:validatebox name="gtids" style="width:250px;" required="false"/>
+			            <r:validatebox name="gtids" style="width:375px;" required="false"/>
 	                 </td>			        			 	  	 		 	     
 			     </tr>
+			     <tr>
+			         <td class="frame_table_list_2_righttext">附加配置</td>
+			         <td colspan="3">
+			            <r:validatebox   name="attrConfig" style="width:755px;" required="false"/>
+	                 </td>
+			    </tr>
 			     <tr name="showmodel">
 			        <td colspan="4">
 				        <table id="dg" title="规则编辑" style="width:98%;height:180px"
@@ -113,12 +119,7 @@
 					    </div>
 			        </td>
 			     </tr>	
-			     <tr>
-			         <td class="frame_table_list_2_righttext">附加配置</td>
-			         <td colspan="3">
-			            <input  name="attrConfig" class="easyui-textbox" data-options="multiline:true,height:80,width:650"/>
-	                 </td>
-			    </tr>			      
+			     			      
 	 </table>
    </t:block>
 
@@ -127,16 +128,12 @@
 <script>	
     function showopt(value,row,index){
             var optCan=false;
-       	    var update= '<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit"  data-options="disabled:'+optCan+'"  style="margin-right:10px" onclick="doUpdateTrue('+index+') ">'+msg.update+'</a>';
-       	    var deletebut= '<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" data-options="disabled:'+optCan+'" style="margin-right:10px" onclick="_doDelete('+index+') ">'+msg.delete_+'</a>'; 
-       	    return update+deletebut;			
+       	    var update= '<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit"  data-options="disabled:'+optCan+'"  style="margin-right:10px" onclick="_doUpdate('+index+') ">'+msg.update+'</a>';
+       	    var deletebut= '<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" data-options="disabled:'+optCan+'" style="margin-right:10px" onclick="_doDelete('+index+') ">'+msg.delete_+'</a>';
+       	    var deploybut= '<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" data-options="disabled:'+optCan+'" style="margin-right:10px" onclick="doDeploy('+index+') ">部署</a>';  
+       	    return update+deletebut+deploybut;
      }
      
-     
-   function doUpdateTrue(index){
-      _doUpdate(index);
-   }
-
    function initAdd(){
       //$('#os_save').combobox('setValue','Linux');
    }
@@ -144,6 +141,34 @@
       //$('#ip2').textbox('readonly',true);
       //$('#version_save').textbox('readonly',true);
       syncRule();
+   }
+ 
+   var sleep = function(time) {
+      var startTime = new Date().getTime() + parseInt(time, 10);
+       while(lt(new Date().getTime(), startTime)) {}
+   }
+
+   function saveCheck(){
+      //updateRuleInput();
+      $('#dg').edatagrid('saveRow');
+      //sleep(3000);
+      return true;
+   }
+   
+   function doDeploy(index){
+	   var row=getRow(index);
+       $.rjzjh.confirm('你确定要启动此任务吗？',function(){
+           $.messager.progress({
+		    	title:window.msg.hintwaiting,
+		    	msg:window.msg.hinthandling
+            });    
+           $.post($.rjzjh.packurl('/runing/TaskManager:StartTask'),row,function(data){
+             $.messager.progress('close');
+             $.rjzjh.opt2(data,function(){
+			    jQuery('#q_grid').datagrid('reload');
+	         }); 
+	       },'json');
+       });
    }
      
    function getRow(index){

@@ -3,7 +3,9 @@ package net.wicp.tams.app.duckula.controller.config;
 public abstract class ConfigItem {
 	// 任务真实的名称
 	public static String task_name = "name";
-	public static String task_version = "version";
+	public static String task_version = "task_version";
+	public static String task_data_version = "data_version";
+	public static String task_image = "task_image";
 	public static String task_debug="debug";
 	public static String task_hosts="hosts";
 	// 任务的配置名称

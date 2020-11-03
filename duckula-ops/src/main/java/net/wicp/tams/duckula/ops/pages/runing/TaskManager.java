@@ -20,6 +20,7 @@ import net.wicp.tams.app.duckula.controller.dao.CommonInstanceMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonMiddlewareMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonTaskMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonVersionMapper;
+import net.wicp.tams.app.duckula.controller.service.DeployService;
 import net.wicp.tams.common.Result;
 import net.wicp.tams.common.apiext.CollectionUtil;
 import net.wicp.tams.common.apiext.StringUtil;
@@ -36,26 +37,24 @@ import net.wicp.tams.duckula.ops.WebTools;
 public class TaskManager {
 	@Inject
 	protected RequestGlobals requestGlobals;
-
 	@Inject
 	protected Request request;
-
 	@Inject
 	private IReq req;
-
 	@Inject
 	private CommonTaskMapper commonTaskMapper;
 	@Inject
 	private CommonVersionMapper commonVersionMapper;
 	@Inject
 	private CommonDeployMapper commonDeployMapper;
-
 	@Inject
 	private CommonMiddlewareMapper commonMiddlewareMapper;
 	@Inject
 	private CommonInstanceMapper commonInstanceMapper;
 	@Inject
 	private CommonCheckpointMapper commonCheckpointMapper;
+	@Inject
+	private DeployService deployService;
 
 	public TextStreamResponse onQuery() {
 		// ajax.req(key, params);
@@ -66,51 +65,51 @@ public class TaskManager {
 		}
 		Page<CommonTask> selectPage = commonTaskMapper.selectPage(WebTools.buildPage(request), queryWrapper);
 		IConvertValue<String> versionConvert = new IConvertValue<String>() {
-			private Map<Integer, String> datamap = BusiTools.convertValues(selectPage.getRecords(), commonVersionMapper,
+			private Map<Long, String> datamap = BusiTools.convertValues(selectPage.getRecords(), commonVersionMapper,
 					"versionId", "mainVersion");
 
 			@Override
 			public String getStr(String keyObj) {
-				return StringUtil.isNull(keyObj) ? "" : datamap.get(Integer.parseInt(keyObj));
+				return StringUtil.isNull(keyObj) ? "" : datamap.get(Long.parseLong(keyObj));
 			}
 		};
 
 		IConvertValue<String> deployConvert = new IConvertValue<String>() {
-			private Map<Integer, String> datamap = BusiTools.convertValues(selectPage.getRecords(), commonDeployMapper,
+			private Map<Long, String> datamap = BusiTools.convertValues(selectPage.getRecords(), commonDeployMapper,
 					"deployId", "name", "deploy");
 
 			@Override
 			public String getStr(String keyObj) {
-				return StringUtil.isNull(keyObj) ? "" : datamap.get(Integer.parseInt(keyObj));
+				return StringUtil.isNull(keyObj) ? "" : datamap.get(Long.parseLong(keyObj));
 			}
 		};
 		IConvertValue<String> middlewareConvert = new IConvertValue<String>() {
-			private Map<Integer, String> datamap = BusiTools.convertValues(selectPage.getRecords(),
-					commonMiddlewareMapper, "middlewareId", "name", "middlewareType");
+			private Map<Long, String> datamap = BusiTools.convertValues(selectPage.getRecords(), commonMiddlewareMapper,
+					"middlewareId", "name", "middlewareType");
 
 			@Override
 			public String getStr(String keyObj) {
-				return StringUtil.isNull(keyObj) ? "" : datamap.get(Integer.parseInt(keyObj));
+				return StringUtil.isNull(keyObj) ? "" : datamap.get(Long.parseLong(keyObj));
 			}
 		};
 
 		IConvertValue<String> instanceConvert = new IConvertValue<String>() {
-			private Map<Integer, String> datamap = BusiTools.convertValues(selectPage.getRecords(),
-					commonInstanceMapper, "instanceId", "name", "host");
+			private Map<Long, String> datamap = BusiTools.convertValues(selectPage.getRecords(), commonInstanceMapper,
+					"instanceId", "name", "host");
 
 			@Override
 			public String getStr(String keyObj) {
-				return StringUtil.isNull(keyObj) ? "" : datamap.get(Integer.parseInt(keyObj));
+				return StringUtil.isNull(keyObj) ? "" : datamap.get(Long.parseLong(keyObj));
 			}
 		};
 
 		IConvertValue<String> checkpointConvert = new IConvertValue<String>() {
-			private Map<Integer, String> datamap = BusiTools.convertValues(selectPage.getRecords(),
-					commonCheckpointMapper, "checkpointId", "name");
+			private Map<Long, String> datamap = BusiTools.convertValues(selectPage.getRecords(), commonCheckpointMapper,
+					"checkpointId", "name", "checkpointType");
 
 			@Override
 			public String getStr(String keyObj) {
-				return StringUtil.isNull(keyObj) ? "" : datamap.get(Integer.parseInt(keyObj));
+				return StringUtil.isNull(keyObj) ? "" : datamap.get(Long.parseLong(keyObj));
 			}
 		};
 
@@ -149,8 +148,20 @@ public class TaskManager {
 
 	public TextStreamResponse onRuleData() {
 		String commandtypeStr = request.getParameter("ruleData");
-		RuleManager ruleManager=new RuleManager(commandtypeStr);
+		RuleManager ruleManager = new RuleManager(commandtypeStr);
 		JSONArray retAry = ruleManager.toJsonAry();
 		return TapestryAssist.getTextStreamResponse(retAry.toJSONString());
 	}
+
+	/**
+	 * 开启任务
+	 * 
+	 * @return
+	 */
+	public TextStreamResponse onStartTask() {
+		final CommonTask commonTask = TapestryAssist.getBeanFromPage(CommonTask.class, requestGlobals);
+		Result startTask = deployService.startTask(commonTask, false);
+		return TapestryAssist.getTextStreamResponse(startTask);
+	}
+
 }
