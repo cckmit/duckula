@@ -6,8 +6,8 @@
    <title isMenu="true" module="3">检查点服务管理</title>
 </head>
 <body>
-   <r:query id="q"  qBlock="query" queryUrl="/runing/TaskManager:query"  uBlock="save"   saveUrl="/runing/TaskManager:save" deleteUrl="/runing/TaskManager:del" opFormatter="showopt" 
-        columns="[[{field:'name',width:200,title:'监听任务名'},{field:'version1',width:100,title:'版本'},{field:'deployId1',width:150,title:'布署环境'},{field:'middlewareId1',width:150,title:'目的中间件'},{field:'instanceId1',width:350,title:'监听实例'},{field:'checkpoint1',width:200,title:'检查点'},{field:'taskStatus',width:130,title:'运行状态'},{field:'pos',width:120,title:'运行位点'},{field:'op',width:320,title:'操作'}]]" 
+   <r:query id="q"  qBlock="query" queryUrl="/runing/DumpManager:query"  uBlock="save"   saveUrl="/runing/DumpManager:save" deleteUrl="/runing/DumpManager:del" opFormatter="showopt" 
+        columns="[[{field:'name',width:200,title:'监听任务名'},{field:'version1',width:100,title:'版本'},{field:'deployId1',width:150,title:'布署环境'},{field:'middlewareId1',width:150,title:'目的中间件'},{field:'instanceId1',width:350,title:'监听实例'},{field:'taskStatus',width:130,title:'运行状态'},{field:'op',width:320,title:'操作'}]]" 
         dialogStyle="width:900px;height:560px;" initAddHandle="initAdd" initSaveHandle="initUpdate"   saveCheckHandle="saveCheck" pagination="true"/>
    <t:block id="query">
        <table class="frame_table_list_4">
@@ -52,21 +52,10 @@
 			         <td>
 			           <r:combogrid id="middlewareId_save" name="middlewareId"   changeHandle="selectMiddleware" columns="[[{field:'name',width:100,title:'实例名'},{field:'middlewareType',width:70,title:'类型'},{field:'version',width:70,title:'版本'},{field:'host',width:250,title:'主机'},{field:'port',width:70,title:'端口'},{field:'username',width:70,title:'用户名'},{field:'remark',width:150,title:'备注'}]]" idfield="id" panelWidth="900" panelHeight="300" textfield="name" width="180" pagination="false" url="/setting/MiddlewareManager:query?needpage=false"></r:combogrid>
 			         </td> 		      
-			         <td class="frame_table_list_2_righttext">检查点</td>
+			         <td class="frame_table_list_2_righttext"></td>
 			         <td>
-			             <r:combogrid id="checkpointId_save" name="checkpointId"  columns="[[{field:'name',width:200,title:'检查点名'},{field:'checkpointType',width:70,title:'检查点类型'},{field:'host',width:200,title:'主机'},{field:'port',width:60,title:'端口'},{field:'username',width:100,title:'用户名'}]]" idfield="id" panelWidth="700" panelHeight="300" textfield="name" width="180" pagination="false" url="/setting/CheckpointManager:query?needpage=false"></r:combogrid>
 			         </td>			 	  	 		 	     
 			      </tr>
-			      <tr>	
-			          <td class="frame_table_list_2_righttext">ha类型</td>
-			 	     <td>
-			 	        <r:comboboxenum id="haType_save"  name="haType" enumClass="net.wicp.tams.app.duckula.controller.config.constant.HaType" required="true" panelHeight="120" panelWidth="160" width="180"></r:comboboxenum>
-			 	     </td>			      
-			         <td class="frame_table_list_2_righttext">启动的gtid</td>
-			         <td>
-			            <r:validatebox name="gtids" style="width:375px;" required="false"/>
-	                 </td>			        			 	  	 		 	     
-			     </tr>
 			     <tr>
 			         <td class="frame_table_list_2_righttext">附加配置</td>
 			         <td colspan="3">
@@ -169,7 +158,7 @@
 		    	title:window.msg.hintwaiting,
 		    	msg:window.msg.hinthandling
             });    
-           $.post($.rjzjh.packurl('/runing/TaskManager:StartTask'),row,function(data){
+           $.post($.rjzjh.packurl('/runing/DumpManager:StartTask'),row,function(data){
              $.messager.progress('close');
              $.rjzjh.opt2(data,function(){
 			    jQuery('#q_grid').datagrid('reload');
@@ -185,7 +174,7 @@
 		    	title:window.msg.hintwaiting,
 		    	msg:window.msg.hinthandling
             });    
-           $.post($.rjzjh.packurl('/runing/TaskManager:StopTask'),row,function(data){
+           $.post($.rjzjh.packurl('/runing/DumpManager:StopTask'),row,function(data){
              $.messager.progress('close');
              $.rjzjh.opt2(data,function(){
 			    jQuery('#q_grid').datagrid('reload');
@@ -217,7 +206,7 @@
    
    function syncRule(){
 	   var rules= $('#ruleEdit').val();
-       $.post($.rjzjh.packurl('/runing/TaskManager:ruleData'),{'ruleData':rules},function(data){
+       $.post($.rjzjh.packurl('/runing/DumpManager:ruleData'),{'ruleData':rules},function(data){
 	         //alert(data);//更新edatagrid
 	     $('#dg').edatagrid("loadData", data);
 	   },'json');
@@ -230,7 +219,7 @@
                    //提交后端进行格式化
 				   //onSave有时会不起作用，故用onBeforeSave
       	var datastr=JSON.stringify(dgdata);	
-      	$.post($.rjzjh.packurl('/runing/TaskManager:dataConvert'),{'saveData':datastr},function(data){
+      	$.post($.rjzjh.packurl('/runing/DumpManager:dataConvert'),{'saveData':datastr},function(data){
 	      	$.rjzjh.opt2(data,function(){
 	      	if("操作成功"==data.msg){
 		      	jQuery('#ruleEdit').val("");

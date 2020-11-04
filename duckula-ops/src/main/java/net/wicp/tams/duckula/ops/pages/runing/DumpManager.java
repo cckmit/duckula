@@ -17,13 +17,13 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import net.wicp.tams.app.duckula.controller.BusiTools;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonCheckpoint;
-import net.wicp.tams.app.duckula.controller.bean.models.CommonTask;
+import net.wicp.tams.app.duckula.controller.bean.models.CommonDump;
 import net.wicp.tams.app.duckula.controller.config.constant.CommandType;
 import net.wicp.tams.app.duckula.controller.dao.CommonCheckpointMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonDeployMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonInstanceMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonMiddlewareMapper;
-import net.wicp.tams.app.duckula.controller.dao.CommonTaskMapper;
+import net.wicp.tams.app.duckula.controller.dao.CommonDumpMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonVersionMapper;
 import net.wicp.tams.app.duckula.controller.service.DeployService;
 import net.wicp.tams.app.duckula.controller.service.PosService;
@@ -41,7 +41,7 @@ import net.wicp.tams.component.tools.TapestryAssist;
 import net.wicp.tams.duckula.ops.WebTools;
 
 @HtmlJs(easyuiadd = { EasyUIAdd.edatagrid })
-public class TaskManager {
+public class DumpManager {
 	@Inject
 	protected RequestGlobals requestGlobals;
 	@Inject
@@ -49,7 +49,7 @@ public class TaskManager {
 	@Inject
 	private IReq req;
 	@Inject
-	private CommonTaskMapper commonTaskMapper;
+	private CommonDumpMapper commonDumpMapper;
 	@Inject
 	private CommonVersionMapper commonVersionMapper;
 	@Inject
@@ -67,12 +67,12 @@ public class TaskManager {
 
 	public TextStreamResponse onQuery() {
 		// ajax.req(key, params);
-		final CommonTask commonCheckpoint = TapestryAssist.getBeanFromPage(CommonTask.class, requestGlobals);
-		QueryWrapper<CommonTask> queryWrapper = new QueryWrapper<CommonTask>();
+		final CommonDump commonCheckpoint = TapestryAssist.getBeanFromPage(CommonDump.class, requestGlobals);
+		QueryWrapper<CommonDump> queryWrapper = new QueryWrapper<CommonDump>();
 		if (StringUtil.isNotNull(commonCheckpoint.getName())) {
 			queryWrapper.likeRight("name", commonCheckpoint.getName());
 		}
-		Page<CommonTask> selectPage = commonTaskMapper.selectPage(WebTools.buildPage(request), queryWrapper);
+		Page<CommonDump> selectPage = commonDumpMapper.selectPage(WebTools.buildPage(request), queryWrapper);
 		IConvertValue<String> versionConvert = new IConvertValue<String>() {
 			private Map<Long, String> datamap = BusiTools.convertValues(selectPage.getRecords(), commonVersionMapper,
 					"versionId", "mainVersion");
@@ -111,66 +111,36 @@ public class TaskManager {
 				return StringUtil.isNull(keyObj) ? "" : datamap.get(Long.parseLong(keyObj));
 			}
 		};
-
-		// 查询检查点信息
-		Set<String> ids = CollectionUtil.getColSetFromObj(selectPage.getRecords(), "checkpointId");
-		List<CommonCheckpoint> listCheckpoint = commonCheckpointMapper.selectBatchIds(ids);
-		Map<Long, CommonCheckpoint> mapCheckpoint = new HashMap<Long, CommonCheckpoint>();
-		for (CommonCheckpoint checkpoint : listCheckpoint) {
-			mapCheckpoint.put(checkpoint.getId(), checkpoint);
-		}
-		IConvertValue<String> checkpointConvert = new IConvertValue<String>() {
-			@Override
-			public String getStr(String keyObj) {
-				if (StringUtil.isNull(keyObj)) {
-					return "";
-				}
-				CommonCheckpoint tempobj = mapCheckpoint.get(Long.parseLong(keyObj));
-				return StringUtil.isNull(keyObj) ? ""
-						: String.format("%s【%s】", tempobj.getName(), tempobj.getCheckpointType());
-			}
-		};
 		// 状态
 		IConvertValue<Object> statusConvert = new IConvertValue<Object>() {
 			@Override
 			public String getStr(Object object) {
-				CommonTask commonTask = (CommonTask) object;
-				return deployService.queryStatus(CommandType.task,commonTask.getId(),commonTask.getDeployId());
-			}
-		};
-		// 位点
-		IConvertValue<Object> posConvert = new IConvertValue<Object>() {
-			@Override
-			public String getStr(Object object) {
-				CommonTask commonTask=(CommonTask)object;
-				CommonCheckpoint checkpoint = mapCheckpoint.get(commonTask.getCheckpointId());
-				Position position = posService.selectPosition(checkpoint, commonTask.getName(), commonTask.getClientId());
-				return position==null?"":position.getTimeStr();
+				CommonDump commonDump = (CommonDump) object;
+				return deployService.queryStatus(CommandType.dump, commonDump.getId(), commonDump.getDeployId());
 			}
 		};
 		String retstr = EasyUiAssist.getJsonForGridAlias2(selectPage.getRecords(),
 				new String[] { "versionId,version1", "deployId,deployId1", "middlewareId,middlewareId1",
-						"instanceId,instanceId1", "checkpointId,checkpoint1", ",taskStatus", ",pos" },
+						"instanceId,instanceId1", ",taskStatus" },
 				CollectionUtil.newMap("version1", versionConvert, "deployId1", deployConvert, "middlewareId1",
-						middlewareConvert, "instanceId1", instanceConvert, "checkpoint1", checkpointConvert,
-						"taskStatus", statusConvert, "pos", posConvert),
+						middlewareConvert, "instanceId1", instanceConvert, "taskStatus", statusConvert),
 				selectPage.getTotal());
 		return TapestryAssist.getTextStreamResponse(retstr);
 	}
 
 	public TextStreamResponse onSave() {
-		final CommonTask commonCheckpoint = TapestryAssist.getBeanFromPage(CommonTask.class, requestGlobals);
+		final CommonDump commonCheckpoint = TapestryAssist.getBeanFromPage(CommonDump.class, requestGlobals);
 		if (commonCheckpoint.getId() == null) {
-			commonTaskMapper.insert(commonCheckpoint);
+			commonDumpMapper.insert(commonCheckpoint);
 		} else {
-			commonTaskMapper.updateByPrimaryKeySelective(commonCheckpoint);
+			commonDumpMapper.updateByPrimaryKeySelective(commonCheckpoint);
 		}
 		return TapestryAssist.getTextStreamResponse(Result.getSuc());
 	}
 
 	public TextStreamResponse onDel() {
 		String id = request.getParameter("id");
-		commonTaskMapper.deleteById(id);
+		commonDumpMapper.deleteById(id);
 		return TapestryAssist.getTextStreamResponse(Result.getSuc());
 	}
 
@@ -194,35 +164,37 @@ public class TaskManager {
 	 * 
 	 * @return
 	 */
-	public TextStreamResponse onStartTask() {
-		final CommonTask commonTask = TapestryAssist.getBeanFromPage(CommonTask.class, requestGlobals);
-		Result startTask = deployService.startTask(CommandType.task, commonTask.getId(),commonTask.getDeployId(), false);
-		return TapestryAssist.getTextStreamResponse(startTask);
+	public TextStreamResponse onStartDump() {
+		final CommonDump commonDump = TapestryAssist.getBeanFromPage(CommonDump.class, requestGlobals);
+		Result startDump = deployService.startTask(CommandType.dump, commonDump.getId(), commonDump.getDeployId(),
+				false);
+		return TapestryAssist.getTextStreamResponse(startDump);
 	}
-	///停止任务,会等3分钟。
-	public TextStreamResponse onStopTask() {
-		final CommonTask commonTask = TapestryAssist.getBeanFromPage(CommonTask.class, requestGlobals);
-		Result stopTask = deployService.stopTask(CommandType.task,commonTask.getId(),commonTask.getDeployId());
-		long maxWaitTime=180000;//最长等10S
-		long curTime=System.currentTimeMillis();
+
+	/// 停止任务,会等3分钟。
+	public TextStreamResponse onStopDump() {
+		final CommonDump commonDump = TapestryAssist.getBeanFromPage(CommonDump.class, requestGlobals);
+		Result stopDump = deployService.stopTask(CommandType.dump, commonDump.getId(), commonDump.getDeployId());
+		long maxWaitTime = 180000;// 最长等10S
+		long curTime = System.currentTimeMillis();
 		while (true) {
-			if(System.currentTimeMillis()-curTime>maxWaitTime) {
+			if (System.currentTimeMillis() - curTime > maxWaitTime) {
 				break;
 			}
 			try {
 				Thread.sleep(3000);
 			} catch (InterruptedException e) {
 			}
-			String queryStatus = deployService.queryStatus(CommandType.task,commonTask.getId(),commonTask.getDeployId());
-			System.out.println("=========stoptasking============"+queryStatus);
-			if(queryStatus.contains("未布署")) {
+			String queryStatus = deployService.queryStatus(CommandType.dump, commonDump.getId(),
+					commonDump.getDeployId());
+			System.out.println("=========stoptasking============" + queryStatus);
+			if (queryStatus.contains("未布署")) {
 				break;
-			}else {
+			} else {
 				continue;
 			}
 		}
-		return TapestryAssist.getTextStreamResponse(stopTask);
+		return TapestryAssist.getTextStreamResponse(stopDump);
 	}
-	
 
 }

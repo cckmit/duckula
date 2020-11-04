@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import net.wicp.tams.app.duckula.controller.bean.models.CommonTask;
+import net.wicp.tams.app.duckula.controller.config.constant.CommandType;
 import net.wicp.tams.app.duckula.controller.dao.CommonTaskMapper;
 import net.wicp.tams.app.duckula.controller.service.DeployService;
 import net.wicp.tams.common.Result;
@@ -23,8 +24,10 @@ public class StartTask implements IBusiApp {
 	public CusDynaBean exe(CusDynaBean inputBean, CusDynaBean outBeanOri) throws ProjectException {
 		long taskId = Long.parseLong(inputBean.getStrValueByName("taskId"));
 		CommonTask commonTask = commonTaskMapper.selectById(taskId);
-		Boolean isdebug = Boolean.parseBoolean(inputBean.getStrValueByName("isDebug"));//  inputBean.getByType(Boolean.class, "isdebug");
-		Result startTask = deployService.startTask(commonTask, isdebug);
+		Boolean isdebug = Boolean.parseBoolean(inputBean.getStrValueByName("isDebug"));// inputBean.getByType(Boolean.class,
+																						// "isdebug");
+		Result startTask = deployService.startTask(CommandType.task, commonTask.getId(), commonTask.getDeployId(),
+				isdebug);
 		outBeanOri.setResult(startTask);
 		return outBeanOri;
 	}

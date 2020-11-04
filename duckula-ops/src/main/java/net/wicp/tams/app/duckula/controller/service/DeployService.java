@@ -58,36 +58,30 @@ public class DeployService {
 	 * @param isdebug
 	 * @return
 	 */
-	public Result startTask(CommonTask commonTask, boolean isdebug) {
-		if (commonTask == null) {
-			return Result.getError("任务没有配置");
-		}
-		CommonDeploy commonDeploy = commonDeployMapper.selectById(commonTask.getDeployId());
+	public Result startTask(CommandType commandType,Long taskId,Long deployId, boolean isdebug) {
+		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployId);
 		if (commonDeploy == null) {
 			return Result.getError("部署环境没有配置");
 		}
 		IDeploy deploy = (IDeploy) SpringAssit.context.getBean(commonDeploy.getDeploy());
 		try {
-			deploy.start(commonDeploy.getId(), CommandType.task, commonTask.getId(), isdebug);
+			deploy.start(commonDeploy.getId(), commandType, taskId, isdebug);
 		} catch (Throwable e) {
 			return Result.getError(e.getMessage());
 		}
-		Result ret = Result.getSuc(commonTask.getName());
+		Result ret = Result.getSuc("布署成功");
 		return ret;
 	}
 	
-	public Result stopTask(CommonTask commonTask) {
-		if (commonTask == null) {
-			return Result.getError("任务没有配置");
-		}
-		CommonDeploy commonDeploy = commonDeployMapper.selectById(commonTask.getDeployId());
+	public Result stopTask(CommandType commandType,Long taskId,Long deployId) {
+		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployId);
 		if (commonDeploy == null) {
 			return Result.getError("部署环境没有配置");
 		}
 		IDeploy deploy = (IDeploy) SpringAssit.context.getBean(commonDeploy.getDeploy());
 		try {
-			deploy.stop(commonDeploy.getId(),  CommandType.task, commonTask.getId());
-			return Result.getSuc(commonTask.getName());
+			deploy.stop(commonDeploy.getId(),  CommandType.task, taskId);
+			return Result.getSuc("删除成功");
 		} catch (Throwable e) {
 			return Result.getError(e.getMessage());
 		}
@@ -95,11 +89,11 @@ public class DeployService {
 	
 	
 	//////TODO 查询状态
-	public String queryStatus(CommonTask commonTask) {
-		CommonDeploy commonDeploy = commonDeployMapper.selectById(commonTask.getDeployId());
+	public String queryStatus(CommandType commandType,Long taskId,Long deployId) {
+		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployId);
 		IDeploy deploy = (IDeploy) SpringAssit.context.getBean(commonDeploy.getDeploy());
 		try {
-			String queryStatus = deploy.queryStatus(commonDeploy.getId(), CommandType.task, commonTask.getId());
+			String queryStatus = deploy.queryStatus(commonDeploy.getId(), commandType, taskId);
 			return queryStatus;
 		} catch (Exception e) {
 			return null;

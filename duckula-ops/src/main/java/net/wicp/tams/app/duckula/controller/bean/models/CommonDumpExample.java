@@ -292,146 +292,6 @@ public class CommonDumpExample {
 			return (Criteria) this;
 		}
 
-		public Criteria andVersionIsNull() {
-			addCriterion("version is null");
-			return (Criteria) this;
-		}
-
-		public Criteria andVersionIsNotNull() {
-			addCriterion("version is not null");
-			return (Criteria) this;
-		}
-
-		public Criteria andVersionEqualTo(String value) {
-			addCriterion("version =", value, "version");
-			return (Criteria) this;
-		}
-
-		public Criteria andVersionNotEqualTo(String value) {
-			addCriterion("version <>", value, "version");
-			return (Criteria) this;
-		}
-
-		public Criteria andVersionGreaterThan(String value) {
-			addCriterion("version >", value, "version");
-			return (Criteria) this;
-		}
-
-		public Criteria andVersionGreaterThanOrEqualTo(String value) {
-			addCriterion("version >=", value, "version");
-			return (Criteria) this;
-		}
-
-		public Criteria andVersionLessThan(String value) {
-			addCriterion("version <", value, "version");
-			return (Criteria) this;
-		}
-
-		public Criteria andVersionLessThanOrEqualTo(String value) {
-			addCriterion("version <=", value, "version");
-			return (Criteria) this;
-		}
-
-		public Criteria andVersionLike(String value) {
-			addCriterion("version like", value, "version");
-			return (Criteria) this;
-		}
-
-		public Criteria andVersionNotLike(String value) {
-			addCriterion("version not like", value, "version");
-			return (Criteria) this;
-		}
-
-		public Criteria andVersionIn(List<String> values) {
-			addCriterion("version in", values, "version");
-			return (Criteria) this;
-		}
-
-		public Criteria andVersionNotIn(List<String> values) {
-			addCriterion("version not in", values, "version");
-			return (Criteria) this;
-		}
-
-		public Criteria andVersionBetween(String value1, String value2) {
-			addCriterion("version between", value1, value2, "version");
-			return (Criteria) this;
-		}
-
-		public Criteria andVersionNotBetween(String value1, String value2) {
-			addCriterion("version not between", value1, value2, "version");
-			return (Criteria) this;
-		}
-
-		public Criteria andNamespaceIsNull() {
-			addCriterion("namespace is null");
-			return (Criteria) this;
-		}
-
-		public Criteria andNamespaceIsNotNull() {
-			addCriterion("namespace is not null");
-			return (Criteria) this;
-		}
-
-		public Criteria andNamespaceEqualTo(String value) {
-			addCriterion("namespace =", value, "namespace");
-			return (Criteria) this;
-		}
-
-		public Criteria andNamespaceNotEqualTo(String value) {
-			addCriterion("namespace <>", value, "namespace");
-			return (Criteria) this;
-		}
-
-		public Criteria andNamespaceGreaterThan(String value) {
-			addCriterion("namespace >", value, "namespace");
-			return (Criteria) this;
-		}
-
-		public Criteria andNamespaceGreaterThanOrEqualTo(String value) {
-			addCriterion("namespace >=", value, "namespace");
-			return (Criteria) this;
-		}
-
-		public Criteria andNamespaceLessThan(String value) {
-			addCriterion("namespace <", value, "namespace");
-			return (Criteria) this;
-		}
-
-		public Criteria andNamespaceLessThanOrEqualTo(String value) {
-			addCriterion("namespace <=", value, "namespace");
-			return (Criteria) this;
-		}
-
-		public Criteria andNamespaceLike(String value) {
-			addCriterion("namespace like", value, "namespace");
-			return (Criteria) this;
-		}
-
-		public Criteria andNamespaceNotLike(String value) {
-			addCriterion("namespace not like", value, "namespace");
-			return (Criteria) this;
-		}
-
-		public Criteria andNamespaceIn(List<String> values) {
-			addCriterion("namespace in", values, "namespace");
-			return (Criteria) this;
-		}
-
-		public Criteria andNamespaceNotIn(List<String> values) {
-			addCriterion("namespace not in", values, "namespace");
-			return (Criteria) this;
-		}
-
-		public Criteria andNamespaceBetween(String value1, String value2) {
-			addCriterion("namespace between", value1, value2, "namespace");
-			return (Criteria) this;
-		}
-
-		public Criteria andNamespaceNotBetween(String value1, String value2) {
-			addCriterion("namespace not between", value1, value2, "namespace");
-			return (Criteria) this;
-		}
-
 		public Criteria andRuleIsNull() {
 			addCriterion("rule is null");
 			return (Criteria) this;
@@ -502,6 +362,66 @@ public class CommonDumpExample {
 			return (Criteria) this;
 		}
 
+		public Criteria andVersionIdIsNull() {
+			addCriterion("version_id is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andVersionIdIsNotNull() {
+			addCriterion("version_id is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andVersionIdEqualTo(Long value) {
+			addCriterion("version_id =", value, "versionId");
+			return (Criteria) this;
+		}
+
+		public Criteria andVersionIdNotEqualTo(Long value) {
+			addCriterion("version_id <>", value, "versionId");
+			return (Criteria) this;
+		}
+
+		public Criteria andVersionIdGreaterThan(Long value) {
+			addCriterion("version_id >", value, "versionId");
+			return (Criteria) this;
+		}
+
+		public Criteria andVersionIdGreaterThanOrEqualTo(Long value) {
+			addCriterion("version_id >=", value, "versionId");
+			return (Criteria) this;
+		}
+
+		public Criteria andVersionIdLessThan(Long value) {
+			addCriterion("version_id <", value, "versionId");
+			return (Criteria) this;
+		}
+
+		public Criteria andVersionIdLessThanOrEqualTo(Long value) {
+			addCriterion("version_id <=", value, "versionId");
+			return (Criteria) this;
+		}
+
+		public Criteria andVersionIdIn(List<Long> values) {
+			addCriterion("version_id in", values, "versionId");
+			return (Criteria) this;
+		}
+
+		public Criteria andVersionIdNotIn(List<Long> values) {
+			addCriterion("version_id not in", values, "versionId");
+			return (Criteria) this;
+		}
+
+		public Criteria andVersionIdBetween(Long value1, Long value2) {
+			addCriterion("version_id between", value1, value2, "versionId");
+			return (Criteria) this;
+		}
+
+		public Criteria andVersionIdNotBetween(Long value1, Long value2) {
+			addCriterion("version_id not between", value1, value2, "versionId");
+			return (Criteria) this;
+		}
+
 		public Criteria andDeployIdIsNull() {
 			addCriterion("deploy_id is null");
 			return (Criteria) this;
@@ -559,6 +479,256 @@ public class CommonDumpExample {
 
 		public Criteria andDeployIdNotBetween(Long value1, Long value2) {
 			addCriterion("deploy_id not between", value1, value2, "deployId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserIdIsNull() {
+			addCriterion("user_id is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserIdIsNotNull() {
+			addCriterion("user_id is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserIdEqualTo(Long value) {
+			addCriterion("user_id =", value, "userId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserIdNotEqualTo(Long value) {
+			addCriterion("user_id <>", value, "userId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserIdGreaterThan(Long value) {
+			addCriterion("user_id >", value, "userId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserIdGreaterThanOrEqualTo(Long value) {
+			addCriterion("user_id >=", value, "userId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserIdLessThan(Long value) {
+			addCriterion("user_id <", value, "userId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserIdLessThanOrEqualTo(Long value) {
+			addCriterion("user_id <=", value, "userId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserIdIn(List<Long> values) {
+			addCriterion("user_id in", values, "userId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserIdNotIn(List<Long> values) {
+			addCriterion("user_id not in", values, "userId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserIdBetween(Long value1, Long value2) {
+			addCriterion("user_id between", value1, value2, "userId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserIdNotBetween(Long value1, Long value2) {
+			addCriterion("user_id not between", value1, value2, "userId");
+			return (Criteria) this;
+		}
+
+		public Criteria andMiddlewareIdIsNull() {
+			addCriterion("middleware_id is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andMiddlewareIdIsNotNull() {
+			addCriterion("middleware_id is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andMiddlewareIdEqualTo(Long value) {
+			addCriterion("middleware_id =", value, "middlewareId");
+			return (Criteria) this;
+		}
+
+		public Criteria andMiddlewareIdNotEqualTo(Long value) {
+			addCriterion("middleware_id <>", value, "middlewareId");
+			return (Criteria) this;
+		}
+
+		public Criteria andMiddlewareIdGreaterThan(Long value) {
+			addCriterion("middleware_id >", value, "middlewareId");
+			return (Criteria) this;
+		}
+
+		public Criteria andMiddlewareIdGreaterThanOrEqualTo(Long value) {
+			addCriterion("middleware_id >=", value, "middlewareId");
+			return (Criteria) this;
+		}
+
+		public Criteria andMiddlewareIdLessThan(Long value) {
+			addCriterion("middleware_id <", value, "middlewareId");
+			return (Criteria) this;
+		}
+
+		public Criteria andMiddlewareIdLessThanOrEqualTo(Long value) {
+			addCriterion("middleware_id <=", value, "middlewareId");
+			return (Criteria) this;
+		}
+
+		public Criteria andMiddlewareIdIn(List<Long> values) {
+			addCriterion("middleware_id in", values, "middlewareId");
+			return (Criteria) this;
+		}
+
+		public Criteria andMiddlewareIdNotIn(List<Long> values) {
+			addCriterion("middleware_id not in", values, "middlewareId");
+			return (Criteria) this;
+		}
+
+		public Criteria andMiddlewareIdBetween(Long value1, Long value2) {
+			addCriterion("middleware_id between", value1, value2, "middlewareId");
+			return (Criteria) this;
+		}
+
+		public Criteria andMiddlewareIdNotBetween(Long value1, Long value2) {
+			addCriterion("middleware_id not between", value1, value2, "middlewareId");
+			return (Criteria) this;
+		}
+
+		public Criteria andInstanceIdIsNull() {
+			addCriterion("instance_id is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andInstanceIdIsNotNull() {
+			addCriterion("instance_id is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andInstanceIdEqualTo(Long value) {
+			addCriterion("instance_id =", value, "instanceId");
+			return (Criteria) this;
+		}
+
+		public Criteria andInstanceIdNotEqualTo(Long value) {
+			addCriterion("instance_id <>", value, "instanceId");
+			return (Criteria) this;
+		}
+
+		public Criteria andInstanceIdGreaterThan(Long value) {
+			addCriterion("instance_id >", value, "instanceId");
+			return (Criteria) this;
+		}
+
+		public Criteria andInstanceIdGreaterThanOrEqualTo(Long value) {
+			addCriterion("instance_id >=", value, "instanceId");
+			return (Criteria) this;
+		}
+
+		public Criteria andInstanceIdLessThan(Long value) {
+			addCriterion("instance_id <", value, "instanceId");
+			return (Criteria) this;
+		}
+
+		public Criteria andInstanceIdLessThanOrEqualTo(Long value) {
+			addCriterion("instance_id <=", value, "instanceId");
+			return (Criteria) this;
+		}
+
+		public Criteria andInstanceIdIn(List<Long> values) {
+			addCriterion("instance_id in", values, "instanceId");
+			return (Criteria) this;
+		}
+
+		public Criteria andInstanceIdNotIn(List<Long> values) {
+			addCriterion("instance_id not in", values, "instanceId");
+			return (Criteria) this;
+		}
+
+		public Criteria andInstanceIdBetween(Long value1, Long value2) {
+			addCriterion("instance_id between", value1, value2, "instanceId");
+			return (Criteria) this;
+		}
+
+		public Criteria andInstanceIdNotBetween(Long value1, Long value2) {
+			addCriterion("instance_id not between", value1, value2, "instanceId");
+			return (Criteria) this;
+		}
+
+		public Criteria andAttrConfigIsNull() {
+			addCriterion("attr_config is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andAttrConfigIsNotNull() {
+			addCriterion("attr_config is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andAttrConfigEqualTo(String value) {
+			addCriterion("attr_config =", value, "attrConfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andAttrConfigNotEqualTo(String value) {
+			addCriterion("attr_config <>", value, "attrConfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andAttrConfigGreaterThan(String value) {
+			addCriterion("attr_config >", value, "attrConfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andAttrConfigGreaterThanOrEqualTo(String value) {
+			addCriterion("attr_config >=", value, "attrConfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andAttrConfigLessThan(String value) {
+			addCriterion("attr_config <", value, "attrConfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andAttrConfigLessThanOrEqualTo(String value) {
+			addCriterion("attr_config <=", value, "attrConfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andAttrConfigLike(String value) {
+			addCriterion("attr_config like", value, "attrConfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andAttrConfigNotLike(String value) {
+			addCriterion("attr_config not like", value, "attrConfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andAttrConfigIn(List<String> values) {
+			addCriterion("attr_config in", values, "attrConfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andAttrConfigNotIn(List<String> values) {
+			addCriterion("attr_config not in", values, "attrConfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andAttrConfigBetween(String value1, String value2) {
+			addCriterion("attr_config between", value1, value2, "attrConfig");
+			return (Criteria) this;
+		}
+
+		public Criteria andAttrConfigNotBetween(String value1, String value2) {
+			addCriterion("attr_config not between", value1, value2, "attrConfig");
 			return (Criteria) this;
 		}
 	}

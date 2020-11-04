@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.mvel2.templates.TemplateRuntime;
 
@@ -32,9 +33,12 @@ public abstract class BusiTools {
 
 	public static <T1, T2> Map<Long, String> convertValues(List<T1> oriList, BaseMapper<T2> maper, String oriColName,
 			String... colNames) {
-		Set<String> ids = CollectionUtil.getColSetFromObj(oriList, oriColName);
-		List<T2> retListObj = maper.selectBatchIds(ids);
 		Map<Long, String> retmap = new HashMap<Long, String>();
+		if(CollectionUtils.isEmpty(oriList)) {
+			return retmap;
+		}
+		Set<String> ids = CollectionUtil.getColSetFromObj(oriList, oriColName);
+		List<T2> retListObj = maper.selectBatchIds(ids);		
 		String tempstr="@{id}~~~";
 		
 		for (int i = 0; i < colNames.length; i++) {
