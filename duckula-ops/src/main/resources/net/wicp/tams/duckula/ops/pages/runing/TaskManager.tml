@@ -38,9 +38,9 @@
 	                 </td>	
 			      </tr>
 			      <tr>	
-			         <td class="frame_table_list_2_righttext">目的中间件</td>
+			         <td class="frame_table_list_2_righttext">监听实例</td>
 			         <td>
-			           <r:combogrid id="middlewareId_save" name="middlewareId"   changeHandle="selectMiddleware" columns="[[{field:'name',width:100,title:'实例名'},{field:'middlewareType',width:70,title:'类型'},{field:'version',width:70,title:'版本'},{field:'host',width:250,title:'主机'},{field:'port',width:70,title:'端口'},{field:'username',width:70,title:'用户名'},{field:'remark',width:150,title:'备注'}]]" idfield="id" panelWidth="900" panelHeight="300" textfield="name" width="180" pagination="false" url="/setting/MiddlewareManager:query?needpage=false"></r:combogrid>
+			            <r:combogrid id="instanceId_save" name="instanceId"   changeHandle="selectInstance"   columns="[[{field:'name',width:200,title:'实例名'},{field:'host',width:350,title:'主机'},{field:'port',width:70,title:'端口'},{field:'username',width:100,title:'用户名'}]]" idfield="id" panelWidth="750" panelHeight="700" textfield="name" width="180" pagination="false" url="/setting/InstanceManager:query?needpage=false"></r:combogrid>
 			         </td>
 			 	      <td class="frame_table_list_2_righttext">布署环境</td>
 			         <td>
@@ -48,10 +48,10 @@
 			        </td>		 	  	 		 	     
 			      </tr>
 			      <tr>	
-			 	      <td class="frame_table_list_2_righttext">监听实例</td>
+			 	     <td class="frame_table_list_2_righttext">目的中间件</td>
 			         <td>
-			            <r:combogrid id="instanceId_save" name="instanceId"   changeHandle="selectInstance"   columns="[[{field:'name',width:200,title:'实例名'},{field:'host',width:350,title:'主机'},{field:'port',width:70,title:'端口'},{field:'username',width:100,title:'用户名'}]]" idfield="id" panelWidth="750" panelHeight="700" textfield="name" width="180" pagination="false" url="/setting/InstanceManager:query?needpage=false"></r:combogrid>
-			         </td>		      
+			           <r:combogrid id="middlewareId_save" name="middlewareId"   changeHandle="selectMiddleware" columns="[[{field:'name',width:100,title:'实例名'},{field:'middlewareType',width:70,title:'类型'},{field:'version',width:70,title:'版本'},{field:'host',width:250,title:'主机'},{field:'port',width:70,title:'端口'},{field:'username',width:70,title:'用户名'},{field:'remark',width:150,title:'备注'}]]" idfield="id" panelWidth="900" panelHeight="300" textfield="name" width="180" pagination="false" url="/setting/MiddlewareManager:query?needpage=false"></r:combogrid>
+			         </td> 		      
 			         <td class="frame_table_list_2_righttext">检查点</td>
 			         <td>
 			             <r:combogrid id="checkpointId_save" name="checkpointId"  columns="[[{field:'name',width:200,title:'检查点名'},{field:'checkpointType',width:70,title:'检查点类型'},{field:'host',width:200,title:'主机'},{field:'port',width:60,title:'端口'},{field:'username',width:100,title:'用户名'}]]" idfield="id" panelWidth="700" panelHeight="300" textfield="name" width="180" pagination="false" url="/setting/CheckpointManager:query?needpage=false"></r:combogrid>
@@ -243,6 +243,8 @@
 	    // 选择规则
         if('kafka'==middlewareType){
            showRuleColumn(["topic","splitkey"]);
+        }else if('mysql'==middlewareType){
+           showRuleColumn(["dbtb"]);
         }else if('es' == middlewareType){
             showRuleColumn(["index"]);
         }else if('redis'==middlewareType){
