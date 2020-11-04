@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import io.kubernetes.client.openapi.models.V1ConfigMap;
+import io.kubernetes.client.openapi.models.V1Deployment;
+import io.kubernetes.client.openapi.models.V1Pod;
+import io.kubernetes.client.openapi.models.V1Status;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonCheckpoint;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonInstance;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonMiddleware;
@@ -108,7 +111,22 @@ public class DeployK8s implements IDeploy {
 	}
 
 	@Override
-	public void start(Long deployid, CommandType taskType, Long taskId, boolean isDebug) {
+	public Result deleteConfig(Long deployid, CommandType commandType, Long taskId) {
+		String configName = null;
+		switch (commandType) {
+		case task:
+			CommonTask selectTask = commonTaskMapper.selectById(taskId);
+			configName = commandType.formateConfigName(selectTask.getName());
+			break;
+		default:
+			break;
+		}
+		k8sService.deleteConfigmap(deployid, configName);
+		return Result.getSuc();
+	}
+
+	@Override
+	public Result start(Long deployid, CommandType taskType, Long taskId, boolean isDebug) {
 		if (!checkExit(deployid, taskType, taskId).isSuc()) {
 			addConfig(deployid, taskType, taskId);
 		}
@@ -133,7 +151,60 @@ public class DeployK8s implements IDeploy {
 		default:
 			break;
 		}
-		k8sService.deployTask(deployid, params);
+		V1Deployment deployTask = k8sService.deployTask(deployid, params);
+		if (deployTask != null) {
+			return Result.getSuc();
+		} else {
+			return Result.getError("布署失败");
+		}
+	}
+
+	@Override
+	public Result stop(Long deployid, CommandType taskType, Long taskId) {
+		String configName = null;
+		switch (taskType) {
+		case task:
+			CommonTask selectTask = commonTaskMapper.selectById(taskId);
+			configName = taskType.formateTaskName(selectTask.getName());
+			break;
+		default:
+			break;
+		}
+		V1Status stopTask = k8sService.stopTask(deployid, configName);
+		if ("Success".equals(stopTask.getStatus())) {
+			if (checkExit(deployid, taskType, taskId).isSuc()) {// 删除配置信息
+				deleteConfig(deployid, taskType, taskId);
+			}
+			return Result.getSuc();
+		} else {
+			return Result.getError(stopTask.getReason());
+		}
+	}
+
+	@Override
+	public String queryStatus(Long deployid, CommandType taskType, Long taskId) {
+		String configName = null;
+		switch (taskType) {
+		case task:
+			CommonTask selectTask = commonTaskMapper.selectById(taskId);
+			configName = taskType.formateTaskName(selectTask.getName());
+			break;
+		default:
+			break;
+		}
+		try {
+			V1Pod queryPod = k8sService.selectPod(deployid, configName);
+			return DeployType.k8s.getStatus(queryPod.getStatus().getPhase());
+			// 结果不太准确
+			// V1Deployment selectDeployment = k8sService.selectDeployment(deployid,
+			// configName);
+			// Integer availableReplicas =
+			// selectDeployment.getStatus().getAvailableReplicas();
+			// String statusstr=availableReplicas==1?"Running":"Stoping";
+			// return DeployType.k8s.getStatus(statusstr);
+		} catch (Exception e) {
+			return DeployType.k8s.getStatus(null);
+		}
 	}
 
 }

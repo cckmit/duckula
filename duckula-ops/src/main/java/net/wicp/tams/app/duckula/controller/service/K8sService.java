@@ -1,8 +1,10 @@
 package net.wicp.tams.app.duckula.controller.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,9 @@ import io.kubernetes.client.openapi.apis.CoreV1Api;
 import io.kubernetes.client.openapi.models.V1ConfigMap;
 import io.kubernetes.client.openapi.models.V1Deployment;
 import io.kubernetes.client.openapi.models.V1Job;
+import io.kubernetes.client.openapi.models.V1Pod;
+import io.kubernetes.client.openapi.models.V1PodList;
+import io.kubernetes.client.openapi.models.V1Status;
 import io.kubernetes.client.util.Yaml;
 import lombok.extern.slf4j.Slf4j;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonDeploy;
@@ -79,6 +84,63 @@ public class K8sService {
 		}
 	}
 
+	public V1Status stopTask(Long deployid, String name) {
+		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployid);
+		ApiClient apiClient = getApiClient(commonDeploy);
+		try {
+			AppsV1Api appsV1Api = new AppsV1Api(apiClient);
+			V1Status delStatus = appsV1Api.deleteNamespacedDeployment(name, commonDeploy.getNamespace(), null, null,
+					null, null, null, null);
+			return delStatus;
+		} catch (ApiException e) {
+			if (e.getCode() == 404) {
+				throw new ProjectExceptionRuntime(ExceptAll.k8s_api_notfind, "要停止的资源没找到");
+			} else {
+				throw new ProjectExceptionRuntime(ExceptAll.k8s_api_other, e.getMessage());
+			}
+		} catch (Exception e) {
+			log.error("部署task失败", e);
+			throw new ProjectExceptionRuntime(ExceptDuckula.duckula_deploy_excetion, e.getMessage());
+		}
+	}
+
+	public V1Pod selectPod(Long deployid, String configName) {
+		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployid);
+		ApiClient apiClient = getApiClient(commonDeploy);
+		try {
+			CoreV1Api coreApi = new CoreV1Api(apiClient);// appname=
+			// V1Pod v1Pod = coreApi.readNamespacedPod(configName,
+			// commonDeploy.getNamespace(), null, null, null);
+			List<V1Pod> items = coreApi.listNamespacedPod(commonDeploy.getNamespace(), null, false, null, null,
+					String.format("appname=%s", configName), null, null, null, null).getItems();
+			if (CollectionUtils.isEmpty(items)) {
+				return null;
+			}
+			return items.get(0);
+		} catch (ApiException e) {
+			throw new ProjectExceptionRuntime(ExceptAll.k8s_api_other, e.getMessage());
+		} catch (Exception e) {
+			log.error("部署task失败", e);
+			throw new ProjectExceptionRuntime(ExceptDuckula.duckula_deploy_excetion, e.getMessage());
+		}
+	}
+	
+	public V1Deployment selectDeployment(Long deployid, String configName) {
+		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployid);
+		ApiClient apiClient = getApiClient(commonDeploy);
+		try {
+			AppsV1Api appsV1Api = new AppsV1Api(apiClient);
+			V1Deployment deployment = appsV1Api.readNamespacedDeployment(configName, commonDeploy.getNamespace(), null, null, null) ;
+			return deployment;
+		} catch (ApiException e) {
+			throw new ProjectExceptionRuntime(ExceptAll.k8s_api_other, e.getMessage());
+		} catch (Exception e) {
+			log.error("部署task失败", e);
+			throw new ProjectExceptionRuntime(ExceptDuckula.duckula_deploy_excetion, e.getMessage());
+		}
+	}
+	
+
 	/**
 	 * 部署configmap
 	 * 
@@ -110,6 +172,25 @@ public class K8sService {
 		} catch (Exception e) {
 			log.error("创建V1ConfigMap失败", e);
 			throw new RuntimeException(e);
+		}
+	}
+	
+	public V1Status deleteConfigmap(Long deployid, String configMapName) {
+		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployid);
+		ApiClient apiClient = getApiClient(commonDeploy);
+		try {
+			CoreV1Api coreV1Api = new CoreV1Api(apiClient);
+			V1Status deleteNamespacedConfigMap = coreV1Api.deleteNamespacedConfigMap(configMapName, commonDeploy.getNamespace(), null, null, null, null, null, null);
+			return deleteNamespacedConfigMap;
+		} catch (ApiException e) {
+			if (e.getCode() == 404) {
+				throw new ProjectExceptionRuntime(ExceptAll.k8s_api_notfind, "要停止的资源没找到");
+			} else {
+				throw new ProjectExceptionRuntime(ExceptAll.k8s_api_other, e.getMessage());
+			}
+		} catch (Exception e) {
+			log.error("删除configmap失败", e);
+			throw new ProjectExceptionRuntime(ExceptDuckula.duckula_deploy_excetion, e.getMessage());
 		}
 	}
 

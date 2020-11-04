@@ -1,6 +1,9 @@
 package net.wicp.tams.duckula.ops.pages.runing;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.Request;
@@ -13,7 +16,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import net.wicp.tams.app.duckula.controller.BusiTools;
+import net.wicp.tams.app.duckula.controller.bean.models.CommonCheckpoint;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonTask;
+import net.wicp.tams.app.duckula.controller.config.constant.CheckpointType;
 import net.wicp.tams.app.duckula.controller.dao.CommonCheckpointMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonDeployMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonInstanceMapper;
@@ -21,10 +26,12 @@ import net.wicp.tams.app.duckula.controller.dao.CommonMiddlewareMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonTaskMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonVersionMapper;
 import net.wicp.tams.app.duckula.controller.service.DeployService;
+import net.wicp.tams.app.duckula.controller.service.PosService;
 import net.wicp.tams.common.Result;
 import net.wicp.tams.common.apiext.CollectionUtil;
 import net.wicp.tams.common.apiext.StringUtil;
 import net.wicp.tams.common.apiext.json.EasyUiAssist;
+import net.wicp.tams.common.binlog.alone.ListenerConf.Position;
 import net.wicp.tams.common.binlog.alone.binlog.bean.RuleManager;
 import net.wicp.tams.common.callback.IConvertValue;
 import net.wicp.tams.component.annotation.HtmlJs;
@@ -55,6 +62,8 @@ public class TaskManager {
 	private CommonCheckpointMapper commonCheckpointMapper;
 	@Inject
 	private DeployService deployService;
+	@Inject
+	private PosService posService;
 
 	public TextStreamResponse onQuery() {
 		// ajax.req(key, params);
@@ -103,21 +112,48 @@ public class TaskManager {
 			}
 		};
 
+		// 查询检查点信息
+		Set<String> ids = CollectionUtil.getColSetFromObj(selectPage.getRecords(), "checkpointId");
+		List<CommonCheckpoint> listCheckpoint = commonCheckpointMapper.selectBatchIds(ids);
+		Map<Long, CommonCheckpoint> mapCheckpoint = new HashMap<Long, CommonCheckpoint>();
+		for (CommonCheckpoint checkpoint : listCheckpoint) {
+			mapCheckpoint.put(checkpoint.getId(), checkpoint);
+		}
 		IConvertValue<String> checkpointConvert = new IConvertValue<String>() {
-			private Map<Long, String> datamap = BusiTools.convertValues(selectPage.getRecords(), commonCheckpointMapper,
-					"checkpointId", "name", "checkpointType");
-
 			@Override
 			public String getStr(String keyObj) {
-				return StringUtil.isNull(keyObj) ? "" : datamap.get(Long.parseLong(keyObj));
+				if (StringUtil.isNull(keyObj)) {
+					return "";
+				}
+				CommonCheckpoint tempobj = mapCheckpoint.get(Long.parseLong(keyObj));
+				return StringUtil.isNull(keyObj) ? ""
+						: String.format("%s【%s】", tempobj.getName(), tempobj.getCheckpointType());
 			}
 		};
-
+		// 状态
+		IConvertValue<Object> statusConvert = new IConvertValue<Object>() {
+			@Override
+			public String getStr(Object object) {
+				CommonTask commonTask = (CommonTask) object;
+				return deployService.queryStatus(commonTask);
+			}
+		};
+		// 位点
+		IConvertValue<Object> posConvert = new IConvertValue<Object>() {
+			@Override
+			public String getStr(Object object) {
+				CommonTask commonTask=(CommonTask)object;
+				CommonCheckpoint checkpoint = mapCheckpoint.get(commonTask.getCheckpointId());
+				Position position = posService.selectPosition(checkpoint, commonTask.getName(), commonTask.getClientId());
+				return position==null?"":position.getTimeStr();
+			}
+		};
 		String retstr = EasyUiAssist.getJsonForGridAlias2(selectPage.getRecords(),
 				new String[] { "versionId,version1", "deployId,deployId1", "middlewareId,middlewareId1",
-						"instanceId,instanceId1", "checkpointId,checkpoint1" },
+						"instanceId,instanceId1", "checkpointId,checkpoint1", ",taskStatus", ",pos" },
 				CollectionUtil.newMap("version1", versionConvert, "deployId1", deployConvert, "middlewareId1",
-						middlewareConvert, "instanceId1", instanceConvert, "checkpoint1", checkpointConvert),
+						middlewareConvert, "instanceId1", instanceConvert, "checkpoint1", checkpointConvert,
+						"taskStatus", statusConvert, "pos", posConvert),
 				selectPage.getTotal());
 		return TapestryAssist.getTextStreamResponse(retstr);
 	}
@@ -163,5 +199,30 @@ public class TaskManager {
 		Result startTask = deployService.startTask(commonTask, false);
 		return TapestryAssist.getTextStreamResponse(startTask);
 	}
+	///停止任务,会等3分钟。
+	public TextStreamResponse onStopTask() {
+		final CommonTask commonTask = TapestryAssist.getBeanFromPage(CommonTask.class, requestGlobals);
+		Result stopTask = deployService.stopTask(commonTask);
+		long maxWaitTime=180000;//最长等10S
+		long curTime=System.currentTimeMillis();
+		while (true) {
+			if(System.currentTimeMillis()-curTime>maxWaitTime) {
+				break;
+			}
+			try {
+				Thread.sleep(3000);
+			} catch (InterruptedException e) {
+			}
+			String queryStatus = deployService.queryStatus(commonTask);
+			System.out.println("=========stoptasking============"+queryStatus);
+			if(queryStatus.contains("未布署")) {
+				break;
+			}else {
+				continue;
+			}
+		}
+		return TapestryAssist.getTextStreamResponse(stopTask);
+	}
+	
 
 }

@@ -7,7 +7,7 @@
 </head>
 <body>
    <r:query id="q"  qBlock="query" queryUrl="/runing/TaskManager:query"  uBlock="save"   saveUrl="/runing/TaskManager:save" deleteUrl="/runing/TaskManager:del" opFormatter="showopt" 
-        columns="[[{field:'name',width:200,title:'监听任务名'},{field:'version1',width:100,title:'版本'},{field:'deployId1',width:150,title:'布署环境'},{field:'middlewareId1',width:150,title:'目的中间件'},{field:'instanceId1',width:350,title:'监听实例'},{field:'checkpoint1',width:200,title:'检查点'},{field:'op',width:320,title:'操作'}]]" 
+        columns="[[{field:'name',width:200,title:'监听任务名'},{field:'version1',width:100,title:'版本'},{field:'deployId1',width:150,title:'布署环境'},{field:'middlewareId1',width:150,title:'目的中间件'},{field:'instanceId1',width:350,title:'监听实例'},{field:'checkpoint1',width:200,title:'检查点'},{field:'taskStatus',width:130,title:'运行状态'},{field:'pos',width:120,title:'运行位点'},{field:'op',width:320,title:'操作'}]]" 
         dialogStyle="width:900px;height:560px;" initAddHandle="initAdd" initSaveHandle="initUpdate"   saveCheckHandle="saveCheck" pagination="true"/>
    <t:block id="query">
        <table class="frame_table_list_4">
@@ -127,11 +127,13 @@
    
 <script>	
     function showopt(value,row,index){
-            var optCan=false;
-       	    var update= '<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit"  data-options="disabled:'+optCan+'"  style="margin-right:10px" onclick="_doUpdate('+index+') ">'+msg.update+'</a>';
-       	    var deletebut= '<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" data-options="disabled:'+optCan+'" style="margin-right:10px" onclick="_doDelete('+index+') ">'+msg.delete_+'</a>';
-       	    var deploybut= '<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" data-options="disabled:'+optCan+'" style="margin-right:10px" onclick="doDeploy('+index+') ">部署</a>';  
-       	    return update+deletebut+deploybut;
+            var reg = RegExp(/未布署/);
+            var opt=!reg.test(row.taskStatus);
+       	    var update= '<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit"  data-options="disabled:'+opt+'"  style="margin-right:10px" onclick="_doUpdate('+index+') ">'+msg.update+'</a>';
+       	    var deletebut= '<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" data-options="disabled:'+opt+'" style="margin-right:10px" onclick="_doDelete('+index+') ">'+msg.delete_+'</a>';
+       	    var deploybut= '<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" data-options="disabled:'+opt+'" style="margin-right:10px" onclick="doStart('+index+') ">启动</a>'; 
+       	    var stopbut= '<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" data-options="disabled:'+!opt+'" style="margin-right:10px" onclick="doStop('+index+') ">停止</a>';  
+       	    return update+deletebut+deploybut+stopbut;
      }
      
    function initAdd(){
@@ -155,7 +157,7 @@
       return true;
    }
    
-   function doDeploy(index){
+   function doStart(index){
 	   var row=getRow(index);
        $.rjzjh.confirm('你确定要启动此任务吗？',function(){
            $.messager.progress({
@@ -170,6 +172,23 @@
 	       },'json');
        });
    }
+   
+   function doStop(index){
+       var row=getRow(index);
+       $.rjzjh.confirm('停止任务需要一段时间，你确定要停止此任务吗？',function(){
+           $.messager.progress({
+		    	title:window.msg.hintwaiting,
+		    	msg:window.msg.hinthandling
+            });    
+           $.post($.rjzjh.packurl('/runing/TaskManager:StopTask'),row,function(data){
+             $.messager.progress('close');
+             $.rjzjh.opt2(data,function(){
+			    jQuery('#q_grid').datagrid('reload');
+	         }); 
+	       },'json');
+       });
+   }
+   
      
    function getRow(index){
      	 var rows = jQuery('#q_grid').datagrid('getRows');

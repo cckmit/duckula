@@ -3,6 +3,8 @@ package net.wicp.tams.app.duckula.controller.config.constant;
 import java.util.Map;
 
 import net.wicp.tams.common.apiext.CollectionUtil;
+import net.wicp.tams.common.apiext.StringUtil;
+import net.wicp.tams.common.callback.IConvertValue;
 import net.wicp.tams.common.constant.dic.intf.IEnumCombobox;
 
 /***
@@ -12,11 +14,36 @@ import net.wicp.tams.common.constant.dic.intf.IEnumCombobox;
  *
  */
 public enum DeployType implements IEnumCombobox {
-	k8s("k8s环境"),
+	k8s("k8s环境", new IConvertValue<String>() {
+		@Override
+		public String getStr(String keyObj) {
+			if (StringUtil.isNull(keyObj)) {
+				return TaskStatus.noExit.retStatusMessage(null);
+			} else if ("Running".equals(keyObj)) {
+				return TaskStatus.running.retStatusMessage(keyObj);
+			} else {
+				return TaskStatus.other.retStatusMessage(keyObj);
+			}
+		}
+	}),
 
-	docker("docker环境"),
+	docker("docker环境", new IConvertValue<String>() {
 
-	host("centos7主机");
+		@Override
+		public String getStr(String keyObj) {
+			// TODO Auto-generated method stub
+			return keyObj;
+		}
+	}),
+
+	host("centos7主机", new IConvertValue<String>() {
+
+		@Override
+		public String getStr(String keyObj) {
+			// TODO Auto-generated method stub
+			return keyObj;
+		}
+	});
 
 	/****
 	 * 必须要英文
@@ -64,8 +91,15 @@ public enum DeployType implements IEnumCombobox {
 
 	private final String desc;
 
-	private DeployType(String desc) {
+	private final IConvertValue<String> statusConvert;
+
+	private DeployType(String desc, IConvertValue<String> statusConvert) {
 		this.desc = desc;
+		this.statusConvert = statusConvert;
+	}
+
+	public String getStatus(String statusTrue) {
+		return statusConvert.getStr(statusTrue);
 	}
 
 	public String getDesc() {

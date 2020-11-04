@@ -75,6 +75,36 @@ public class DeployService {
 		Result ret = Result.getSuc(commonTask.getName());
 		return ret;
 	}
+	
+	public Result stopTask(CommonTask commonTask) {
+		if (commonTask == null) {
+			return Result.getError("任务没有配置");
+		}
+		CommonDeploy commonDeploy = commonDeployMapper.selectById(commonTask.getDeployId());
+		if (commonDeploy == null) {
+			return Result.getError("部署环境没有配置");
+		}
+		IDeploy deploy = (IDeploy) SpringAssit.context.getBean(commonDeploy.getDeploy());
+		try {
+			deploy.stop(commonDeploy.getId(),  CommandType.task, commonTask.getId());
+			return Result.getSuc(commonTask.getName());
+		} catch (Throwable e) {
+			return Result.getError(e.getMessage());
+		}
+	}
+	
+	
+	//////TODO 查询状态
+	public String queryStatus(CommonTask commonTask) {
+		CommonDeploy commonDeploy = commonDeployMapper.selectById(commonTask.getDeployId());
+		IDeploy deploy = (IDeploy) SpringAssit.context.getBean(commonDeploy.getDeploy());
+		try {
+			String queryStatus = deploy.queryStatus(commonDeploy.getId(), CommandType.task, commonTask.getId());
+			return queryStatus;
+		} catch (Exception e) {
+			return null;
+		}
+	}
 
 	public Result initHost(CommonDeploy commonDeploy, String pwd) {
 		DeployType deployType = DeployType.valueOf(commonDeploy.getDeploy());

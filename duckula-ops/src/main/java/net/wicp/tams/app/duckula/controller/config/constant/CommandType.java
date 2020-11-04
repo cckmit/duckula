@@ -48,13 +48,15 @@ public enum CommandType implements IEnumCombobox {
 		retmap.put("common.binlog.alone.binlog.global.chk", checkpointType.getSaveCheckPointClassName());
 		switch (checkpointType) {
 		case Mysql:
-			// TODO 加上mysql的配置
+			retmap.put("common.binlog.alone.binlog.global.chk.mysql.host", commonCheckpoint.getHost());
+			retmap.put("common.binlog.alone.binlog.global.chk.mysql.port", commonCheckpoint.getPort());
+			retmap.put("common.binlog.alone.binlog.global.chk.mysql.defaultdb", commonCheckpoint.getDefaultDb());
+			retmap.put("common.binlog.alone.binlog.global.chk.mysql.username", commonCheckpoint.getUsername());
+			retmap.put("common.binlog.alone.binlog.global.chk.mysql.password", commonCheckpoint.getPassword());
 			break;
-
 		default:
 			break;
 		}
-		// TODO 业务监听器
 		retmap.put("common.binlog.alone.binlog.global.conf.groupId", commonTask.getGroupId());
 		retmap.put("common.binlog.alone.binlog.global.conf.clientId", commonTask.getClientId());
 		retmap.put("common.binlog.alone.binlog.global.conf.haType", commonTask.getHaType());
