@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonDeploy;
-import net.wicp.tams.app.duckula.controller.bean.models.CommonTask;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonVersion;
 import net.wicp.tams.app.duckula.controller.config.constant.CommandType;
 import net.wicp.tams.app.duckula.controller.config.constant.DeployType;
@@ -34,23 +33,7 @@ public class DeployService {
 	@Autowired
 	private CommonVersionMapper commonVersionMapper;
 
-	/**
-	 * 把配置信息部署上去
-	 * 
-	 * @param commonTask
-	 */
-	public void deployTask(CommonTask commonTask) {
-		CommonDeploy commonDeploy = commonDeployMapper.selectById(commonTask.getDeployId());
-		DeployType deployType = DeployType.valueOf(commonDeploy.getDeploy());
-		IDeploy deploy = (IDeploy) SpringAssit.context.getBean(deployType.name());
-		Result checkExit = deploy.checkExit(commonTask.getDeployId(), CommandType.task, commonTask.getId());
-		if (!checkExit.isSuc()) {
-			deploy.addConfig(commonTask.getDeployId(), CommandType.task, commonTask.getId());
-		}
-		// deploy.start();
-		log.info("the task:{} start sucess", commonTask.getName());
-	}
-
+	
 	/***
 	 * 启动监听任务
 	 * 
@@ -80,7 +63,7 @@ public class DeployService {
 		}
 		IDeploy deploy = (IDeploy) SpringAssit.context.getBean(commonDeploy.getDeploy());
 		try {
-			deploy.stop(commonDeploy.getId(),  CommandType.task, taskId);
+			deploy.stop(commonDeploy.getId(),  commandType, taskId);
 			return Result.getSuc("删除成功");
 		} catch (Throwable e) {
 			return Result.getError(e.getMessage());

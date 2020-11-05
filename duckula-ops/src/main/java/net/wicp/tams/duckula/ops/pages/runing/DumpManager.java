@@ -187,7 +187,7 @@ public class DumpManager {
 			}
 			String queryStatus = deployService.queryStatus(CommandType.dump, commonDump.getId(),
 					commonDump.getDeployId());
-			System.out.println("=========stoptasking============" + queryStatus);
+			System.out.println("=========stopdump============" + queryStatus);
 			if (queryStatus.contains("未布署")) {
 				break;
 			} else {

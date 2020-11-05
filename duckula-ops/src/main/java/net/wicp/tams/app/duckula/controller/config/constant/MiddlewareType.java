@@ -106,13 +106,20 @@ public enum MiddlewareType implements IEnumCombobox{
 		switch (commandType) {
 		case task:
 			retmap.put("common.binlog.alone.binlog.global.conf.listener", verPluginByVersion[1]);// 监听器
+			if (verPluginByVersion[3] != null) {
+				retmap.put("common.binlog.alone.binlog.global.busiPluginDir", verPluginByVersion[3]);
+			}
+			break;
+		case dump:
+			retmap.put("common.binlog.alone.dump.global.ori.busiSender", verPluginByVersion[2]);// 监听器
+			if (verPluginByVersion[3] != null) {
+				retmap.put("common.binlog.alone.dump.global.busiPluginDir", verPluginByVersion[3]);
+			}
 			break;
 		default:
 			break;
 		}
-		if (verPluginByVersion[3] != null) {
-			retmap.put("common.binlog.alone.binlog.global.busiPluginDir", verPluginByVersion[3]);
-		}
+		
 		return retmap;
 	}
 

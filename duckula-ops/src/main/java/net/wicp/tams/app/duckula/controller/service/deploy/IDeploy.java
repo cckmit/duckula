@@ -3,6 +3,8 @@ package net.wicp.tams.app.duckula.controller.service.deploy;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Case;
+
 import net.wicp.tams.app.duckula.controller.bean.models.CommonInstance;
 import net.wicp.tams.app.duckula.controller.config.constant.CommandType;
 import net.wicp.tams.common.Result;
@@ -22,14 +24,28 @@ public interface IDeploy {
 	public String queryStatus(Long deployid, CommandType taskType, Long taskId);
 
 	// 配置监听实例
-	public default Map<String, Object> configInstall(CommonInstance commonInstance) {
+	public default Map<String, Object> configInstall(CommandType taskType,CommonInstance commonInstance) {
 		Map<String, Object> tempmap = new HashMap<String, Object>();
-		tempmap.put("common.binlog.alone.binlog.global.conf.host", commonInstance.getHost());
-		tempmap.put("common.binlog.alone.binlog.global.conf.port", commonInstance.getPort());
-		tempmap.put("common.binlog.alone.binlog.global.conf.username", commonInstance.getUsername());
-		tempmap.put("common.binlog.alone.binlog.global.conf.password", commonInstance.getPassword());
-		tempmap.put("common.binlog.alone.binlog.global.conf.rds", "false");// 写死为false,不理rds
-		tempmap.put("common.apiext.classload.child-first", false);// 不明白为什么是true，还没查到原因，写死为false
+		switch (taskType) {
+		case task:
+			tempmap.put("common.binlog.alone.binlog.global.conf.host", commonInstance.getHost());
+			tempmap.put("common.binlog.alone.binlog.global.conf.port", commonInstance.getPort());
+			tempmap.put("common.binlog.alone.binlog.global.conf.username", commonInstance.getUsername());
+			tempmap.put("common.binlog.alone.binlog.global.conf.password", commonInstance.getPassword());
+			tempmap.put("common.binlog.alone.binlog.global.conf.rds", "false");// 写死为false,不理rds			
+			break;
+		case dump:
+			tempmap.put("common.binlog.alone.dump.global.pool.host", commonInstance.getHost());
+			tempmap.put("common.binlog.alone.dump.global.pool.port", commonInstance.getPort());
+			tempmap.put("common.binlog.alone.dump.global.pool.username", commonInstance.getUsername());
+			tempmap.put("common.binlog.alone.dump.global.pool.password", commonInstance.getPassword());
+			//tempmap.put("common.binlog.alone.binlog.global.conf.rds", "false");// 写死为false,不理rds  dump不认
+			break;
+		default:
+			break;
+		}
+		
+		
 		return tempmap;
 	}
 }

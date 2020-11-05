@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: rjzjh-duckula-task-chart
+  name: ${name}
   labels:
     helm.sh/chart: duckula-task-chart-0.1.0
     app.kubernetes.io/name: duckula-task-chart
@@ -18,12 +18,20 @@ spec:
       labels:
         app.kubernetes.io/name: duckula-task-chart
         app.kubernetes.io/instance: rjzjh
+        appname: ${name}
     spec:
       restartPolicy: Never
-
+      hostAliases:
+      <#list hosts as host>
+      - ip: ${host.ip}
+        hostnames: 
+       <#list host.hostnames as hostname>
+        - ${hostname}
+       </#list>
+      </#list>
       initContainers:
       - name: pro-data
-        image: 'registry.choerodon.xforceplus.com/rjzjh/duckula3:data.3.3.4'
+        image: '${task_image}:${data_version}'
         imagePullPolicy: IfNotPresent
         volumeMounts:
         - name: data
@@ -34,7 +42,7 @@ spec:
         - name: duckula-task-chart
           securityContext:
             {}
-          image: 'registry.choerodon.xforceplus.com/rjzjh/duckula3:task.3.3.4'
+          image: '${task_image}:${task_version}'
           imagePullPolicy: IfNotPresent
           env:
           - name: taskid
@@ -88,4 +96,4 @@ spec:
         emptyDir: {}
       - name: userconfig-root
         configMap:
-          name: rjzjh-duckula-task-chart-root
+          name: ${configmapname}

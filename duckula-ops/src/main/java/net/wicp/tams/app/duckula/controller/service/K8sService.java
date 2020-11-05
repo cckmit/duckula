@@ -17,13 +17,13 @@ import io.kubernetes.client.openapi.models.V1ConfigMap;
 import io.kubernetes.client.openapi.models.V1Deployment;
 import io.kubernetes.client.openapi.models.V1Job;
 import io.kubernetes.client.openapi.models.V1Pod;
-import io.kubernetes.client.openapi.models.V1PodList;
 import io.kubernetes.client.openapi.models.V1Status;
 import io.kubernetes.client.util.Yaml;
 import lombok.extern.slf4j.Slf4j;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonDeploy;
 import net.wicp.tams.app.duckula.controller.config.ConfigItem;
 import net.wicp.tams.app.duckula.controller.config.ExceptDuckula;
+import net.wicp.tams.app.duckula.controller.config.constant.DeployType;
 import net.wicp.tams.app.duckula.controller.config.k8s.ApiClientManager;
 import net.wicp.tams.app.duckula.controller.dao.CommonDeployMapper;
 import net.wicp.tams.common.apiext.FreemarkUtil;
@@ -45,19 +45,25 @@ public class K8sService {
 	@Autowired
 	private CommonDeployMapper commonDeployMapper;
 
-	public V1Job deployDump(Long deployid, Map<String, String> params) {
+	public V1Job deployDump(Long deployid, Map<String, Object> params) {
 		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployid);
 		ApiClient apiClient = getApiClient(commonDeploy);
 		try {
-			String context = IOUtil.slurp(IOUtil.fileToInputStream("/job.yaml", K8sService.class));
+			String context = IOUtil.slurp(IOUtil.fileToInputStream("/deploy/k8s/job.yaml", K8sService.class));
 			String result = FreemarkUtil.getInst().doProcessByTemp(context, params);
 			V1Job yamlSvc = (V1Job) Yaml.load(result);
 			BatchV1Api batchV1Api = new BatchV1Api(apiClient);
 			V1Job v1Job = batchV1Api.createNamespacedJob(commonDeploy.getNamespace(), yamlSvc, "true", null, null);
 			return v1Job;
+		} catch (ApiException e) {
+			if ("Conflict".equals(e.getMessage())) {
+				throw new ProjectExceptionRuntime(ExceptAll.k8s_deploy_conflict);
+			} else {
+				throw new ProjectExceptionRuntime(ExceptAll.k8s_api_other, e.getMessage());
+			}
 		} catch (Exception e) {
-			log.error("创建job失败", e);
-			throw new RuntimeException(e);
+			log.error("部署dump失败", e);
+			throw new ProjectExceptionRuntime(ExceptDuckula.duckula_deploy_excetion, e.getMessage());
 		}
 	}
 
@@ -83,7 +89,7 @@ public class K8sService {
 			throw new ProjectExceptionRuntime(ExceptDuckula.duckula_deploy_excetion, e.getMessage());
 		}
 	}
-
+	
 	public V1Status stopTask(Long deployid, String name) {
 		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployid);
 		ApiClient apiClient = getApiClient(commonDeploy);
@@ -99,10 +105,45 @@ public class K8sService {
 				throw new ProjectExceptionRuntime(ExceptAll.k8s_api_other, e.getMessage());
 			}
 		} catch (Exception e) {
-			log.error("部署task失败", e);
+			log.error("停止dump失败", e);
 			throw new ProjectExceptionRuntime(ExceptDuckula.duckula_deploy_excetion, e.getMessage());
 		}
 	}
+	
+	//删除job不会删除pod
+	public V1Status stopDump(Long deployid, String name) {
+		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployid);
+		ApiClient apiClient = getApiClient(commonDeploy);
+		V1Status delStatus=null;
+		try {
+			BatchV1Api batchV1Api = new BatchV1Api(apiClient);
+			delStatus = batchV1Api.deleteNamespacedJob(name, commonDeploy.getNamespace(), null, null,
+					null, null, null, null);
+			return delStatus;
+		} catch (ApiException e) {
+			//if (e.getCode() == 404) {
+			//	throw new ProjectExceptionRuntime(ExceptAll.k8s_api_notfind, "要停止的资源没找到");
+			//} else {
+			//	throw new ProjectExceptionRuntime(ExceptAll.k8s_api_other, e.getMessage());
+			//}
+		} catch (Exception e) {
+			//com.google.gson.JsonSyntaxException是正确的
+			//log.error("停止dump失败", e);
+			//throw new ProjectExceptionRuntime(ExceptDuckula.duckula_deploy_excetion, e.getMessage());
+		}
+		//删除相关的pod
+		CoreV1Api coreV1Api = new CoreV1Api(apiClient);
+		V1Pod selectPod = selectPod(deployid,name);
+		String name2 = selectPod.getMetadata().getName();
+		try {
+			coreV1Api.deleteNamespacedPod(name2, commonDeploy.getNamespace(), null, null, null, null, null, null);
+		} catch (Exception e) {
+			//log.error("删除job相关的pod失败",e);
+			//throw new ProjectExceptionRuntime(ExceptDuckula.duckula_deploy_excetion, e.getMessage());
+		}
+		return delStatus;		
+	}
+	
 
 	public V1Pod selectPod(Long deployid, String configName) {
 		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployid);
@@ -124,6 +165,8 @@ public class K8sService {
 			throw new ProjectExceptionRuntime(ExceptDuckula.duckula_deploy_excetion, e.getMessage());
 		}
 	}
+	
+	
 	
 	public V1Deployment selectDeployment(Long deployid, String configName) {
 		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployid);
@@ -149,7 +192,9 @@ public class K8sService {
 	 * @param params        key：文件名 value：文件内容，不需要考虑空格,暂时只有一个
 	 * @return
 	 */
-	public V1ConfigMap deployConfigmap(Long deployid, String configMapName, String configmapStr) {
+	public V1ConfigMap deployConfigmap(Long deployid, String configMapName, Map<String, Object> contextParams) {
+		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployid);
+		String configmapStr = DeployType.formateConfig(DeployType.valueOf(commonDeploy.getDeploy()), contextParams);		
 		Map<String, String> params = new HashMap<String, String>();
 		params.put(ConfigItem.configmap_name, configMapName);
 		// 保证第一行为非空字符，为了避免yaml语法检查失败
@@ -159,7 +204,7 @@ public class K8sService {
 			configmapStr = configmapStr.substring(4);
 		}
 		params.put(ConfigItem.configmap_filecontext, configmapStr);
-		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployid);
+		
 		ApiClient apiClient = getApiClient(commonDeploy);
 		try {
 			String context = IOUtil.slurp(IOUtil.fileToInputStream("/deploy/k8s/configMap.yaml", K8sService.class));

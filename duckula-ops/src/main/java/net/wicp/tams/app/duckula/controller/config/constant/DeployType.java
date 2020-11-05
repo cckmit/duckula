@@ -74,7 +74,7 @@ public enum DeployType implements IEnumCombobox {
 	 * @param datamap
 	 * @return
 	 */
-	public static String formateConfig(DeployType deployType, CommandType commandType, Map<String, Object> datamap) {
+	public static String formateConfig(DeployType deployType, Map<String, Object> datamap) {
 		String propString = "";
 		switch (deployType) {
 		case k8s:

@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 
 import io.kubernetes.client.openapi.models.V1ConfigMap;
 import io.kubernetes.client.openapi.models.V1Deployment;
+import io.kubernetes.client.openapi.models.V1Job;
 import io.kubernetes.client.openapi.models.V1Pod;
 import io.kubernetes.client.openapi.models.V1Status;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonCheckpoint;
+import net.wicp.tams.app.duckula.controller.bean.models.CommonDump;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonInstance;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonMiddleware;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonTask;
@@ -21,6 +23,7 @@ import net.wicp.tams.app.duckula.controller.config.constant.CommandType;
 import net.wicp.tams.app.duckula.controller.config.constant.DeployType;
 import net.wicp.tams.app.duckula.controller.config.constant.MiddlewareType;
 import net.wicp.tams.app.duckula.controller.dao.CommonCheckpointMapper;
+import net.wicp.tams.app.duckula.controller.dao.CommonDumpMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonInstanceMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonMiddlewareMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonTaskMapper;
@@ -42,6 +45,8 @@ public class DeployK8s implements IDeploy {
 	@Autowired
 	private CommonTaskMapper commonTaskMapper;
 	@Autowired
+	private CommonDumpMapper commonDumpMapper;
+	@Autowired
 	private CommonMiddlewareMapper commonMiddlewareMapper;
 	@Autowired
 	private CommonInstanceMapper commonInstanceMapper;
@@ -57,6 +62,10 @@ public class DeployK8s implements IDeploy {
 		case task:
 			CommonTask selectTask = commonTaskMapper.selectById(taskId);
 			configName = taskType.formateConfigName(selectTask.getName());
+			break;
+		case dump:
+			CommonDump commonDump = commonDumpMapper.selectById(taskId);
+			configName = taskType.formateConfigName(commonDump.getName());
 			break;
 		default:
 			break;
@@ -88,6 +97,13 @@ public class DeployK8s implements IDeploy {
 			middlewareId = selectTask.getMiddlewareId();
 			instanceId = selectTask.getInstanceId();
 			break;
+		case dump:
+			CommonDump commonDump = commonDumpMapper.selectById(taskId);
+			params.putAll(CommandType.proDumpConfig(commonDump));// 默认配置
+			configName = commandType.formateConfigName(commonDump.getName());
+			middlewareId = commonDump.getMiddlewareId();
+			instanceId = commonDump.getInstanceId();
+			break;	
 		default:
 			break;
 		}
@@ -102,11 +118,9 @@ public class DeployK8s implements IDeploy {
 		// 配置监听实例,如consumer可能就没有这个实例
 		if (instanceId != null) {
 			CommonInstance commonInstance = commonInstanceMapper.selectById(instanceId);
-			params.putAll(configInstall(commonInstance));
+			params.putAll(configInstall(commandType,commonInstance));
 		}
-
-		String propStr = DeployType.formateConfig(DeployType.k8s, commandType, params);
-		k8sService.deployConfigmap(deployid, configName, propStr);
+		k8sService.deployConfigmap(deployid, configName, params);
 		return Result.getSuc();
 	}
 
@@ -147,30 +161,55 @@ public class DeployK8s implements IDeploy {
 			CommonMiddleware middleware = commonMiddlewareMapper.selectById(selectTask.getMiddlewareId());
 			List<Host> jsonToHosts = Host.jsonToHosts(middleware.getHostsconfig());
 			params.put(ConfigItem.task_hosts, jsonToHosts);
-			break;
+			V1Deployment deployTask = k8sService.deployTask(deployid, params);
+			if (deployTask != null) {
+				return Result.getSuc();
+			} else {
+				return Result.getError("布署失败");
+			}
+		case dump:
+			CommonDump commonDump = commonDumpMapper.selectById(taskId);
+			configName = taskType.formateTaskName(commonDump.getName());
+			params.put(ConfigItem.task_name, configName);
+			CommonVersion commonVersion2 = commonVersionMapper.selectById(commonDump.getVersionId());
+			params.put(ConfigItem.task_version, commonVersion2.getMainVersion());
+			params.put(ConfigItem.task_data_version, commonVersion2.getDataVersion());
+			params.put(ConfigItem.task_image, commonVersion2.getImage());
+			params.put(ConfigItem.configmap_name, taskType.formateConfigName(commonDump.getName()));
+			// 处理中间件的hosts
+			CommonMiddleware middleware2 = commonMiddlewareMapper.selectById(commonDump.getMiddlewareId());
+			List<Host> jsonToHosts2 = Host.jsonToHosts(middleware2.getHostsconfig());
+			params.put(ConfigItem.task_hosts, jsonToHosts2);
+			V1Job v1Job = k8sService.deployDump(deployid, params);
+			if (v1Job != null) {
+				return Result.getSuc();
+			} else {
+				return Result.getError("布署失败");
+			}	
 		default:
 			break;
 		}
-		V1Deployment deployTask = k8sService.deployTask(deployid, params);
-		if (deployTask != null) {
-			return Result.getSuc();
-		} else {
-			return Result.getError("布署失败");
-		}
+		return Result.getError("还未实现的布署类型");
 	}
 
 	@Override
 	public Result stop(Long deployid, CommandType taskType, Long taskId) {
 		String configName = null;
+		V1Status stopTask =null;
 		switch (taskType) {
 		case task:
 			CommonTask selectTask = commonTaskMapper.selectById(taskId);
 			configName = taskType.formateTaskName(selectTask.getName());
+			stopTask = k8sService.stopTask(deployid, configName);
 			break;
+		case dump:
+			CommonDump commonDump = commonDumpMapper.selectById(taskId);
+			configName = taskType.formateTaskName(commonDump.getName());
+			stopTask = k8sService.stopDump(deployid, configName);
+			return Result.getSuc();//特殊处理
 		default:
 			break;
 		}
-		V1Status stopTask = k8sService.stopTask(deployid, configName);
 		if ("Success".equals(stopTask.getStatus())) {
 			if (checkExit(deployid, taskType, taskId).isSuc()) {// 删除配置信息
 				deleteConfig(deployid, taskType, taskId);
@@ -188,6 +227,10 @@ public class DeployK8s implements IDeploy {
 		case task:
 			CommonTask selectTask = commonTaskMapper.selectById(taskId);
 			configName = taskType.formateTaskName(selectTask.getName());
+			break;
+		case dump:
+			CommonDump commonDump = commonDumpMapper.selectById(taskId);
+			configName = taskType.formateTaskName(commonDump.getName());
 			break;
 		default:
 			break;

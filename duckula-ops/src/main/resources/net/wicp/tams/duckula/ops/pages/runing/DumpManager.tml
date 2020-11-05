@@ -7,7 +7,7 @@
 </head>
 <body>
    <r:query id="q"  qBlock="query" queryUrl="/runing/DumpManager:query"  uBlock="save"   saveUrl="/runing/DumpManager:save" deleteUrl="/runing/DumpManager:del" opFormatter="showopt" 
-        columns="[[{field:'name',width:200,title:'监听任务名'},{field:'version1',width:100,title:'版本'},{field:'deployId1',width:150,title:'布署环境'},{field:'middlewareId1',width:150,title:'目的中间件'},{field:'instanceId1',width:350,title:'监听实例'},{field:'taskStatus',width:130,title:'运行状态'},{field:'op',width:320,title:'操作'}]]" 
+        columns="[[{field:'name',width:200,title:'监听任务名'},{field:'version1',width:100,title:'版本'},{field:'deployId1',width:150,title:'布署环境'},{field:'middlewareId1',width:150,title:'目的中间件'},{field:'instanceId1',width:350,title:'监听实例'},{field:'taskStatus',width:150,title:'运行状态'},{field:'op',width:320,title:'操作'}]]" 
         dialogStyle="width:900px;height:560px;" initAddHandle="initAdd" initSaveHandle="initUpdate"   saveCheckHandle="saveCheck" pagination="true"/>
    <t:block id="query">
        <table class="frame_table_list_4">
@@ -158,7 +158,7 @@
 		    	title:window.msg.hintwaiting,
 		    	msg:window.msg.hinthandling
             });    
-           $.post($.rjzjh.packurl('/runing/DumpManager:StartTask'),row,function(data){
+           $.post($.rjzjh.packurl('/runing/DumpManager:StartDump'),row,function(data){
              $.messager.progress('close');
              $.rjzjh.opt2(data,function(){
 			    jQuery('#q_grid').datagrid('reload');
@@ -174,7 +174,7 @@
 		    	title:window.msg.hintwaiting,
 		    	msg:window.msg.hinthandling
             });    
-           $.post($.rjzjh.packurl('/runing/DumpManager:StopTask'),row,function(data){
+           $.post($.rjzjh.packurl('/runing/DumpManager:StopDump'),row,function(data){
              $.messager.progress('close');
              $.rjzjh.opt2(data,function(){
 			    jQuery('#q_grid').datagrid('reload');
