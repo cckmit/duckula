@@ -250,4 +250,23 @@ public class DeployK8s implements IDeploy {
 		}
 	}
 
+	@Override
+	public String viewLog(Long deployid, CommandType taskType, Long taskId) {
+		String configName = null;
+		switch (taskType) {
+		case task:
+			CommonTask selectTask = commonTaskMapper.selectById(taskId);
+			configName = taskType.formateTaskName(selectTask.getName());
+			break;
+		case dump:
+			CommonDump commonDump = commonDumpMapper.selectById(taskId);
+			configName = taskType.formateTaskName(commonDump.getName());
+			break;
+		default:
+			break;
+		}
+		k8sService.viewLog(deployid, configName);
+		return null;
+	}
+
 }

@@ -17,6 +17,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import net.wicp.tams.app.duckula.controller.BusiTools;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonCheckpoint;
+import net.wicp.tams.app.duckula.controller.bean.models.CommonDump;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonTask;
 import net.wicp.tams.app.duckula.controller.config.constant.CommandType;
 import net.wicp.tams.app.duckula.controller.dao.CommonCheckpointMapper;
@@ -148,12 +149,18 @@ public class TaskManager {
 				return position==null?"":position.getTimeStr();
 			}
 		};
+		IConvertValue<String> configNameConvert = new IConvertValue<String>() {
+			@Override
+			public String getStr(String keyObj) {
+				return  CommandType.task.formateTaskName(keyObj);
+			}
+		};
 		String retstr = EasyUiAssist.getJsonForGridAlias2(selectPage.getRecords(),
 				new String[] { "versionId,version1", "deployId,deployId1", "middlewareId,middlewareId1",
-						"instanceId,instanceId1", "checkpointId,checkpoint1", ",taskStatus", ",pos" },
+						"instanceId,instanceId1", "checkpointId,checkpoint1", ",taskStatus", ",pos","name,configName" },
 				CollectionUtil.newMap("version1", versionConvert, "deployId1", deployConvert, "middlewareId1",
 						middlewareConvert, "instanceId1", instanceConvert, "checkpoint1", checkpointConvert,
-						"taskStatus", statusConvert, "pos", posConvert),
+						"taskStatus", statusConvert, "pos", posConvert,"configName",configNameConvert),
 				selectPage.getTotal());
 		return TapestryAssist.getTextStreamResponse(retstr);
 	}
@@ -187,6 +194,12 @@ public class TaskManager {
 		RuleManager ruleManager = new RuleManager(commandtypeStr);
 		JSONArray retAry = ruleManager.toJsonAry();
 		return TapestryAssist.getTextStreamResponse(retAry.toJSONString());
+	}
+	
+	public TextStreamResponse onViewlog() {
+		final CommonTask commonTask = TapestryAssist.getBeanFromPage(CommonTask.class, requestGlobals);
+		deployService.viewLog(CommandType.task, commonTask.getId(), commonTask.getDeployId());
+		return TapestryAssist.getTextStreamResponse(Result.getSuc());
 	}
 
 	/**

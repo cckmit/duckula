@@ -119,11 +119,17 @@ public class DumpManager {
 				return deployService.queryStatus(CommandType.dump, commonDump.getId(), commonDump.getDeployId());
 			}
 		};
+		IConvertValue<String> configNameConvert = new IConvertValue<String>() {
+			@Override
+			public String getStr(String keyObj) {
+				return  CommandType.dump.formateTaskName(keyObj);
+			}
+		};
 		String retstr = EasyUiAssist.getJsonForGridAlias2(selectPage.getRecords(),
 				new String[] { "versionId,version1", "deployId,deployId1", "middlewareId,middlewareId1",
-						"instanceId,instanceId1", ",taskStatus" },
+						"instanceId,instanceId1", ",taskStatus","name,configName"},
 				CollectionUtil.newMap("version1", versionConvert, "deployId1", deployConvert, "middlewareId1",
-						middlewareConvert, "instanceId1", instanceConvert, "taskStatus", statusConvert),
+						middlewareConvert, "instanceId1", instanceConvert, "taskStatus", statusConvert,"configName",configNameConvert),
 				selectPage.getTotal());
 		return TapestryAssist.getTextStreamResponse(retstr);
 	}
@@ -196,5 +202,13 @@ public class DumpManager {
 		}
 		return TapestryAssist.getTextStreamResponse(stopDump);
 	}
+	
+	public TextStreamResponse onViewlog() {
+		final CommonDump commonDump = TapestryAssist.getBeanFromPage(CommonDump.class, requestGlobals);
+		deployService.viewLog(CommandType.dump, commonDump.getId(), commonDump.getDeployId());
+		return TapestryAssist.getTextStreamResponse(Result.getSuc());
+	}
+	
+	
 
 }

@@ -307,7 +307,6 @@
 			<version>3.2.0</version>
 		</dependency>
 		<!--end mybatis plus -->
-
 		<dependency>
 			<groupId>net.wicp.tams</groupId>
 			<artifactId>common-http</artifactId>
@@ -315,6 +314,11 @@
 		<dependency>
 			<groupId>net.wicp.tams</groupId>
 			<artifactId>common-jdbc</artifactId>
+		</dependency>
+		<!-- websocket -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-websocket</artifactId>
 		</dependency>
 	</dependencies>
 	<build>

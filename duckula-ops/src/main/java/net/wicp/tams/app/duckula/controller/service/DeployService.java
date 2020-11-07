@@ -70,6 +70,21 @@ public class DeployService {
 		}
 	}
 	
+	public void viewLog(CommandType commandType,Long taskId,Long deployId) {
+		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployId);
+		if (commonDeploy == null) {
+			return;
+		}
+		IDeploy deploy = (IDeploy) SpringAssit.context.getBean(commonDeploy.getDeploy());
+		try {
+			deploy.viewLog(commonDeploy.getId(),  commandType, taskId);
+			return;
+		} catch (Throwable e) {
+			return;
+		}
+	}
+	
+	
 	
 	//////TODO 查询状态
 	public String queryStatus(CommandType commandType,Long taskId,Long deployId) {

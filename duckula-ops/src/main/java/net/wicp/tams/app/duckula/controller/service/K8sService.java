@@ -1,5 +1,9 @@
 package net.wicp.tams.app.duckula.controller.service;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +12,9 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.common.io.ByteStreams;
+
+import io.kubernetes.client.PodLogs;
 import io.kubernetes.client.openapi.ApiClient;
 import io.kubernetes.client.openapi.ApiException;
 import io.kubernetes.client.openapi.apis.AppsV1Api;
@@ -164,6 +171,33 @@ public class K8sService {
 			log.error("部署task失败", e);
 			throw new ProjectExceptionRuntime(ExceptDuckula.duckula_deploy_excetion, e.getMessage());
 		}
+	}
+	
+	
+	public BufferedReader viewLog(Long deployid, String configName) {
+		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployid);
+		ApiClient apiClient = getApiClient(commonDeploy);
+		V1Pod v1Pod = selectPod(deployid,configName);
+		 PodLogs logs = new PodLogs(apiClient);
+		 apiClient.setReadTimeout(300000);//5分钟
+		 try {			
+			InputStream is = logs.streamNamespacedPodLog(v1Pod);
+			BufferedReader reader= new BufferedReader(new InputStreamReader(is));
+			return reader;
+			// ByteStreams.copy(is, System.out);
+			// String line;
+			 //while((line = reader.readLine()) != null) {
+	          //      System.out.println("====="+line);
+	        // }
+			 //System.out.println(2222);
+		} catch (ApiException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		 return null;
 	}
 	
 	

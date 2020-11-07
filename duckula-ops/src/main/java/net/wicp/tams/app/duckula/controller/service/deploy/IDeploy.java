@@ -19,6 +19,8 @@ public interface IDeploy {
 	public Result start(Long deployid, CommandType taskType, Long taskId, boolean isDebug);
 	
 	public Result stop(Long deployid, CommandType taskType, Long taskId);
+	
+	public String viewLog(Long deployid, CommandType taskType, Long taskId);
 
 	// 查询任务的相关状态
 	public String queryStatus(Long deployid, CommandType taskType, Long taskId);

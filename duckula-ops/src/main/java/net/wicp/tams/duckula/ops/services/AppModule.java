@@ -140,5 +140,6 @@ public class AppModule {
 
 	public static void contributeIgnoredPathsFilter(org.apache.tapestry5.ioc.Configuration<String> configuration) {
 		configuration.add("/connector");
+		configuration.add("/websocket");		
 	}
 }
