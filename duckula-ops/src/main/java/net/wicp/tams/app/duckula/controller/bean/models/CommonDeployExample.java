@@ -1182,63 +1182,63 @@ public class CommonDeployExample {
 			return (Criteria) this;
 		}
 
-		public Criteria andVersionIsNull() {
-			addCriterion("version is null");
+		public Criteria andVersionIdIsNull() {
+			addCriterion("version_id is null");
 			return (Criteria) this;
 		}
 
-		public Criteria andVersionIsNotNull() {
-			addCriterion("version is not null");
+		public Criteria andVersionIdIsNotNull() {
+			addCriterion("version_id is not null");
 			return (Criteria) this;
 		}
 
-		public Criteria andVersionEqualTo(Integer value) {
-			addCriterion("version =", value, "version");
+		public Criteria andVersionIdEqualTo(Long value) {
+			addCriterion("version_id =", value, "versionId");
 			return (Criteria) this;
 		}
 
-		public Criteria andVersionNotEqualTo(Integer value) {
-			addCriterion("version <>", value, "version");
+		public Criteria andVersionIdNotEqualTo(Long value) {
+			addCriterion("version_id <>", value, "versionId");
 			return (Criteria) this;
 		}
 
-		public Criteria andVersionGreaterThan(Integer value) {
-			addCriterion("version >", value, "version");
+		public Criteria andVersionIdGreaterThan(Long value) {
+			addCriterion("version_id >", value, "versionId");
 			return (Criteria) this;
 		}
 
-		public Criteria andVersionGreaterThanOrEqualTo(Integer value) {
-			addCriterion("version >=", value, "version");
+		public Criteria andVersionIdGreaterThanOrEqualTo(Long value) {
+			addCriterion("version_id >=", value, "versionId");
 			return (Criteria) this;
 		}
 
-		public Criteria andVersionLessThan(Integer value) {
-			addCriterion("version <", value, "version");
+		public Criteria andVersionIdLessThan(Long value) {
+			addCriterion("version_id <", value, "versionId");
 			return (Criteria) this;
 		}
 
-		public Criteria andVersionLessThanOrEqualTo(Integer value) {
-			addCriterion("version <=", value, "version");
+		public Criteria andVersionIdLessThanOrEqualTo(Long value) {
+			addCriterion("version_id <=", value, "versionId");
 			return (Criteria) this;
 		}
 
-		public Criteria andVersionIn(List<Integer> values) {
-			addCriterion("version in", values, "version");
+		public Criteria andVersionIdIn(List<Long> values) {
+			addCriterion("version_id in", values, "versionId");
 			return (Criteria) this;
 		}
 
-		public Criteria andVersionNotIn(List<Integer> values) {
-			addCriterion("version not in", values, "version");
+		public Criteria andVersionIdNotIn(List<Long> values) {
+			addCriterion("version_id not in", values, "versionId");
 			return (Criteria) this;
 		}
 
-		public Criteria andVersionBetween(Integer value1, Integer value2) {
-			addCriterion("version between", value1, value2, "version");
+		public Criteria andVersionIdBetween(Long value1, Long value2) {
+			addCriterion("version_id between", value1, value2, "versionId");
 			return (Criteria) this;
 		}
 
-		public Criteria andVersionNotBetween(Integer value1, Integer value2) {
-			addCriterion("version not between", value1, value2, "version");
+		public Criteria andVersionIdNotBetween(Long value1, Long value2) {
+			addCriterion("version_id not between", value1, value2, "versionId");
 			return (Criteria) this;
 		}
 

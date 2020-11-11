@@ -33,7 +33,6 @@ public class DeployService {
 	@Autowired
 	private CommonVersionMapper commonVersionMapper;
 
-	
 	/***
 	 * 启动监听任务
 	 * 
@@ -41,7 +40,7 @@ public class DeployService {
 	 * @param isdebug
 	 * @return
 	 */
-	public Result startTask(CommandType commandType,Long taskId,Long deployId, boolean isdebug) {
+	public Result startTask(CommandType commandType, Long taskId, Long deployId, boolean isdebug) {
 		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployId);
 		if (commonDeploy == null) {
 			return Result.getError("部署环境没有配置");
@@ -55,39 +54,37 @@ public class DeployService {
 		Result ret = Result.getSuc("布署成功");
 		return ret;
 	}
-	
-	public Result stopTask(CommandType commandType,Long taskId,Long deployId) {
+
+	public Result stopTask(CommandType commandType, Long taskId, Long deployId) {
 		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployId);
 		if (commonDeploy == null) {
 			return Result.getError("部署环境没有配置");
 		}
 		IDeploy deploy = (IDeploy) SpringAssit.context.getBean(commonDeploy.getDeploy());
 		try {
-			deploy.stop(commonDeploy.getId(),  commandType, taskId);
+			deploy.stop(commonDeploy.getId(), commandType, taskId);
 			return Result.getSuc("删除成功");
 		} catch (Throwable e) {
 			return Result.getError(e.getMessage());
 		}
 	}
-	
-	public void viewLog(CommandType commandType,Long taskId,Long deployId) {
+
+	public void viewLog(CommandType commandType, Long taskId, Long deployId) {
 		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployId);
 		if (commonDeploy == null) {
 			return;
 		}
 		IDeploy deploy = (IDeploy) SpringAssit.context.getBean(commonDeploy.getDeploy());
 		try {
-			deploy.viewLog(commonDeploy.getId(),  commandType, taskId);
+			deploy.viewLog(commonDeploy.getId(), commandType, taskId);
 			return;
 		} catch (Throwable e) {
 			return;
 		}
 	}
-	
-	
-	
-	//////TODO 查询状态
-	public String queryStatus(CommandType commandType,Long taskId,Long deployId) {
+
+	////// TODO 查询状态
+	public String queryStatus(CommandType commandType, Long taskId, Long deployId) {
 		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployId);
 		IDeploy deploy = (IDeploy) SpringAssit.context.getBean(commonDeploy.getDeploy());
 		try {
@@ -153,7 +150,7 @@ public class DeployService {
 		if (deployType == DeployType.k8s) {
 			return Result.getError("k8s类型不需要升级版本");
 		}
-		CommonVersion commonVersionOld = commonVersionMapper.selectById(commonDeploy.getVersion());
+		CommonVersion commonVersionOld = commonVersionMapper.selectById(commonDeploy.getVersionId());
 		if (commonVersionOld != null) {
 			String[] newVersion = commonVersionNew.getMainVersion().split("\\.");
 			String[] oldVersion = commonVersionOld.getMainVersion().split("\\.");
@@ -211,7 +208,7 @@ public class DeployService {
 			conn.tarX("~/" + fileName + ".tar", "/data");
 		}
 		conn.close();
-		commonDeploy.setVersion(commonVersionNew.getId());
+		commonDeploy.setVersionId(commonVersionNew.getId().longValue());
 		commonDeployMapper.updateById(commonDeploy);
 		return Result.getSuc();
 	}

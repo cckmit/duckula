@@ -7,7 +7,7 @@
 </head>
 <body>
    <r:query id="q"  qBlock="query" queryUrl="/setting/DeployManager:query"  uBlock="save"   saveUrl="/setting/DeployManager:save" deleteUrl="/setting/DeployManager:del" opFormatter="showopt" 
-        columns="[[{field:'name',width:200,title:'发布名'},{field:'deploy',width:100,title:'发布类型'},{field:'env',width:100,title:'环境'},{field:'isInit2',width:70,title:'是否初始化'},{field:'version',width:50,title:'版本'},{field:'namespace',width:150,title:'名称空间'},{field:'host',width:120,title:'主机'},{field:'op',width:320,title:'操作'}]]" 
+        columns="[[{field:'name',width:200,title:'发布名'},{field:'deploy',width:100,title:'发布类型'},{field:'env',width:100,title:'环境'},{field:'isInit2',width:70,title:'是否初始化'},{field:'version1',width:70,title:'版本'},{field:'namespace',width:150,title:'名称空间'},{field:'host',width:120,title:'主机'},{field:'op',width:320,title:'操作'}]]" 
         dialogStyle="width:800px;height:460px;" initAddHandle="initAdd" initSaveHandle="initUpdate"  pagination="true"/>
    <t:block id="query">
        <table class="frame_table_list_4">
@@ -52,11 +52,12 @@
 			         <td class="frame_table_list_2_righttext">镜像组</td>
 			         <td>
 			            <r:validatebox name="imagegroup" style="width:250px;" required="false"/>
-	                 </td>			        
-			 	  	 <td class="frame_table_list_2_righttext">版本</td>
+	                 </td>
+	                 
+	                 <td class="frame_table_list_2_righttext">版本</td>
 			 	     <td>
-			 	        <r:validatebox  id="version_save" name="version" style="width:250px;" required="false"/>
-			 	     </td>			 	     
+			 	        <r:combogrid id="versionId_save" name="versionId"  columns="[[{field:'mainVersion',width:70,title:'主程序版本'},{field:'dataVersion',width:70,title:'数据版本'},{field:'updateTimeStr',width:150,title:'升级时间'},{field:'author',width:70,title:'作者'}]]" idfield="id" panelWidth="400" panelHeight="300" textfield="mainVersion" width="180" pagination="false" url="/setting/VersionManager:query?needpage=false"></r:combogrid>
+	                 </td>		 	     
 			      </tr>
 			      <tr>			      
 			         <td class="frame_table_list_2_righttext">主机</td>

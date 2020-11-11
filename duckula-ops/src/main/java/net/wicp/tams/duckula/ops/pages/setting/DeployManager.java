@@ -1,6 +1,7 @@
 package net.wicp.tams.duckula.ops.pages.setting;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.Request;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
+import net.wicp.tams.app.duckula.controller.BusiTools;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonDeploy;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonVersion;
 import net.wicp.tams.app.duckula.controller.dao.CommonDeployMapper;
@@ -67,11 +69,19 @@ public class DeployManager {
 			selectList = commonDeployMapper.selectList(queryWrapper);
 			size = selectList.size();
 		}
+		final Map<Long, String> datamap = BusiTools.convertValues(selectList, commonVersionMapper,
+				"versionId", "mainVersion");
+		IConvertValue<String> versionConvert = new IConvertValue<String>() {
+			@Override
+			public String getStr(String keyObj) {
+				return StringUtil.isNull(keyObj) ? "" : datamap.get(Long.parseLong(keyObj));
+			}
+		};
 		String retstr = EasyUiAssist.getJsonForGrid(selectList,
 				new String[] { "id", "name", "deploy", "env", "namespace", "host", "port", "pwdDuckula", "isInit",
-						"isDefault", "imagegroup", "version", "remark", "isInit,isInit2" },
+						"isDefault", "imagegroup", "versionId", "remark", "isInit,isInit2", "versionId,version1" },
 				new IConvertValue[] { null, null, null, null, null, null, null, null, null, null, null, null, null,
-						new ConvertValueEnum(YesOrNo.class) },
+						new ConvertValueEnum(YesOrNo.class), versionConvert },
 				size);
 		return TapestryAssist.getTextStreamResponse(retstr);
 	}
@@ -119,7 +129,7 @@ public class DeployManager {
 
 		Result result = deployService.upgradeVersion(commonDeploy, commonVersionNew);
 		if (result.isSuc()) {
-			commonDeploy.setVersion(commonVersionNew.getId());
+			commonDeploy.setVersionId(commonVersionNew.getId().longValue());
 			commonDeployMapper.updateByPrimaryKeySelective(commonDeploy);
 		}
 		return TapestryAssist.getTextStreamResponse(result);
