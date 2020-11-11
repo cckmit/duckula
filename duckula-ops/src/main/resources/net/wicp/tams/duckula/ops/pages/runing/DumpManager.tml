@@ -267,6 +267,8 @@
             showRuleColumn(["key","splitkey","appid","redisurl"]);
         }else if('cassandra'==middlewareType){
             showRuleColumn(["ks","table"]);
+        }else if('logger'==middlewareType){
+           showRuleColumn([]);
         }
 	}
 	function selectInstance(val){

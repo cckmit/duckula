@@ -13,7 +13,7 @@ import net.wicp.tams.common.apiext.json.JSONUtil;
 import net.wicp.tams.common.binlog.alone.binlog.bean.RuleItem;
 import net.wicp.tams.common.constant.dic.intf.IEnumCombobox;
 
-public enum MiddlewareType implements IEnumCombobox{
+public enum MiddlewareType implements IEnumCombobox {
 	es("es搜索", "common.es.",
 			new String[][] {
 					{ "5.X", "net.wicp.tams.common.es.plugin.ListenerEs5", "net.wicp.tams.common.es.plugin.DumperEs5",
@@ -46,9 +46,11 @@ public enum MiddlewareType implements IEnumCombobox{
 					"net.wicp.tams.duckula.plugin.http.DumperHttp",
 					"env:DUCKULA3_DATA:/plugins/duckula-plugin-http" } },
 			new RuleItem[] { RuleItem.httpRela }),
+	// 只打logger，测试用服务器
+	logger("logger日志", "", new String[][] { { "*", "net.wicp.tams.common.binlog.plugin.logger.ListenerLogger",
+			"net.wicp.tams.common.binlog.plugin.logger.DumperLogger", null } }, new RuleItem[] {}),
 
 	;
-
 
 	private final String[][] verPlugins;// 支持的版本,元素：0:版本 1：监听 2：全量 3:插件目录
 
@@ -119,7 +121,7 @@ public enum MiddlewareType implements IEnumCombobox{
 		default:
 			break;
 		}
-		
+
 		return retmap;
 	}
 
@@ -143,29 +145,28 @@ public enum MiddlewareType implements IEnumCombobox{
 		}
 		return null;
 	}
+
 	/**
 	 * 得到插件的所有版本
+	 * 
 	 * @return
 	 */
 	public String[] getPluginVers() {
-		String[] retAry=new String[verPlugins.length];
+		String[] retAry = new String[verPlugins.length];
 		for (int i = 0; i < retAry.length; i++) {
-			retAry[i]=verPlugins[i][0];
+			retAry[i] = verPlugins[i][0];
 		}
 		return retAry;
 	}
 
-	
 	private MiddlewareType(String desc, String pre, String[][] verPlugins, RuleItem[] ruleItems) {
 		this.desc = desc;
 		this.pre = pre;
 		this.verPlugins = verPlugins;
 		this.ruleItems = CollectionUtil.arrayMerge(RuleItem[].class, ruleItems, commonItems);
 	}
-	
-	private final String desc;
 
-	
+	private final String desc;
 
 	public String getDesc() {
 		return desc;
