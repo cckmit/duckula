@@ -142,7 +142,6 @@ public class DeployService {
 		}
 		conn.close();
 		return executeCommand;
-
 	}
 
 	public Result upgradeVersion(CommonDeploy commonDeploy, CommonVersion commonVersionNew) {
@@ -162,12 +161,12 @@ public class DeployService {
 		}
 		String mainPath = null, dataPath = null;
 		switch (deployType) {
-		case docker:
-			// 更新data
-			dataPath = PathType.getPath(commonVersionNew.getDataPath(), true);
 		case host:
 			// 更新main
 			mainPath = PathType.getPath(commonVersionNew.getMainPath(), true);
+		case docker:
+			// 更新data
+			dataPath = PathType.getPath(commonVersionNew.getDataPath(), true);
 			break;
 		default:
 			break;

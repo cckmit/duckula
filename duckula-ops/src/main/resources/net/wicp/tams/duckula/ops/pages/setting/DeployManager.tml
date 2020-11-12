@@ -8,7 +8,7 @@
 <body>
    <r:query id="q"  qBlock="query" queryUrl="/setting/DeployManager:query"  uBlock="save"   saveUrl="/setting/DeployManager:save" deleteUrl="/setting/DeployManager:del" opFormatter="showopt" 
         columns="[[{field:'name',width:200,title:'发布名'},{field:'deploy',width:100,title:'发布类型'},{field:'env',width:100,title:'环境'},{field:'isInit2',width:70,title:'是否初始化'},{field:'version1',width:70,title:'版本'},{field:'namespace',width:150,title:'名称空间'},{field:'host',width:120,title:'主机'},{field:'op',width:320,title:'操作'}]]" 
-        dialogStyle="width:800px;height:460px;" initAddHandle="initAdd" initSaveHandle="initUpdate"  pagination="true"/>
+        dialogStyle="width:800px;height:460px;" initAddHandle="initAdd" initSaveHandle="initUpdate" saveCheckHandle="saveCheck"  pagination="true"/>
    <t:block id="query">
        <table class="frame_table_list_4">
 		 <tr>
@@ -72,7 +72,7 @@
 			      <tr>			      
 			         <td class="frame_table_list_2_righttext">duckula密码</td>
 			         <td>
-			            <r:validatebox name="pwdDuckula" style="width:250px;" required="false" readonly="true"/>
+			            <r:validatebox id="pwdDuckula_save" name="pwdDuckula" style="width:250px;" required="false" readonly="true"/>
 	                 </td>			        
 			 	  	 <td class="frame_table_list_2_righttext">是否初始化</td>
 			 	     <td>
@@ -109,10 +109,14 @@
    function initAdd(){
       //$('#os_save').combobox('setValue','Linux');
    }
-   function initUpdate(){
-      //$('#ip2').textbox('readonly',true);
-      //$('#version_save').textbox('readonly',true);
-      
+   function initUpdate(row){
+      //如果是host或docker需要可以设置duckula密码
+     var deploy=or(row.deploy=='host',row.deploy=='docker');
+     if(and(deploy,!(row.isInit=='yes'))){
+        $('#pwdDuckula_save').validatebox("readonly",false);
+     }else{
+        $('#pwdDuckula_save').validatebox("readonly",true);
+     }
    }
 
    
@@ -159,7 +163,16 @@
    }
    
    
-   
+   function saveCheck(){
+      var pwdDuckula=$('#pwdDuckula_save').val();
+      var deploySave=  $('#deploy_save').combobox('getValue'); 
+      //host或docker必须要填写duckula用的密码
+      if(and(or(deploySave=='host',deploySave=='docker'),pwdDuckula=='')){
+        $.rjzjh.alert('你需要填写duckula密码!');
+        return false;
+      }
+      return true;
+   }
 
      
    function getRow(index){
