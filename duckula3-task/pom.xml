@@ -33,7 +33,7 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<finalName>duckula3-task</finalName>
+		<finalName>duckula-task</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

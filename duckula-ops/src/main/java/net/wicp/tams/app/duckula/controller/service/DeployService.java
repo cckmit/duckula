@@ -49,6 +49,7 @@ public class DeployService {
 		try {
 			deploy.start(commonDeploy.getId(), commandType, taskId, isdebug);
 		} catch (Throwable e) {
+			log.error("host 开始任务失败",e);
 			return Result.getError(e.getMessage());
 		}
 		Result ret = Result.getSuc("布署成功");
