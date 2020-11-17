@@ -1,22 +1,20 @@
 package net.wicp.tams.app.duckula.controller.service.deploy;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import io.kubernetes.client.openapi.models.V1Deployment;
-import io.kubernetes.client.openapi.models.V1Job;
+import ch.ethz.ssh2.Session;
 import lombok.extern.slf4j.Slf4j;
 import net.wicp.tams.app.duckula.controller.BusiTools;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonDeploy;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonDump;
-import net.wicp.tams.app.duckula.controller.bean.models.CommonMiddleware;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonTask;
-import net.wicp.tams.app.duckula.controller.bean.models.CommonVersion;
-import net.wicp.tams.app.duckula.controller.config.ConfigItem;
 import net.wicp.tams.app.duckula.controller.config.constant.CommandType;
 import net.wicp.tams.app.duckula.controller.config.constant.DeployType;
 import net.wicp.tams.app.duckula.controller.dao.CommonCheckpointMapper;
@@ -25,10 +23,8 @@ import net.wicp.tams.app.duckula.controller.dao.CommonDumpMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonInstanceMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonMiddlewareMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonTaskMapper;
-import net.wicp.tams.app.duckula.controller.dao.CommonVersionMapper;
 import net.wicp.tams.common.Result;
 import net.wicp.tams.common.apiext.StringUtil;
-import net.wicp.tams.common.beans.Host;
 import net.wicp.tams.common.exception.ProjectException;
 import net.wicp.tams.common.os.SSHAssit;
 import net.wicp.tams.common.os.constant.CommandCentOs;
@@ -46,8 +42,6 @@ public class DeployHost implements IDeploy {
 	private CommonMiddlewareMapper commonMiddlewareMapper;
 	@Autowired
 	private CommonInstanceMapper commonInstanceMapper;
-	@Autowired
-	private CommonVersionMapper commonVersionMapper;
 	@Autowired
 	private CommonCheckpointMapper commonCheckpointMapper;
 
@@ -232,8 +226,40 @@ public class DeployHost implements IDeploy {
 	}
 
 	@Override
-	public String viewLog(Long deployid, CommandType taskType, Long taskId) {
-		// TODO Auto-generated method stub
+	public BufferedReader viewLog(Long deployid, CommandType taskType, Long taskId) {
+		String configName = null;
+		switch (taskType) {
+		case task:
+			CommonTask selectTask = commonTaskMapper.selectById(taskId);
+			configName = taskType.formateConfigName(selectTask.getName());
+			break;
+		case dump:
+		default:
+			break;
+		}
+		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployid);
+		SSHConnection conn = null;
+		Session session = null;
+		try {
+			conn = SSHAssit.getConn(commonDeploy.getHost(), commonDeploy.getPort(), "duckula",
+					commonDeploy.getPwdDuckula(), 300000);// 0表示不超时 ，使用5分钟，怕链接泄露
+			session = conn.getConn().openSession();
+			String cmdStr = String.format("tail -100f $DUCKULA3_DATA/logs/task/%s/other.log", configName);
+			session.execCommand(cmdStr);
+			InputStream stdout = session.getStdout();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(stdout));
+			return reader;
+		} catch (ProjectException e) {
+			log.error("连接服务器失败", e);
+		} catch (Exception e) {
+			log.error("执行tail命令失败", e);
+		}
+		if (session != null) {
+			session.close();
+		}
+		if (conn != null) {
+			conn.close();
+		}
 		return null;
 	}
 

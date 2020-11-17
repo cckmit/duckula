@@ -1,5 +1,6 @@
 package net.wicp.tams.app.duckula.controller.service.deploy;
 
+import java.io.BufferedReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,16 +14,13 @@ import io.kubernetes.client.openapi.models.V1Job;
 import io.kubernetes.client.openapi.models.V1Pod;
 import io.kubernetes.client.openapi.models.V1Status;
 import net.wicp.tams.app.duckula.controller.BusiTools;
-import net.wicp.tams.app.duckula.controller.bean.models.CommonCheckpoint;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonDump;
-import net.wicp.tams.app.duckula.controller.bean.models.CommonInstance;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonMiddleware;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonTask;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonVersion;
 import net.wicp.tams.app.duckula.controller.config.ConfigItem;
 import net.wicp.tams.app.duckula.controller.config.constant.CommandType;
 import net.wicp.tams.app.duckula.controller.config.constant.DeployType;
-import net.wicp.tams.app.duckula.controller.config.constant.MiddlewareType;
 import net.wicp.tams.app.duckula.controller.dao.CommonCheckpointMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonDumpMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonInstanceMapper;
@@ -219,7 +217,7 @@ public class DeployK8s implements IDeploy {
 	}
 
 	@Override
-	public String viewLog(Long deployid, CommandType taskType, Long taskId) {
+	public BufferedReader viewLog(Long deployid, CommandType taskType, Long taskId) {
 		String configName = null;
 		switch (taskType) {
 		case task:
@@ -233,8 +231,8 @@ public class DeployK8s implements IDeploy {
 		default:
 			break;
 		}
-		k8sService.viewLog(deployid, configName);
-		return null;
+		BufferedReader viewLog = k8sService.viewLog(deployid, configName);
+		return viewLog;
 	}
 
 }

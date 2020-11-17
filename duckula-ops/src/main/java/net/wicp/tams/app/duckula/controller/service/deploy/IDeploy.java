@@ -1,5 +1,6 @@
 package net.wicp.tams.app.duckula.controller.service.deploy;
 
+import java.io.BufferedReader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,7 +40,7 @@ public interface IDeploy {
 
 	public Result stop(Long deployid, CommandType taskType, Long taskId);
 
-	public String viewLog(Long deployid, CommandType taskType, Long taskId);
+	public BufferedReader viewLog(Long deployid, CommandType taskType, Long taskId);
 
 	// 查询任务的相关状态
 	public String queryStatus(Long deployid, CommandType taskType, Long taskId);

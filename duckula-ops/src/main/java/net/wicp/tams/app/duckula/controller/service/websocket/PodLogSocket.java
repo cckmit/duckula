@@ -20,6 +20,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import lombok.extern.slf4j.Slf4j;
 import net.wicp.tams.app.duckula.controller.config.constant.CommandType;
+import net.wicp.tams.app.duckula.controller.config.constant.DeployType;
 import net.wicp.tams.app.duckula.controller.service.DeployService;
 import net.wicp.tams.app.duckula.controller.service.K8sService;
 import net.wicp.tams.app.duckula.controller.service.deploy.IDeploy;
@@ -74,8 +75,16 @@ public class PodLogSocket {
 		// 什么也不做
 		k8sService= (K8sService) SpringAssit.context.getBean(K8sService.class);		
 		JSONObject jsonObj = JSONObject.parseObject(message);
-		BufferedReader viewLogbuff = k8sService.viewLog(jsonObj.getLong("deployId"),jsonObj.getString("configName"));// "t-rjzjh-jdbc"
+		DeployService deployService=(DeployService) SpringAssit.context.getBean(DeployService.class);		
+		String commandTypeStr = jsonObj.getString("commandType");
+		long taskId = jsonObj.getLongValue("taskId");
+		BufferedReader viewLogbuff = deployService.viewLog(CommandType.valueOf(commandTypeStr), taskId, jsonObj.getLong("deployId"));
+		//BufferedReader viewLogbuff = k8sService.viewLog(jsonObj.getLong("deployId"),jsonObj.getString("configName"));// "t-rjzjh-jdbc"
 		try {
+			if(viewLogbuff==null) {
+				sendMessage("查看日志错误，请联系相关人员");
+				return;
+			}
 			String line;
 			while ((line = viewLogbuff.readLine()) != null) {
 				// System.out.println("=====" + line);

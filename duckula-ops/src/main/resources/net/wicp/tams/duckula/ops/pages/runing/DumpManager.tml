@@ -197,7 +197,8 @@
    
    function viewLog(index){
        var row=getRow(index);
-       var url = $.rjzjh.packurl('/tools/ViewPodLog?params='+row.deployId+':'+row.configName);
+      // var url = $.rjzjh.packurl('/tools/ViewPodLog?params='+row.deployId+':'+row.configName);
+       var url = $.rjzjh.packurl('/tools/ViewPodLog?params=dump:'+row.id+':'+row.deployId);
        var iWidth=1200;                          //弹出窗口的宽度;
        var iHeight=1000;                         //弹出窗口的高度;
            //获得窗口的垂直位置

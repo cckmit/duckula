@@ -35,8 +35,10 @@ public class ViewPodLog {
 		String params = request.getParameter("params");
 		String[] paramsAry = params.split(":");
 		JSONObject json = new JSONObject();
-		json.put("deployId", paramsAry[0]);
-		json.put("configName", paramsAry[1]);
+		//commandType taskId  deployId
+		json.put("commandType", paramsAry[0]);
+		json.put("taskId", paramsAry[1]);
+		json.put("deployId", paramsAry[2]);
 		this.params = json.toJSONString();
 	}
 

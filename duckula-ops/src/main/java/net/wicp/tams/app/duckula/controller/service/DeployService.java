@@ -1,5 +1,6 @@
 package net.wicp.tams.app.duckula.controller.service;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -70,17 +71,18 @@ public class DeployService {
 		}
 	}
 
-	public void viewLog(CommandType commandType, Long taskId, Long deployId) {
+	public BufferedReader viewLog(CommandType commandType, Long taskId, Long deployId) {
 		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployId);
 		if (commonDeploy == null) {
-			return;
+			return null;
 		}
 		IDeploy deploy = (IDeploy) SpringAssit.context.getBean(commonDeploy.getDeploy());
 		try {
-			deploy.viewLog(commonDeploy.getId(), commandType, taskId);
-			return;
+			BufferedReader viewLog = deploy.viewLog(commonDeploy.getId(), commandType, taskId);
+			return viewLog;
 		} catch (Throwable e) {
-			return;
+			log.error("查看日志错误",e);
+			return null;
 		}
 	}
 

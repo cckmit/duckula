@@ -171,17 +171,12 @@
       //sleep(3000);
       return true;
    }
-   function viewLog(index){
-       var row=getRow(index);
-       $.post($.rjzjh.packurl('/runing/TaskManager:viewLog'),row,function(data){
-	       alert(data);
-	   },'json');
-   }
-   
+
    
     function viewLog(index){
        var row=getRow(index);
-       var url = $.rjzjh.packurl('/tools/ViewPodLog?params='+row.deployId+':'+row.configName);
+       var deploy= $.rjzjh.getcombogrid('deployId_save','deploy');
+       var url = $.rjzjh.packurl('/tools/ViewPodLog?params=task:'+row.id+':'+row.deployId);
        var iWidth=1200;                          //弹出窗口的宽度;
        var iHeight=1000;                         //弹出窗口的高度;
            //获得窗口的垂直位置
