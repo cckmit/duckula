@@ -8,6 +8,7 @@
 # @author: zhoujunhui
 # @email: rjzjh@163.com
 # @time:  2018-09-30
+# @配置好jdk,安装好yum install -y perl
 ###########################################################################
 
 set -o nounset
@@ -48,6 +49,7 @@ checkDocker() {
 
 # create the user
 createUser() {
+    #yum install -y perl
 	# create a user 
 	useradd -m -d /home/$1 -s /bin/bash $1 -p  $(perl -e 'print crypt($ARGV[0], "password")' $2)
 	 

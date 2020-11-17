@@ -72,7 +72,7 @@
 			      <tr>			      
 			         <td class="frame_table_list_2_righttext">duckula密码</td>
 			         <td>
-			            <r:validatebox id="pwdDuckula_save" name="pwdDuckula" style="width:250px;" required="false" readonly="true"/>
+			            <r:validatebox id="pwdDuckula_save" name="pwdDuckula" style="width:250px;" required="false" readonly="false"/>
 	                 </td>			        
 			 	  	 <td class="frame_table_list_2_righttext">是否初始化</td>
 			 	     <td>
@@ -106,8 +106,9 @@
 			
      }
 
-   function initAdd(){
+   function initAdd(row){
       //$('#os_save').combobox('setValue','Linux');
+      $('#pwdDuckula_save').validatebox("readonly",false);
    }
    function initUpdate(row){
       //如果是host或docker需要可以设置duckula密码
