@@ -55,7 +55,7 @@
 			 	     </td>			      
 			         <td class="frame_table_list_2_righttext">更新时间</td>
 			         <td>
-			            <r:validatebox name="updateTime" style="width:250px;" required="true"/>
+			           <r:datepicker dateFmt="yyyy-MM-dd" name="updateTime" required="true"></r:datepicker>
 	                 </td>			        			 	  	 		 	     
 			     </tr>
 			     <tr>

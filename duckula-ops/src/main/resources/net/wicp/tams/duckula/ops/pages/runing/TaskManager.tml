@@ -145,10 +145,19 @@
            $('#dg').edatagrid("hideColumn", item);
 	  }
    }
-   function initUpdate(){
+   function initUpdate(row){
       //$('#ip2').textbox('readonly',true);
       //$('#version_save').textbox('readonly',true);
       syncRule();
+      selectMiddleware();
+     //host和docker不能设置版本
+     var deploy=or((row.deployId1.search("【host】") != -1),(row.deployId1.search("【docker】") != -1));
+     //alert(deploy);
+     if(deploy){
+        $('#versionId_save').combogrid("readonly",true);
+     }else{
+        $('#versionId_save').combogrid("readonly",false);
+     }      
    }
  
    var sleep = function(time) {

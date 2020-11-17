@@ -23,15 +23,21 @@ import net.wicp.tams.common.constant.dic.intf.IEnumCombobox;
  *
  */
 public enum CommandType implements IEnumCombobox {
-	task("监听任务", new String[] { "common.apiext.classload.child-first", "false" }, "t-%s"),
+	task("监听任务", new String[] { "common.apiext.classload.child-first", "false" }, "t-%s", "run.sh"),
 
 	dump("全量导入", new String[] { "common.apiext.classload.child-first", "false",
-			"common.binlog.alone.dump.global.enable", "true" }, "d-%s");
+			"common.binlog.alone.dump.global.enable", "true" }, "d-%s", "dump.sh");
 
 	// 默认配置
 	public final Map<String, Object> defaultconfig;
 
 	private final String nameFormate;
+
+	private final String hostShellFile;
+
+	public String getHostShellFile() {
+		return hostShellFile;
+	}
 
 	public Map<String, Object> getDefaultconfig() {
 		return this.defaultconfig;
@@ -97,8 +103,8 @@ public enum CommandType implements IEnumCombobox {
 				rule.getItems().put(RuleItem.dbinstanceid, String.valueOf(commonDump.getMiddlewareId()));
 			}
 		}
-		//自定义一个监听
-		retmap.put("common.binlog.alone.dump.ori._global.rule", ruleManager.toString());		
+		// 自定义一个监听
+		retmap.put("common.binlog.alone.dump.ori._global.rule", ruleManager.toString());
 		// 其它的配置,如auto.create.index
 		if (StringUtil.isNotNull(commonDump.getAttrConfig())) {
 			JSONObject attrConfig = JSON.parseObject(commonDump.getAttrConfig());
@@ -110,10 +116,11 @@ public enum CommandType implements IEnumCombobox {
 	}
 
 	@SuppressWarnings("unchecked")
-	private CommandType(String desc, String[] configs, String nameFormate) {
+	private CommandType(String desc, String[] configs, String nameFormate, String hostShellFile) {
 		this.defaultconfig = CollectionUtil.newMap(configs);
 		this.nameFormate = nameFormate;
 		this.desc = desc;
+		this.hostShellFile = hostShellFile;
 	}
 
 	// 62是因为configmap有前缀有2位，而task前缀只有1位，这样可以取到相同的原taskname.

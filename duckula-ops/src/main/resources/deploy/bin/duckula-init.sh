@@ -66,7 +66,7 @@ createUser() {
 # create defautl dirs and authorize
 init() {		
 	#setting environment variables note: $JAVA_HOME not support
-	echo -e  "JAVA_HOME=${jdkhome}\nDUCKULA_HOME=/opt/duckula\nDUCKULA_DATA=/data/duckula-data\nPATH=$PATH:${jdkhome}/bin\nexport PATH JAVA_HOME DUCKULA_HOME DUCKULA_DATA" >  /etc/profile.d/duckula.sh
+	echo -e  "JAVA_HOME=${jdkhome}\nDUCKULA3_HOME=/opt/duckula\nDUCKULA3_DATA=/data/duckula-data\nPATH=$PATH:${jdkhome}/bin\nexport PATH JAVA_HOME DUCKULA3_HOME DUCKULA3_DATA" >  /etc/profile.d/duckula.sh
 	#source /etc/profile  
 	echo "the env added: $1 done"
 	if [ "$hosts" != "" ]; then
@@ -79,6 +79,7 @@ init() {
 		 /opt/duckula-history \
 		 /data/duckula-data \
 		 /data/duckula-data/history \
+		 /data/duckula-data/conf \
 		 /data/duckula-data/logs  \
 		 /data/duckula-data/logs/consumer  \
 		 /data/duckula-data/logs/dump  \

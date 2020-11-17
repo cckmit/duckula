@@ -141,6 +141,11 @@ public class DeployService {
 					String.format("sh ~/duckula-init.sh %s %s", "duckula", commonDeploy.getPwdDuckula()));
 		}
 		conn.close();
+		
+		
+		//同时升级版本
+		CommonVersion commonVersion = commonVersionMapper.selectByMaxKey();
+		upgradeVersion(commonDeploy,commonVersion);		
 		return executeCommand;
 	}
 
@@ -187,8 +192,8 @@ public class DeployService {
 			// 3.转移历史
 			// String version =
 			// BusiTools.getVersion(dataPath,"/duckula-data/plugins/readme.text");
-			if (commonVersionOld != null && StringUtil.isNotNull(commonVersionOld.getMainVersion())) {
-				conn.executeCommand("mv /opt/duckula/  /opt/duckula-history/" + commonVersionOld.getMainVersion());
+			if (commonVersionOld != null && StringUtil.isNotNull(commonVersionOld.getMainVersion())) {//mv 方式没有权限
+				conn.executeCommand(String.format("mkdir /opt/duckula-history/%s;cp -R /opt/duckula/  /opt/duckula-history/%s/; rm -rf /opt/duckula/*", commonVersionOld.getMainVersion(),commonVersionOld.getMainVersion()));
 			}
 			// 4.解压
 			conn.tarX("~/" + fileName + ".tar", "/opt");

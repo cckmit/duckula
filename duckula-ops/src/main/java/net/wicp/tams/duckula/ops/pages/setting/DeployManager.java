@@ -3,6 +3,7 @@ package net.wicp.tams.duckula.ops.pages.setting;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.Request;
 import org.apache.tapestry5.services.RequestGlobals;
@@ -19,6 +20,7 @@ import net.wicp.tams.app.duckula.controller.dao.CommonDeployMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonVersionMapper;
 import net.wicp.tams.app.duckula.controller.service.DeployService;
 import net.wicp.tams.common.Result;
+import net.wicp.tams.common.apiext.CollectionUtil;
 import net.wicp.tams.common.apiext.StringUtil;
 import net.wicp.tams.common.apiext.json.EasyUiAssist;
 import net.wicp.tams.common.callback.IConvertValue;
@@ -69,8 +71,8 @@ public class DeployManager {
 			selectList = commonDeployMapper.selectList(queryWrapper);
 			size = selectList.size();
 		}
-		final Map<Long, String> datamap = BusiTools.convertValues(selectList, commonVersionMapper,
-				"versionId", "mainVersion");
+		final Map<Long, String> datamap = BusiTools.convertValues(selectList, commonVersionMapper, "versionId",
+				"mainVersion");
 		IConvertValue<String> versionConvert = new IConvertValue<String>() {
 			@Override
 			public String getStr(String keyObj) {
@@ -114,19 +116,22 @@ public class DeployManager {
 		return TapestryAssist.getTextStreamResponse(result);
 	}
 
+	@SuppressWarnings("unchecked")
 	public TextStreamResponse onUpServer() {
 		final CommonDeploy commonDeploy = TapestryAssist.getBeanFromPage(CommonDeploy.class, requestGlobals);
 		CommonVersion commonVersionNew = null;
 		try {
-			int versionNew = Integer.parseInt(request.getParameter("versionNew"));
-			commonVersionNew = commonVersionMapper.selectById(versionNew);
-			if (commonVersionNew == null) {
-				return TapestryAssist.getTextStreamResponse(Result.getError("没有这个版本"));
+			String versionNew = request.getParameter("versionNew");
+			versionNew = versionNew.startsWith("task.") ? versionNew : "task." + versionNew;
+			List<CommonVersion> selectByMap = commonVersionMapper
+					.selectByMap(CollectionUtil.newMap("main_version", versionNew));
+			if (CollectionUtils.isEmpty(selectByMap) || selectByMap.size() > 1) {
+				return TapestryAssist.getTextStreamResponse(Result.getError("没有这个版本或存在2个相同的版本"));
 			}
+			commonVersionNew = selectByMap.get(0);
 		} catch (Exception e) {
-			return TapestryAssist.getTextStreamResponse(Result.getError("版本需要数字"));
+			return TapestryAssist.getTextStreamResponse(Result.getError(e.getMessage()));
 		}
-
 		Result result = deployService.upgradeVersion(commonDeploy, commonVersionNew);
 		if (result.isSuc()) {
 			commonDeploy.setVersionId(commonVersionNew.getId().longValue());

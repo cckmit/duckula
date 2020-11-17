@@ -40,8 +40,11 @@ public enum DeployType implements IEnumCombobox {
 
 		@Override
 		public String getStr(String keyObj) {
-			// TODO Auto-generated method stub
-			return keyObj;
+			if("running".equals(keyObj)) {
+				return TaskStatus.running.retStatusMessage(keyObj);
+			}else {
+				return TaskStatus.noExit.retStatusMessage(null);
+			}
 		}
 	});
 

@@ -44,7 +44,7 @@
 			         </td>
 			 	      <td class="frame_table_list_2_righttext">布署环境</td>
 			         <td>
-			            <r:combogrid id="deployId_save" name="deployId"  columns="[[{field:'name',width:200,title:'发布名'},{field:'deploy',width:100,title:'发布类型'},{field:'env',width:100,title:'环境'},{field:'namespace',width:150,title:'名称空间'},{field:'host',width:120,title:'主机'}]]" idfield="id" panelWidth="700" panelHeight="300" textfield="name" width="180" pagination="false" url="/setting/DeployManager:query?needpage=false"></r:combogrid>
+			            <r:combogrid id="deployId_save" name="deployId"   changeHandle="selectDeploy"   columns="[[{field:'name',width:200,title:'发布名'},{field:'deploy',width:100,title:'发布类型'},{field:'env',width:100,title:'环境'},{field:'namespace',width:150,title:'名称空间'},{field:'host',width:120,title:'主机'}]]" idfield="id" panelWidth="700" panelHeight="300" textfield="name" width="180" pagination="false" url="/setting/DeployManager:query?needpage=false"></r:combogrid>
 			        </td>		 	  	 		 	     
 			      </tr>
 			      <tr>	
@@ -136,10 +136,19 @@
            $('#dg').edatagrid("hideColumn", item);
 	  }
    }
-   function initUpdate(){
+   function initUpdate(row){
       //$('#ip2').textbox('readonly',true);
       //$('#version_save').textbox('readonly',true);
       syncRule();
+      selectMiddleware();
+      //host和docker不能设置版本
+     var deploy=or((row.deployId1.search("【host】") != -1),(row.deployId1.search("【docker】") != -1));
+     //alert(deploy);
+     if(deploy){
+        $('#versionId_save').combogrid("readonly",true);
+     }else{
+        $('#versionId_save').combogrid("readonly",false);
+     } 
    }
  
    var sleep = function(time) {
@@ -279,6 +288,17 @@
            $('#dg').edatagrid("hideColumn", "drds");
         }
 	}
+	function selectDeploy(val){
+	    alert(1);
+	   var deploy= $.rjzjh.getcombogrid('deployId_save','deploy');
+      alert(deploy);
+       if(deploy){
+        $('#versionId_save').combogrid("readonly",true);
+       }else{
+        $('#versionId_save').combogrid("readonly",false);
+       } 
+	}
+	
 	
    
   $(function(){

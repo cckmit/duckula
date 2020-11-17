@@ -12,6 +12,7 @@ import io.kubernetes.client.openapi.models.V1Deployment;
 import io.kubernetes.client.openapi.models.V1Job;
 import io.kubernetes.client.openapi.models.V1Pod;
 import io.kubernetes.client.openapi.models.V1Status;
+import net.wicp.tams.app.duckula.controller.BusiTools;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonCheckpoint;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonDump;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonInstance;
@@ -85,41 +86,8 @@ public class DeployK8s implements IDeploy {
 	@Override
 	public Result addConfig(Long deployid, CommandType commandType, Long taskId) {
 		Map<String, Object> params = new HashMap<String, Object>();
-		Long middlewareId = null;
-		String configName = null;
-		Long instanceId = null;
-		switch (commandType) {
-		case task:
-			CommonTask selectTask = commonTaskMapper.selectById(taskId);
-			CommonCheckpoint commonCheckpoint = commonCheckpointMapper.selectById(selectTask.getCheckpointId());
-			params.putAll(CommandType.proTaskConfig(selectTask, commonCheckpoint));// 默认配置
-			configName = commandType.formateConfigName(selectTask.getName());
-			middlewareId = selectTask.getMiddlewareId();
-			instanceId = selectTask.getInstanceId();
-			break;
-		case dump:
-			CommonDump commonDump = commonDumpMapper.selectById(taskId);
-			params.putAll(CommandType.proDumpConfig(commonDump));// 默认配置
-			configName = commandType.formateConfigName(commonDump.getName());
-			middlewareId = commonDump.getMiddlewareId();
-			instanceId = commonDump.getInstanceId();
-			break;	
-		default:
-			break;
-		}
-		CommonMiddleware middleware = commonMiddlewareMapper.selectById(middlewareId);
-		MiddlewareType middlewareType = MiddlewareType.valueOf(middleware.getMiddlewareType());
-		// 配置插件
-		Map<String, Object> pluginConfig = middlewareType.proPluginConfig(commandType, middleware.getVersion());
-		params.putAll(pluginConfig);
-		// 配置目标中间件
-		Map<String, Object> proConfig = middlewareType.proConfig(middleware);
-		params.putAll(proConfig);
-		// 配置监听实例,如consumer可能就没有这个实例
-		if (instanceId != null) {
-			CommonInstance commonInstance = commonInstanceMapper.selectById(instanceId);
-			params.putAll(configInstall(commandType,commonInstance));
-		}
+		String configName = BusiTools.configContext(commonTaskMapper, commonCheckpointMapper, commonDumpMapper,
+				commonMiddlewareMapper, commonInstanceMapper, commandType, taskId, params);
 		k8sService.deployConfigmap(deployid, configName, params);
 		return Result.getSuc();
 	}
