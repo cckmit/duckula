@@ -1,0 +1,39 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>net.wicp.tams</groupId>
+    <artifactId>duckula3</artifactId>
+    <version>1.0.0</version>
+  </parent>
+  <artifactId>duckula3-consumer</artifactId>
+  <dependencies>
+  	<dependency>
+  		<groupId>net.wicp.tams</groupId>
+  		<artifactId>common-kafka</artifactId>
+  	</dependency>
+  	<dependency>
+  		<groupId>net.wicp.tams</groupId>
+  		<artifactId>common-binlog-alone-api</artifactId>
+  	</dependency>
+  </dependencies>
+  
+  <build>
+		<finalName>duckula-consumer</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>net.wicp.tams.duckula.task.MainConsumer</mainClass>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
