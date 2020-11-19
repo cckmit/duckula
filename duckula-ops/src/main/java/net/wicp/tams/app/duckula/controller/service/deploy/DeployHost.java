@@ -73,7 +73,9 @@ public class DeployHost implements IDeploy {
 						"/data/duckula-data/conf");
 				// message示例: -rwxr--r--. 1 duckula duckula 1595 2020-11-15 22:14:25
 				// ct-rjzjh-jdbc.properties
-				if ("没有异常".equals(result.getMessage()) || StringUtil.isNull(result.getMessage())) {
+				// 考虑中英文的问题
+				if ("没有异常".equals(result.getMessage()) || "No Exception".equals(result.getMessage())
+						|| StringUtil.isNull(result.getMessage())) {
 					return Result.getError("没有配置信息");
 				} else {
 					return result;
