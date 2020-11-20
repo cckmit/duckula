@@ -25,6 +25,7 @@ import net.wicp.tams.app.duckula.controller.dao.CommonMiddlewareMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonTaskMapper;
 import net.wicp.tams.common.Result;
 import net.wicp.tams.common.apiext.StringUtil;
+import net.wicp.tams.common.exception.ExceptAll;
 import net.wicp.tams.common.exception.ProjectException;
 import net.wicp.tams.common.os.SSHAssit;
 import net.wicp.tams.common.os.constant.CommandCentOs;
@@ -296,7 +297,12 @@ public class DeployHost implements IDeploy {
 			}
 		} catch (ProjectException e) {
 			log.error("连接服务器失败", e);
-			status = DeployType.host.getStatus(null);
+			if(e.getExcept()==ExceptAll.project_timeout) {
+				status = DeployType.host.getStatus("timeout");
+			}else {
+				status = DeployType.host.getStatus(e.getExcept().getDesc());
+			}
+			
 		} finally {
 			if (conn != null) {
 				conn.close();

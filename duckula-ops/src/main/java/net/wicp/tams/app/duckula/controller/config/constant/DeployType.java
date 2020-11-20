@@ -42,7 +42,9 @@ public enum DeployType implements IEnumCombobox {
 		public String getStr(String keyObj) {
 			if("running".equals(keyObj)) {
 				return TaskStatus.running.retStatusMessage(keyObj);
-			}else {
+			}else if("timeout".equals(keyObj)) {
+				return TaskStatus.other.retStatusMessage("Timeout");
+			}  else {
 				return TaskStatus.noExit.retStatusMessage(null);
 			}
 		}
