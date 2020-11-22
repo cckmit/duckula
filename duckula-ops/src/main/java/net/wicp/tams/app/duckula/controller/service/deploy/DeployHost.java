@@ -136,6 +136,10 @@ public class DeployHost implements IDeploy {
 			CommonTask selectTask = commonTaskMapper.selectById(taskId);
 			configName = commandType.formateConfigName(selectTask.getName());
 			break;
+		case consumer:
+			CommonConsumer commonConsumer = commonConsumerMapper.selectById(taskId);
+			configName = commandType.formateConfigName(commonConsumer.getName());
+			break;
 		default:
 			break;
 		}
@@ -206,14 +210,17 @@ public class DeployHost implements IDeploy {
 	@Override
 	public Result stop(Long deployid, CommandType taskType, Long taskId) {
 		String configName = null;
+		String containsStr=null;
 		switch (taskType) {
 		case task:
 			CommonTask selectTask = commonTaskMapper.selectById(taskId);
 			configName = taskType.formateConfigName(selectTask.getName());
+			containsStr="/opt/duckula/duckula-task.jar";
 			break;
 		case consumer:
 			CommonConsumer commonConsumer = commonConsumerMapper.selectById(taskId);
 			configName = taskType.formateConfigName(commonConsumer.getName());
+			containsStr="/opt/duckula/duckula-consumer.jar";
 			break;
 		case dump:
 		default:
@@ -226,7 +233,7 @@ public class DeployHost implements IDeploy {
 					commonDeploy.getPwdDuckula(), 0);
 			Result executeCommand = conn.executeCommand("ps -ax|grep " + configName + "/gc.log");// 加/gc.log为了区分一个id是另一个id的前缀
 			if (executeCommand.isSuc()) {
-				if (executeCommand.getMessage().contains("/opt/duckula/duckula-task.jar")) {// 还在运行
+				if (executeCommand.getMessage().contains(containsStr)) {// 还在运行
 					String[] ress = executeCommand.getMessage().split(" ");
 					Result result = conn.executeCommand("kill -15 " + ress[1]);
 					return result;
