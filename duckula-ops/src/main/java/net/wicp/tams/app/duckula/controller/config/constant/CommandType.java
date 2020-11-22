@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import net.wicp.tams.app.duckula.controller.bean.models.CommonCheckpoint;
+import net.wicp.tams.app.duckula.controller.bean.models.CommonConsumer;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonDump;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonTask;
 import net.wicp.tams.common.apiext.CollectionUtil;
@@ -24,6 +25,13 @@ import net.wicp.tams.common.constant.dic.intf.IEnumCombobox;
  */
 public enum CommandType implements IEnumCombobox {
 	task("监听任务", new String[] { "common.apiext.classload.child-first", "false" }, "t-%s", "run.sh"),
+
+	// 默认设置split默认为true表示会单条发送
+	consumer("kafka消费任务",
+			new String[] { "common.apiext.classload.child-first", "false",
+					"common.binlog.alone.consumer.global.groupId", "tams", "common.binlog.alone.consumer.global.hosts",
+					"1", "common.binlog.alone.consumer.global.split", "true" },
+			"c-%s", "consumer.sh"),
 
 	dump("全量导入", new String[] { "common.apiext.classload.child-first", "false",
 			"common.binlog.alone.dump.global.enable", "true" }, "d-%s", "dump.sh");
@@ -84,6 +92,31 @@ public enum CommandType implements IEnumCombobox {
 		// 其它的配置,如auto.create.index
 		if (StringUtil.isNotNull(commonTask.getAttrConfig())) {
 			JSONObject attrConfig = JSON.parseObject(commonTask.getAttrConfig());
+			for (String key : attrConfig.keySet()) {
+				retmap.put(key, attrConfig.getString(key));
+			}
+		}
+		return retmap;
+	}
+
+	public static Map<String, Object> proConsumerConfig(CommonConsumer commonConsumer) {
+		Map<String, Object> retmap = new HashMap<String, Object>();
+		retmap.putAll(CommandType.consumer.getDefaultconfig());
+		RuleManager ruleManager = new RuleManager(commonConsumer.getRule());
+		for (Rule rule : ruleManager.getRules()) {
+			// 自定义规则，如果是mysql,则需把dbinstanceid指向中间件ID，而中间件会做编码，把common.binlog.alone.plugin.jdbc.${MiddlewareId}.targetmysql.host做好编码
+			// 配置了dbtb，表示是mysql目标中间件， 见MiddlewareType.proConfig()
+			if (rule.getItems().containsKey(RuleItem.dbtb)) {
+				rule.getItems().put(RuleItem.dbinstanceid, String.valueOf(commonConsumer.getMiddlewareId()));
+			}
+		}		
+		// 规则，使用全局的监听器
+		retmap.put("common.binlog.alone.consumer.global.rule", ruleManager.toString());
+		//topic
+		retmap.put("common.binlog.alone.consumer.global.topic", commonConsumer.getTopic());		
+		// 其它的配置,如auto.create.index
+		if (StringUtil.isNotNull(commonConsumer.getAttrConfig())) {
+			JSONObject attrConfig = JSON.parseObject(commonConsumer.getAttrConfig());
 			for (String key : attrConfig.keySet()) {
 				retmap.put(key, attrConfig.getString(key));
 			}

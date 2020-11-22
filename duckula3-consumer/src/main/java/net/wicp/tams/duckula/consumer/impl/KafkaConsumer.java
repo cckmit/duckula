@@ -54,7 +54,7 @@ public class KafkaConsumer implements IConsumer<byte[]> {
 				DuckulaEvent duckulaEvent = DuckulaAssit.parse(consumerRecord.value());
 				Rule rule = ruleManager.findRule(duckulaEvent.getDb(), duckulaEvent.getTb());
 				if (duckulaEvent.getIsError()) {// 是单条发送或是幂等，无需顺序
-					String addProp = StringUtil.hasNull(duckulaEvent.getAddProp(), "default");
+					String addProp = StringUtil.hasNull(duckulaEvent.getAddProp(), "_global");
 					Connection conn = getConn(addProp);
 					// TODO 查一下数据 ,补全数据
 				}
@@ -94,7 +94,7 @@ public class KafkaConsumer implements IConsumer<byte[]> {
 		if (StringUtil.isNotNull(addProp)) {
 			String sourceKey = "drds:" + addProp;
 			if (!DruidAssit.getDataSourceMap().containsKey(sourceKey)) {
-				Properties jdbcprops = Conf.getPreToProp("common.binlog.alone.consumer.addProp." + addProp, true);
+				Properties jdbcprops = Conf.getPreToProp("common.binlog.alone.plugin.jdbc." + addProp, true);
 				connection = DruidAssit.getDataSourceNoConf(sourceKey, jdbcprops).getConnection();
 			} else {
 				connection = DruidAssit.getDataSource(sourceKey).getConnection();

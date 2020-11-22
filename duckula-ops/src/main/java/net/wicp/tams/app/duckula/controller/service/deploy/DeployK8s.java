@@ -14,6 +14,7 @@ import io.kubernetes.client.openapi.models.V1Job;
 import io.kubernetes.client.openapi.models.V1Pod;
 import io.kubernetes.client.openapi.models.V1Status;
 import net.wicp.tams.app.duckula.controller.BusiTools;
+import net.wicp.tams.app.duckula.controller.bean.models.CommonConsumer;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonDump;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonMiddleware;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonTask;
@@ -22,6 +23,7 @@ import net.wicp.tams.app.duckula.controller.config.ConfigItem;
 import net.wicp.tams.app.duckula.controller.config.constant.CommandType;
 import net.wicp.tams.app.duckula.controller.config.constant.DeployType;
 import net.wicp.tams.app.duckula.controller.dao.CommonCheckpointMapper;
+import net.wicp.tams.app.duckula.controller.dao.CommonConsumerMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonDumpMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonInstanceMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonMiddlewareMapper;
@@ -46,6 +48,8 @@ public class DeployK8s implements IDeploy {
 	@Autowired
 	private CommonDumpMapper commonDumpMapper;
 	@Autowired
+	private CommonConsumerMapper commonConsumerMapper;
+	@Autowired
 	private CommonMiddlewareMapper commonMiddlewareMapper;
 	@Autowired
 	private CommonInstanceMapper commonInstanceMapper;
@@ -61,6 +65,10 @@ public class DeployK8s implements IDeploy {
 		case task:
 			CommonTask selectTask = commonTaskMapper.selectById(taskId);
 			configName = taskType.formateConfigName(selectTask.getName());
+			break;
+		case consumer:
+			CommonConsumer commonConsumer = commonConsumerMapper.selectById(taskId);
+			configName = taskType.formateConfigName(commonConsumer.getName());
 			break;
 		case dump:
 			CommonDump commonDump = commonDumpMapper.selectById(taskId);
@@ -84,8 +92,8 @@ public class DeployK8s implements IDeploy {
 	@Override
 	public Result addConfig(Long deployid, CommandType commandType, Long taskId) {
 		Map<String, Object> params = new HashMap<String, Object>();
-		String configName = BusiTools.configContext(commonTaskMapper, commonCheckpointMapper, commonDumpMapper,
-				commonMiddlewareMapper, commonInstanceMapper, commandType, taskId, params);
+		String configName = BusiTools.configContext(commonConsumerMapper, commonTaskMapper, commonCheckpointMapper,
+				commonDumpMapper, commonMiddlewareMapper, commonInstanceMapper, commandType, taskId, params);
 		k8sService.deployConfigmap(deployid, configName, params);
 		return Result.getSuc();
 	}
@@ -151,7 +159,7 @@ public class DeployK8s implements IDeploy {
 				return Result.getSuc();
 			} else {
 				return Result.getError("布署失败");
-			}	
+			}
 		default:
 			break;
 		}
@@ -161,18 +169,23 @@ public class DeployK8s implements IDeploy {
 	@Override
 	public Result stop(Long deployid, CommandType taskType, Long taskId) {
 		String configName = null;
-		V1Status stopTask =null;
+		V1Status stopTask = null;
 		switch (taskType) {
 		case task:
 			CommonTask selectTask = commonTaskMapper.selectById(taskId);
 			configName = taskType.formateTaskName(selectTask.getName());
 			stopTask = k8sService.stopTask(deployid, configName);
 			break;
+		case consumer:
+			CommonConsumer commonConsumer = commonConsumerMapper.selectById(taskId);
+			configName = taskType.formateTaskName(commonConsumer.getName());
+			stopTask = k8sService.stopTask(deployid, configName);
+			break;
 		case dump:
 			CommonDump commonDump = commonDumpMapper.selectById(taskId);
 			configName = taskType.formateTaskName(commonDump.getName());
 			stopTask = k8sService.stopDump(deployid, configName);
-			return Result.getSuc();//特殊处理
+			return Result.getSuc();// 特殊处理
 		default:
 			break;
 		}
@@ -193,6 +206,10 @@ public class DeployK8s implements IDeploy {
 		case task:
 			CommonTask selectTask = commonTaskMapper.selectById(taskId);
 			configName = taskType.formateTaskName(selectTask.getName());
+			break;
+		case consumer:
+			CommonConsumer commonConsumer = commonConsumerMapper.selectById(taskId);
+			configName = taskType.formateTaskName(commonConsumer.getName());
 			break;
 		case dump:
 			CommonDump commonDump = commonDumpMapper.selectById(taskId);
@@ -223,6 +240,10 @@ public class DeployK8s implements IDeploy {
 		case task:
 			CommonTask selectTask = commonTaskMapper.selectById(taskId);
 			configName = taskType.formateTaskName(selectTask.getName());
+			break;
+		case consumer:
+			CommonConsumer commonConsumer = commonConsumerMapper.selectById(taskId);
+			configName = taskType.formateTaskName(commonConsumer.getName());
 			break;
 		case dump:
 			CommonDump commonDump = commonDumpMapper.selectById(taskId);

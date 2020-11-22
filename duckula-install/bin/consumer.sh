@@ -35,5 +35,5 @@ LOG_ROOT="-DlogRoot=$DUCKULA3_DATA/logs/consumer/$1"
 JAVA_OPTS="${JAVA_MEM_OPTS} ${JAVA_JMX} ${JAVA_DEFAULT_OPT} ${LOG_ROOT} ${JAVA_DEBUGGER}" 
 echo  ${JAVA_OPTS}
 echo "============================serverice started============================================="
-nohup java  ${JAVA_OPTS}  -jar $DUCKULA3_HOME/duckula-kafka-consumer.jar  $1 >/dev/null 2>&1 &
+nohup java  ${JAVA_OPTS}  -jar $DUCKULA3_HOME/duckula-consumer.jar  $1 >/dev/null 2>&1 &
 echo "========================serverice end======================================"

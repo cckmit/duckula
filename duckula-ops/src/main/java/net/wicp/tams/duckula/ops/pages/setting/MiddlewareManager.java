@@ -44,7 +44,14 @@ public class MiddlewareManager {
 			queryWrapper.likeRight("name", commonMiddleware.getName());
 		}
 		
-		
+		if (StringUtil.isNotNull(commonMiddleware.getMiddlewareType())) {
+			if(commonMiddleware.getMiddlewareType().charAt(0)=='!') {
+				String[] ins = commonMiddleware.getMiddlewareType().substring(1).split(",");
+				queryWrapper.notIn("middleware_type", ins);
+			}else {
+				queryWrapper.eq("middleware_type", commonMiddleware.getMiddlewareType());
+			}
+		}
 		String needpage = request.getParameter("needpage");
 		boolean isPage = StringUtil.isNotNull(needpage) && !Boolean.parseBoolean(needpage) ? false : true;
 		List<CommonMiddleware> selectList = null;

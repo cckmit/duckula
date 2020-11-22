@@ -1,5 +1,6 @@
 package net.wicp.tams.duckula.consumer;
 
+import java.io.File;
 import java.util.Properties;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -23,9 +24,9 @@ public class MainConsumer {
 			relaPath = String.format("/conf/%s.properties", args[0]);
 		}
 		log.info("使用配置文件:{}", relaPath);
-		// Properties props = IOUtil.fileToProperties(new
-		// File(IOUtil.mergeFolderAndFilePath(rootDir, relaPath)));
-		Properties props = IOUtil.fileToProperties("/consumer-demo.properties", MainConsumer.class);
+		Properties props = IOUtil.fileToProperties(new File(IOUtil.mergeFolderAndFilePath(rootDir, relaPath)));
+		// Properties props = IOUtil.fileToProperties("/consumer-demo.properties",
+		// MainConsumer.class);
 		Conf.overProp(props);
 
 		AbsConsumerListener consumerListener = null;

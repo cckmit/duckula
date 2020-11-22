@@ -12,12 +12,14 @@ import org.springframework.stereotype.Service;
 import ch.ethz.ssh2.Session;
 import lombok.extern.slf4j.Slf4j;
 import net.wicp.tams.app.duckula.controller.BusiTools;
+import net.wicp.tams.app.duckula.controller.bean.models.CommonConsumer;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonDeploy;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonDump;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonTask;
 import net.wicp.tams.app.duckula.controller.config.constant.CommandType;
 import net.wicp.tams.app.duckula.controller.config.constant.DeployType;
 import net.wicp.tams.app.duckula.controller.dao.CommonCheckpointMapper;
+import net.wicp.tams.app.duckula.controller.dao.CommonConsumerMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonDeployMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonDumpMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonInstanceMapper;
@@ -38,6 +40,8 @@ public class DeployHost implements IDeploy {
 	@Autowired
 	private CommonTaskMapper commonTaskMapper;
 	@Autowired
+	private CommonConsumerMapper commonConsumerMapper;
+	@Autowired
 	private CommonDumpMapper commonDumpMapper;
 	@Autowired
 	private CommonMiddlewareMapper commonMiddlewareMapper;
@@ -56,6 +60,10 @@ public class DeployHost implements IDeploy {
 		case task:
 			CommonTask selectTask = commonTaskMapper.selectById(taskId);
 			configName = taskType.formateConfigName(selectTask.getName());
+			break;
+		case consumer:
+			CommonConsumer commonConsumer = commonConsumerMapper.selectById(taskId);
+			configName = taskType.formateConfigName(commonConsumer.getName());
 			break;
 		case dump:
 			CommonDump commonDump = commonDumpMapper.selectById(taskId);
@@ -97,7 +105,7 @@ public class DeployHost implements IDeploy {
 	@Override
 	public Result addConfig(Long deployid, CommandType commandType, Long taskId) {
 		Map<String, Object> params = new HashMap<String, Object>();
-		String configName = BusiTools.configContext(commonTaskMapper, commonCheckpointMapper, commonDumpMapper,
+		String configName = BusiTools.configContext(commonConsumerMapper,commonTaskMapper, commonCheckpointMapper, commonDumpMapper,
 				commonMiddlewareMapper, commonInstanceMapper, commandType, taskId, params);
 
 		// 产生相关文件
@@ -165,6 +173,10 @@ public class DeployHost implements IDeploy {
 				CommonTask selectTask = commonTaskMapper.selectById(taskId);
 				configName = taskType.formateConfigName(selectTask.getName());// 使用的配置
 				break;
+			case consumer:
+				CommonConsumer commonConsumer = commonConsumerMapper.selectById(taskId);
+				configName = taskType.formateConfigName(commonConsumer.getName());// 使用的配置
+				break;
 			case dump:
 				CommonDump commonDump = commonDumpMapper.selectById(taskId);
 				configName = taskType.formateConfigName(commonDump.getName());// 使用的配置
@@ -198,6 +210,10 @@ public class DeployHost implements IDeploy {
 		case task:
 			CommonTask selectTask = commonTaskMapper.selectById(taskId);
 			configName = taskType.formateConfigName(selectTask.getName());
+			break;
+		case consumer:
+			CommonConsumer commonConsumer = commonConsumerMapper.selectById(taskId);
+			configName = taskType.formateConfigName(commonConsumer.getName());
 			break;
 		case dump:
 		default:
@@ -236,6 +252,10 @@ public class DeployHost implements IDeploy {
 			CommonTask selectTask = commonTaskMapper.selectById(taskId);
 			configName = taskType.formateConfigName(selectTask.getName());
 			break;
+		case consumer:
+			CommonConsumer commonConsumer = commonConsumerMapper.selectById(taskId);
+			configName = taskType.formateConfigName(commonConsumer.getName());
+			break;
 		case dump:
 		default:
 			break;
@@ -247,7 +267,7 @@ public class DeployHost implements IDeploy {
 			conn = SSHAssit.getConn(commonDeploy.getHost(), commonDeploy.getPort(), "duckula",
 					commonDeploy.getPwdDuckula(), 300000);// 0表示不超时 ，使用5分钟，怕链接泄露
 			session = conn.getConn().openSession();
-			String cmdStr = String.format("tail -100f $DUCKULA3_DATA/logs/task/%s/other.log", configName);
+			String cmdStr = String.format("tail -100f $DUCKULA3_DATA/logs/%s/%s/other.log",taskType.name(),configName);
 			session.execCommand(cmdStr);
 			InputStream stdout = session.getStdout();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(stdout));
@@ -269,10 +289,17 @@ public class DeployHost implements IDeploy {
 	@Override
 	public String queryStatus(Long deployid, CommandType taskType, Long taskId) {
 		String configName = null;
+		String containsStr=null;
 		switch (taskType) {
 		case task:
 			CommonTask selectTask = commonTaskMapper.selectById(taskId);
 			configName = taskType.formateConfigName(selectTask.getName());
+			containsStr="/opt/duckula/duckula-task.jar";
+			break;
+		case consumer:
+			CommonConsumer commonConsumer = commonConsumerMapper.selectById(taskId);
+			configName = taskType.formateConfigName(commonConsumer.getName());
+			containsStr="/opt/duckula/duckula-consumer.jar";
 			break;
 		case dump:
 		default:
@@ -287,7 +314,7 @@ public class DeployHost implements IDeploy {
 					commonDeploy.getPwdDuckula(), 0);
 			Result executeCommand = conn.executeCommand("ps -ax|grep " + configName + "/gc.log");// 加/gc.log为了区分一个id是另一个id的前缀
 			if (executeCommand.isSuc()) {
-				if (executeCommand.getMessage().contains("/opt/duckula/duckula-task.jar")) {// 还在运行
+				if (executeCommand.getMessage().contains(containsStr)) {// 还在运行
 					status = DeployType.host.getStatus("running");
 				} else {
 					status = DeployType.host.getStatus(null);

@@ -14,14 +14,13 @@ import net.wicp.tams.common.binlog.alone.binlog.bean.RuleItem;
 import net.wicp.tams.common.constant.dic.intf.IEnumCombobox;
 
 public enum MiddlewareType implements IEnumCombobox {
-	es("es搜索", "common.es.",
-			new String[][] {
-					{ "5.X", "net.wicp.tams.common.es.plugin.ListenerEs5", "net.wicp.tams.common.es.plugin.DumperEs5",
-							"env:DUCKULA3_DATA:/plugins/duckula-plugin-es5" },
-					{ "6.X", "net.wicp.tams.common.es.plugin.ListenerEs6", "net.wicp.tams.common.es.plugin.DumperEs6",
-							"env:DUCKULA3_DATA:/plugins/duckula-plugin-es6" },
-					{ "7.X", "net.wicp.tams.common.es.plugin.ListenerEs7", "net.wicp.tams.common.es.plugin.DumperEs7",
-							"env:DUCKULA3_DATA:/plugins/duckula-plugin-es7" } },
+	es("es搜索", "common.es.", new String[][] {
+			{ "5.X", "net.wicp.tams.common.es.plugin.ListenerEs5", "net.wicp.tams.common.es.plugin.ListenerEs5",
+					"net.wicp.tams.common.es.plugin.DumperEs5", "env:DUCKULA3_DATA:/plugins/duckula-plugin-es5" },
+			{ "6.X", "net.wicp.tams.common.es.plugin.ListenerEs6", "net.wicp.tams.common.es.plugin.ListenerEs6",
+					"net.wicp.tams.common.es.plugin.DumperEs6", "env:DUCKULA3_DATA:/plugins/duckula-plugin-es6" },
+			{ "7.X", "net.wicp.tams.common.es.plugin.ListenerEs7", "net.wicp.tams.common.es.plugin.ListenerEs7",
+					"net.wicp.tams.common.es.plugin.DumperEs7", "env:DUCKULA3_DATA:/plugins/duckula-plugin-es7" } },
 			new RuleItem[] { RuleItem.index, RuleItem.type, RuleItem.relakey, RuleItem.copynum, RuleItem.partitions }),
 
 	manticore("manticore搜索", "", new String[][] { { "3.5" } }, new RuleItem[] {}),
@@ -30,12 +29,14 @@ public enum MiddlewareType implements IEnumCombobox {
 
 	mysql("mysql数据库", "common.binlog.alone.plugin.jdbc.",
 			new String[][] { { "*", "net.wicp.tams.common.binlog.plugin.jdbc.ListenerJdbc",
+					"net.wicp.tams.common.binlog.plugin.jdbc.ListenerJdbc",
 					"net.wicp.tams.common.binlog.plugin.jdbc.DumperJdbc", null } }, // null不需要插件
 			new RuleItem[] { RuleItem.dbinstanceid, RuleItem.dbtb }),
 
 	kafka("kafka消息", "common.kafka.",
 			new String[][] {
-					{ "1.X", "net.wicp.tams.common.kafka.plugin.ListenerKafka", null,
+					{ "1.X", "net.wicp.tams.common.kafka.plugin.ListenerKafka",
+							"net.wicp.tams.common.kafka.plugin.ListenerKafka", null,
 							"env:DUCKULA3_DATA:/plugins/duckula-plugin-kafka" },
 					{ "2.X", "net.wicp.tams.common.kafka.plugin.ListenerKafka", null,
 							"env:DUCKULA3_DATA:/plugins/duckula-plugin-kafka" } },
@@ -43,12 +44,15 @@ public enum MiddlewareType implements IEnumCombobox {
 
 	http("http服务器", "common.http.",
 			new String[][] { { "1.1", "net.wicp.tams.duckula.plugin.http.ListenerHttp",
-					"net.wicp.tams.duckula.plugin.http.DumperHttp",
+					"net.wicp.tams.duckula.plugin.http.ListenerHttp", "net.wicp.tams.duckula.plugin.http.DumperHttp",
 					"env:DUCKULA3_DATA:/plugins/duckula-plugin-http" } },
 			new RuleItem[] { RuleItem.httpRela }),
 	// 只打logger，测试用服务器
-	logger("logger日志", "", new String[][] { { "*", "net.wicp.tams.common.binlog.plugin.logger.ListenerLogger",
-			"net.wicp.tams.common.binlog.plugin.logger.DumperLogger", null } }, new RuleItem[] {}),
+	logger("logger日志", "",
+			new String[][] { { "*", "net.wicp.tams.common.binlog.plugin.logger.ListenerLogger",
+					"net.wicp.tams.common.binlog.plugin.logger.ListenerLogger",
+					"net.wicp.tams.common.binlog.plugin.logger.DumperLogger", null } },
+			new RuleItem[] {}),
 
 	;
 
@@ -108,20 +112,25 @@ public enum MiddlewareType implements IEnumCombobox {
 		switch (commandType) {
 		case task:
 			retmap.put("common.binlog.alone.binlog.global.conf.listener", verPluginByVersion[1]);// 监听器
-			if (verPluginByVersion[3] != null) {
-				retmap.put("common.binlog.alone.binlog.global.busiPluginDir", verPluginByVersion[3]);
+			if (verPluginByVersion[4] != null) {
+				retmap.put("common.binlog.alone.binlog.global.busiPluginDir", verPluginByVersion[4]);
+			}
+			break;
+		case consumer:
+			retmap.put("common.binlog.alone.consumer.global.busiSender", verPluginByVersion[2]);// 监听器
+			if (verPluginByVersion[4] != null) {
+				retmap.put("common.binlog.alone.consumer.global.busiPluginDir", verPluginByVersion[4]);
 			}
 			break;
 		case dump:
-			retmap.put("common.binlog.alone.dump.global.ori.busiSender", verPluginByVersion[2]);// 监听器
-			if (verPluginByVersion[3] != null) {
-				retmap.put("common.binlog.alone.dump.global.busiPluginDir", verPluginByVersion[3]);
+			retmap.put("common.binlog.alone.dump.global.ori.busiSender", verPluginByVersion[3]);// 监听器
+			if (verPluginByVersion[4] != null) {
+				retmap.put("common.binlog.alone.dump.global.busiPluginDir", verPluginByVersion[4]);
 			}
 			break;
 		default:
 			break;
 		}
-
 		return retmap;
 	}
 
