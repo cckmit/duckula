@@ -1042,6 +1042,76 @@ public class CommonDeployExample {
 			return (Criteria) this;
 		}
 
+		public Criteria andDockerLoginIsNull() {
+			addCriterion("docker_login is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andDockerLoginIsNotNull() {
+			addCriterion("docker_login is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andDockerLoginEqualTo(String value) {
+			addCriterion("docker_login =", value, "dockerLogin");
+			return (Criteria) this;
+		}
+
+		public Criteria andDockerLoginNotEqualTo(String value) {
+			addCriterion("docker_login <>", value, "dockerLogin");
+			return (Criteria) this;
+		}
+
+		public Criteria andDockerLoginGreaterThan(String value) {
+			addCriterion("docker_login >", value, "dockerLogin");
+			return (Criteria) this;
+		}
+
+		public Criteria andDockerLoginGreaterThanOrEqualTo(String value) {
+			addCriterion("docker_login >=", value, "dockerLogin");
+			return (Criteria) this;
+		}
+
+		public Criteria andDockerLoginLessThan(String value) {
+			addCriterion("docker_login <", value, "dockerLogin");
+			return (Criteria) this;
+		}
+
+		public Criteria andDockerLoginLessThanOrEqualTo(String value) {
+			addCriterion("docker_login <=", value, "dockerLogin");
+			return (Criteria) this;
+		}
+
+		public Criteria andDockerLoginLike(String value) {
+			addCriterion("docker_login like", value, "dockerLogin");
+			return (Criteria) this;
+		}
+
+		public Criteria andDockerLoginNotLike(String value) {
+			addCriterion("docker_login not like", value, "dockerLogin");
+			return (Criteria) this;
+		}
+
+		public Criteria andDockerLoginIn(List<String> values) {
+			addCriterion("docker_login in", values, "dockerLogin");
+			return (Criteria) this;
+		}
+
+		public Criteria andDockerLoginNotIn(List<String> values) {
+			addCriterion("docker_login not in", values, "dockerLogin");
+			return (Criteria) this;
+		}
+
+		public Criteria andDockerLoginBetween(String value1, String value2) {
+			addCriterion("docker_login between", value1, value2, "dockerLogin");
+			return (Criteria) this;
+		}
+
+		public Criteria andDockerLoginNotBetween(String value1, String value2) {
+			addCriterion("docker_login not between", value1, value2, "dockerLogin");
+			return (Criteria) this;
+		}
+
 		public Criteria andIsDefaultIsNull() {
 			addCriterion("is_default is null");
 			return (Criteria) this;

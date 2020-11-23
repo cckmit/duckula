@@ -50,7 +50,7 @@ public class DeployService {
 		try {
 			deploy.start(commonDeploy.getId(), commandType, taskId, isdebug);
 		} catch (Throwable e) {
-			log.error("host 开始任务失败",e);
+			log.error("host 开始任务失败", e);
 			return Result.getError(e.getMessage());
 		}
 		Result ret = Result.getSuc("布署成功");
@@ -81,7 +81,7 @@ public class DeployService {
 			BufferedReader viewLog = deploy.viewLog(commonDeploy.getId(), commandType, taskId);
 			return viewLog;
 		} catch (Throwable e) {
-			log.error("查看日志错误",e);
+			log.error("查看日志错误", e);
 			return null;
 		}
 	}
@@ -140,15 +140,21 @@ public class DeployService {
 			executeCommand = conn.executeCommand(
 					String.format("sh ~/duckula-init.sh %s %s \"%s\"", "duckula", commonDeploy.getPwdDuckula(), hosts));
 		} else {
+			//如果是docker默认6秒太少了，12秒
 			executeCommand = conn.executeCommand(
-					String.format("sh ~/duckula-init.sh %s %s", "duckula", commonDeploy.getPwdDuckula()));
+					String.format("sh ~/duckula-init.sh %s %s", "duckula", commonDeploy.getPwdDuckula()),12000);
+		}
+		// 8、如果是docker且需要执行一个login
+		if (executeCommand.isSuc() && deployType == DeployType.docker
+				&& StringUtil.isNotNull(commonDeploy.getDockerLogin())) {
+			executeCommand = conn.executeCommand(commonDeploy.getDockerLogin());
 		}
 		conn.close();
-		
-		
-		//同时升级版本
-		CommonVersion commonVersion = commonVersionMapper.selectByMaxKey();
-		upgradeVersion(commonDeploy,commonVersion);		
+		if(executeCommand.isSuc()) {
+			// 同时升级版本
+			CommonVersion commonVersion = commonVersionMapper.selectByMaxKey();
+			upgradeVersion(commonDeploy, commonVersion);
+		}
 		return executeCommand;
 	}
 
@@ -195,8 +201,10 @@ public class DeployService {
 			// 3.转移历史
 			// String version =
 			// BusiTools.getVersion(dataPath,"/duckula-data/plugins/readme.text");
-			if (commonVersionOld != null && StringUtil.isNotNull(commonVersionOld.getMainVersion())) {//mv 方式没有权限
-				conn.executeCommand(String.format("mkdir /opt/duckula-history/%s;cp -R /opt/duckula/  /opt/duckula-history/%s/; rm -rf /opt/duckula/*", commonVersionOld.getMainVersion(),commonVersionOld.getMainVersion()));
+			if (commonVersionOld != null && StringUtil.isNotNull(commonVersionOld.getMainVersion())) {// mv 方式没有权限
+				conn.executeCommand(String.format(
+						"mkdir /opt/duckula-history/%s;cp -R /opt/duckula/  /opt/duckula-history/%s/; rm -rf /opt/duckula/*",
+						commonVersionOld.getMainVersion(), commonVersionOld.getMainVersion()));
 			}
 			// 4.解压
 			conn.tarX("~/" + fileName + ".tar", "/opt");
