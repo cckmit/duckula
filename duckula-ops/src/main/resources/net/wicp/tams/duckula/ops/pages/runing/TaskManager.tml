@@ -151,7 +151,8 @@
       syncRule();
       selectMiddleware();
      //host和docker不能设置版本
-     var deploy=or((row.deployId1.search("【host】") != -1),(row.deployId1.search("【docker】") != -1));
+     //var deploy=or((row.deployId1.search("【host】") != -1),(row.deployId1.search("【docker】") != -1));
+     var deploy=row.deployId1.search("【host】") != -1;
      //alert(deploy);
      if(deploy){
         $('#versionId_save').combogrid("readonly",true);
@@ -169,6 +170,13 @@
       //updateRuleInput();
       $('#dg').edatagrid('saveRow');
       //sleep(3000);
+       var deployComValue= $.rjzjh.getcombogrid('deployId_save','deploy');
+       var versionIdValue=$.rjzjh.getcombogrid('versionId_save','id');
+       //var deploy=deployComValue.search("【host】") != -1;
+       if(and((deployComValue!='host') ,(versionIdValue==''))){
+          $.rjzjh.alert('需要选择版本');
+          return false;
+       }
       return true;
    }
 

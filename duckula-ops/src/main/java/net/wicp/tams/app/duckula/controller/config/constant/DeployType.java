@@ -31,8 +31,15 @@ public enum DeployType implements IEnumCombobox {
 
 		@Override
 		public String getStr(String keyObj) {
-			// TODO Auto-generated method stub
-			return keyObj;
+			if ("running".equals(keyObj)) {
+				return TaskStatus.running.retStatusMessage(keyObj);
+			} else if ("exited".equals(keyObj)) {
+				return TaskStatus.exited.retStatusMessage("Exited");
+			} else if ("timeout".equals(keyObj)) {
+				return TaskStatus.other.retStatusMessage("Timeout");
+			} else {
+				return TaskStatus.noExit.retStatusMessage(null);
+			}
 		}
 	}),
 
@@ -40,11 +47,11 @@ public enum DeployType implements IEnumCombobox {
 
 		@Override
 		public String getStr(String keyObj) {
-			if("running".equals(keyObj)) {
+			if ("running".equals(keyObj)) {
 				return TaskStatus.running.retStatusMessage(keyObj);
-			}else if("timeout".equals(keyObj)) {
+			} else if ("timeout".equals(keyObj)) {
 				return TaskStatus.other.retStatusMessage("Timeout");
-			}  else {
+			} else {
 				return TaskStatus.noExit.retStatusMessage(null);
 			}
 		}

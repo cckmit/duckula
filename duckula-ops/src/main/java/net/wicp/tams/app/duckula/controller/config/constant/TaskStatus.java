@@ -4,6 +4,8 @@ public enum TaskStatus {
 	running("运行中"),
 
 	noExit("未布署"),
+	
+	exited("停止运行"),
 
 	other("其它状态");
 

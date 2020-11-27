@@ -16,6 +16,7 @@ import net.wicp.tams.app.duckula.controller.bean.models.CommonConsumer;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonDeploy;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonDump;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonTask;
+import net.wicp.tams.app.duckula.controller.bean.models.CommonVersion;
 import net.wicp.tams.app.duckula.controller.config.constant.CommandType;
 import net.wicp.tams.app.duckula.controller.config.constant.DeployType;
 import net.wicp.tams.app.duckula.controller.dao.CommonCheckpointMapper;
@@ -25,6 +26,7 @@ import net.wicp.tams.app.duckula.controller.dao.CommonDumpMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonInstanceMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonMiddlewareMapper;
 import net.wicp.tams.app.duckula.controller.dao.CommonTaskMapper;
+import net.wicp.tams.app.duckula.controller.dao.CommonVersionMapper;
 import net.wicp.tams.common.Result;
 import net.wicp.tams.common.apiext.StringUtil;
 import net.wicp.tams.common.exception.ExceptAll;
@@ -52,7 +54,10 @@ public class DeployDocker implements IDeploy {
 
 	@Autowired
 	private CommonDeployMapper commonDeployMapper;
+	@Autowired
+	private CommonVersionMapper commonVersionMapper;
 
+	// docker与host一样的逻辑
 	@Override
 	public Result checkExit(Long deployid, CommandType taskType, Long taskId) {
 		String configName = null;
@@ -102,11 +107,12 @@ public class DeployDocker implements IDeploy {
 		}
 	}
 
+	// docker与host一样的逻辑
 	@Override
 	public Result addConfig(Long deployid, CommandType commandType, Long taskId) {
 		Map<String, Object> params = new HashMap<String, Object>();
-		String configName = BusiTools.configContext(commonConsumerMapper,commonTaskMapper, commonCheckpointMapper, commonDumpMapper,
-				commonMiddlewareMapper, commonInstanceMapper, commandType, taskId, params);
+		String configName = BusiTools.configContext(commonConsumerMapper, commonTaskMapper, commonCheckpointMapper,
+				commonDumpMapper, commonMiddlewareMapper, commonInstanceMapper, commandType, taskId, params);
 
 		// 产生相关文件
 		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployid);
@@ -166,7 +172,8 @@ public class DeployDocker implements IDeploy {
 			addConfig(deployid, taskType, taskId);
 		}
 		String configName = null;
-
+		String taskMainVersion = null;
+		String image = null;
 		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployid);
 		SSHConnection conn = null;
 		try {
@@ -176,21 +183,32 @@ public class DeployDocker implements IDeploy {
 			case task:
 				CommonTask selectTask = commonTaskMapper.selectById(taskId);
 				configName = taskType.formateConfigName(selectTask.getName());// 使用的配置
+				CommonVersion commonVersion = commonVersionMapper.selectById(selectTask.getVersionId());
+				taskMainVersion = commonVersion.getMainVersion();
+				image = commonVersion.getImage();
 				break;
 			case consumer:
 				CommonConsumer commonConsumer = commonConsumerMapper.selectById(taskId);
 				configName = taskType.formateConfigName(commonConsumer.getName());// 使用的配置
+				CommonVersion commonVersion2 = commonVersionMapper.selectById(commonConsumer.getVersionId());
+				taskMainVersion = commonVersion2.getMainVersion();
+				image = commonVersion2.getImage();
 				break;
 			case dump:
 				CommonDump commonDump = commonDumpMapper.selectById(taskId);
 				configName = taskType.formateConfigName(commonDump.getName());// 使用的配置
+				CommonVersion commonVersion3 = commonVersionMapper.selectById(commonDump.getVersionId());
+				taskMainVersion = commonVersion3.getMainVersion();
+				image = commonVersion3.getImage();
 				break;
 			default:
 				return Result.getError("还未实现的布署类型");
 			}
-			int jmxPort = StringUtil.buildPort(configName);
-			Result startTask = conn.executeCommand(
-					String.format("sh $DUCKULA3_HOME/bin/%s %s %s", taskType.getHostShellFile(), configName, jmxPort));
+			image = StringUtil.hasNull(image, "registry.cn-hangzhou.aliyuncs.com/rjzjh/duckula");// 默认使用
+			String dockerstartcmd = String.format(
+					"docker run -d -it --name=%s -v /data/duckula-data:/data/duckula-data %s:%s  docker-run.sh  %s 2723",
+					configName, image, taskMainVersion, configName);
+			Result startTask = conn.executeCommand(dockerstartcmd);
 			if (startTask != null) {
 				return Result.getSuc();
 			} else {
@@ -210,17 +228,14 @@ public class DeployDocker implements IDeploy {
 	@Override
 	public Result stop(Long deployid, CommandType taskType, Long taskId) {
 		String configName = null;
-		String containsStr=null;
 		switch (taskType) {
 		case task:
 			CommonTask selectTask = commonTaskMapper.selectById(taskId);
 			configName = taskType.formateConfigName(selectTask.getName());
-			containsStr="/opt/duckula/duckula-task.jar";
 			break;
 		case consumer:
 			CommonConsumer commonConsumer = commonConsumerMapper.selectById(taskId);
 			configName = taskType.formateConfigName(commonConsumer.getName());
-			containsStr="/opt/duckula/duckula-consumer.jar";
 			break;
 		case dump:
 		default:
@@ -231,14 +246,17 @@ public class DeployDocker implements IDeploy {
 		try {
 			conn = SSHAssit.getConn(commonDeploy.getHost(), commonDeploy.getPort(), "duckula",
 					commonDeploy.getPwdDuckula(), 0);
-			Result executeCommand = conn.executeCommand("ps -ax|grep " + configName + "/gc.log");// 加/gc.log为了区分一个id是另一个id的前缀
+			Result executeCommand = conn.executeCommand("docker ps -all|grep -w " + configName);// 加/gc.log为了区分一个id是另一个id的前缀
 			if (executeCommand.isSuc()) {
-				if (executeCommand.getMessage().contains(containsStr)) {// 还在运行
-					String[] ress = executeCommand.getMessage().split(" ");
-					Result result = conn.executeCommand("kill -15 " + ress[1]);
+				String[] ress = executeCommand.getMessage().split(" ");
+				if (ress.length > 1) {// 只返回"操作成功"即为不存在此任务
+					String cmd = executeCommand.getMessage().contains("Exited") ? ("docker rm " + ress[0])
+							: ("docker stop " + ress[0]);
+					Result result = conn.executeCommand(cmd);
 					return result;
+				} else {
+					return Result.getError("已停止监听");
 				}
-			} else {
 			}
 		} catch (ProjectException e) {
 			log.error("执行失败", e);
@@ -274,11 +292,17 @@ public class DeployDocker implements IDeploy {
 			conn = SSHAssit.getConn(commonDeploy.getHost(), commonDeploy.getPort(), "duckula",
 					commonDeploy.getPwdDuckula(), 300000);// 0表示不超时 ，使用5分钟，怕链接泄露
 			session = conn.getConn().openSession();
-			String cmdStr = String.format("tail -100f $DUCKULA3_DATA/logs/%s/%s/other.log",taskType.name(),configName);
-			session.execCommand(cmdStr);
-			InputStream stdout = session.getStdout();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(stdout));
-			return reader;
+			Result executeCommand = conn.executeCommand("docker ps -all|grep  -w " + configName);
+			if (executeCommand.isSuc()) {
+				String[] strings = executeCommand.getMessage().split(" ");
+				if (strings.length > 1) {
+					String cmdStr = String.format("docker logs -f %s", strings[0]);
+					session.execCommand(cmdStr);
+					InputStream stdout = session.getStdout();
+					BufferedReader reader = new BufferedReader(new InputStreamReader(stdout));
+					return reader;
+				}
+			}
 		} catch (ProjectException e) {
 			log.error("连接服务器失败", e);
 		} catch (Exception e) {
@@ -296,47 +320,49 @@ public class DeployDocker implements IDeploy {
 	@Override
 	public String queryStatus(Long deployid, CommandType taskType, Long taskId) {
 		String configName = null;
-		String containsStr=null;
 		switch (taskType) {
 		case task:
 			CommonTask selectTask = commonTaskMapper.selectById(taskId);
 			configName = taskType.formateConfigName(selectTask.getName());
-			containsStr="/opt/duckula/duckula-task.jar";
 			break;
 		case consumer:
 			CommonConsumer commonConsumer = commonConsumerMapper.selectById(taskId);
 			configName = taskType.formateConfigName(commonConsumer.getName());
-			containsStr="/opt/duckula/duckula-consumer.jar";
 			break;
 		case dump:
 		default:
 			break;
 		}
-
 		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployid);
 		SSHConnection conn = null;
 		String status = null;
 		try {
 			conn = SSHAssit.getConn(commonDeploy.getHost(), commonDeploy.getPort(), "duckula",
 					commonDeploy.getPwdDuckula(), 0);
-			Result executeCommand = conn.executeCommand("ps -ax|grep " + configName + "/gc.log");// 加/gc.log为了区分一个id是另一个id的前缀
+			Result executeCommand = conn.executeCommand("docker ps -all|grep  -w " + configName);// 加/gc.log为了区分一个id是另一个id的前缀
 			if (executeCommand.isSuc()) {
-				if (executeCommand.getMessage().contains(containsStr)) {// 还在运行
-					status = DeployType.host.getStatus("running");
+				String[] message = executeCommand.getMessage().split(" ");
+				if (message.length > 1) {
+					if (executeCommand.getMessage().contains("Exited")) {// 还在运行
+						status = DeployType.docker.getStatus("exited");
+					} else {
+						status = DeployType.docker.getStatus("running");
+					}
 				} else {
-					status = DeployType.host.getStatus(null);
+					status = DeployType.docker.getStatus("null");
 				}
+
 			} else {
-				status = DeployType.host.getStatus(null);
+				status = DeployType.docker.getStatus(null);
 			}
 		} catch (ProjectException e) {
 			log.error("连接服务器失败", e);
-			if(e.getExcept()==ExceptAll.project_timeout) {
-				status = DeployType.host.getStatus("timeout");
-			}else {
-				status = DeployType.host.getStatus(e.getExcept().getDesc());
+			if (e.getExcept() == ExceptAll.project_timeout) {
+				status = DeployType.docker.getStatus("timeout");
+			} else {
+				status = DeployType.docker.getStatus(e.getExcept().getDesc());
 			}
-			
+
 		} finally {
 			if (conn != null) {
 				conn.close();
