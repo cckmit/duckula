@@ -1,17 +1,13 @@
 package net.wicp.tams.duckula.ops.pages;
 
 import org.apache.tapestry5.annotations.Import;
-import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.annotations.SessionState;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.Request;
-import org.apache.tapestry5.util.TextStreamResponse;
 import org.slf4j.Logger;
 
-import net.wicp.tams.common.Result;
 import net.wicp.tams.common.apiext.StringUtil;
 import net.wicp.tams.common.constant.dic.YesOrNo;
-import net.wicp.tams.component.tools.TapestryAssist;
 import net.wicp.tams.duckula.ops.beans.SessionBean;
 
 @Import(stack = "easyuistack")
@@ -25,23 +21,18 @@ public class Login {
 	@SessionState
 	private SessionBean sessionBean;
 
-	@Property
-	@SessionState
-	private String namespace;
-
-	public TextStreamResponse onLogin() {
+	Object onSuccess() {
 		String userName = request.getParameter("userName");
 		String pwd = request.getParameter("pwd");
 		if (StringUtil.isNull(userName) || StringUtil.isNull(pwd)) {
-			return TapestryAssist.getTextStreamResponse(Result.getError("请输入用户名和密码!"));
+			return Login.class;
 		}
 		if (!"admin".equals(userName) || !"admin123".equals(pwd)) {
-			return TapestryAssist.getTextStreamResponse(Result.getError("用户名或密码错误!"));
+			return Login.class;
 		}
 		sessionBean = new SessionBean();
 		sessionBean.setIsLogin(YesOrNo.yes);
-		namespace = "all";
-		return TapestryAssist.getTextStreamResponse(Result.getSuc());
+		return Index.class;
 	}
 
 }

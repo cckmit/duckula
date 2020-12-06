@@ -86,6 +86,13 @@ public class Index {
 		}
 		return TapestryAssist.getTextStreamResponse(zkDataStr);
 	}
+	public TextStreamResponse onLogout() {
+		sessionBean=null;
+		return TapestryAssist.getTextStreamResponse(Result.getSuc()); 
+	}
+	
+	
+	
 
 	public Object onActivate() {
 		if (!sessionBeanExists || sessionBean == null || sessionBean.getIsLogin() == YesOrNo.no) {

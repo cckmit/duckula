@@ -100,24 +100,26 @@
             <img src="${asset:resource/images/login/pic_03.png}" height="300"/>
             </section>
             <section class="pic">
-                <form class="form-inline">
+                <t:form   id="loginform" class="form-inline">
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <div class="input-group-text"><img style="padding-top:8px;"  src="${asset:resource/images/login/use.png}" height="28"/></div>
                         </div>
-                        <input id="username" type="text" class="form-control" name="name" placeholder="Username"/>
+                        <input id="username" type="text" class="form-control" name="userName" placeholder="Username"/>
                     </div>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <div class="input-group-text"><img style="padding-top:10px;" src="${asset:resource/images/login/mima.png}"  height="24"/></div>
                         </div>
-                        <input id="password"  type="password" class="form-control" name="password" placeholder="password"/>
+                        <input id="password"  type="password" class="form-control" name="pwd" placeholder="password"/>
                     </div>
                     <div class="button">
-                        <button id="submitbut" type="buton" class="btn1">登陆</button>
+                         <t:submit t:id="submitbut2" value="登陆" class="btn1" style="display: block; border: 0; height: 46px;
+            width: 100%; letter-spacing: 2px; font-size: 14px;
+            border-radius: 4px"/>
                         <button type="reset" class="btn2">重置</button>
                     </div>
-                </form>
+                </t:form>
             </section>
         </section>
 
@@ -135,17 +137,6 @@
     </section>
 </body>
 <script>
- $(function(){
-    $('#submitbut').click(function(){
-      var userName=$('#username').val();
-      var pwd=$('#password').val();
-      $.post($.rjzjh.packurl('/login:login'),{'userName':userName,'pwd':pwd},function(data){
-		$.rjzjh.opt2(data,function(){
-		    window.location.href=$.rjzjh.packurl('/index');
-		});
-	  },'json');
-    });
-   
- });
+
 </script>
 </html>
