@@ -42,7 +42,12 @@ public interface IDeploy {
 
 	public BufferedReader viewLog(Long deployid, CommandType taskType, Long taskId);
 
+	//查看现在的配置
+	public String viewConf(Long deployid, CommandType commandType, Long taskId);
+	//查看已布署的配置
+	public String viewConfDeploy(Long deployid, CommandType commandType, Long taskId);
+
 	// 查询任务的相关状态
 	public String queryStatus(Long deployid, CommandType taskType, Long taskId);
-	
+
 }

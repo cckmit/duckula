@@ -60,6 +60,18 @@ public class DeployDocker implements IDeploy {
 	// docker与host一样的逻辑
 	@Override
 	public Result checkExit(Long deployid, CommandType taskType, Long taskId) {
+		String viewConfDeploy = viewConfDeploy(deployid, taskType, taskId);
+		if (!viewConfDeploy.startsWith("error:")) {
+			return Result.getSuc();
+		} else {
+			return Result.getError(viewConfDeploy);
+		}
+	}
+	
+	
+	
+	@Override
+	public String viewConfDeploy(Long deployid, CommandType taskType, Long taskId) {
 		String configName = null;
 		switch (taskType) {
 		case task:
@@ -90,20 +102,20 @@ public class DeployDocker implements IDeploy {
 				// 考虑中英文的问题
 				if ("没有异常".equals(result.getMessage()) || "No Exception".equals(result.getMessage())
 						|| StringUtil.isNull(result.getMessage())) {
-					return Result.getError("没有配置信息");
+					return "error:没有配置信息";
 				} else {
-					return result;
+					return result.getMessage();
 				}
 			} catch (ProjectException e) {
 				log.error("连接服务器失败", e);
-				return Result.getError("连接服务器失败：" + e.getMessage());
+				return "error:连接服务器失败：" + e.getMessage();
 			} finally {
 				if (conn != null) {
 					conn.close();
 				}
 			}
 		} catch (Throwable e) {
-			return Result.getError("查找异常:" + e.getMessage());
+			return "error:查找异常:" + e.getMessage();
 		}
 	}
 
@@ -369,6 +381,18 @@ public class DeployDocker implements IDeploy {
 			}
 		}
 		return status;
+	}
+
+	@Override
+	public String viewConf(Long deployid, CommandType commandType, Long taskId) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		String configName = BusiTools.configContext(commonConsumerMapper,commonTaskMapper, commonCheckpointMapper, commonDumpMapper,
+				commonMiddlewareMapper, commonInstanceMapper, commandType, taskId, params);
+
+		// 产生相关文件
+		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployid);
+		String configmapStr = DeployType.formateConfig(DeployType.valueOf(commonDeploy.getDeploy()), params);
+		return configmapStr;
 	}
 
 }

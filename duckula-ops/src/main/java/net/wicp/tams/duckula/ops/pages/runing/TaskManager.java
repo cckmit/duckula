@@ -17,7 +17,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import net.wicp.tams.app.duckula.controller.BusiTools;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonCheckpoint;
-import net.wicp.tams.app.duckula.controller.bean.models.CommonDump;
 import net.wicp.tams.app.duckula.controller.bean.models.CommonTask;
 import net.wicp.tams.app.duckula.controller.config.constant.CommandType;
 import net.wicp.tams.app.duckula.controller.dao.CommonCheckpointMapper;
@@ -212,6 +211,15 @@ public class TaskManager {
 		Result startTask = deployService.startTask(CommandType.task, commonTask.getId(),commonTask.getDeployId(), false);
 		return TapestryAssist.getTextStreamResponse(startTask);
 	}
+	//布署配置文件
+	public TextStreamResponse onAddConfig() {
+		final CommonTask commonTask = TapestryAssist.getBeanFromPage(CommonTask.class, requestGlobals);
+		Result startTask = deployService.addConfig(CommandType.task, commonTask.getId(),commonTask.getDeployId());
+		return TapestryAssist.getTextStreamResponse(startTask);
+	}
+	
+	
+	
 	///停止任务,会等3分钟。
 	public TextStreamResponse onStopTask() {
 		final CommonTask commonTask = TapestryAssist.getBeanFromPage(CommonTask.class, requestGlobals);

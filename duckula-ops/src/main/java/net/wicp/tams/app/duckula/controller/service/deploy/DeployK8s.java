@@ -60,6 +60,16 @@ public class DeployK8s implements IDeploy {
 
 	@Override
 	public Result checkExit(Long deployid, CommandType taskType, Long taskId) {
+		String viewConfDeploy = viewConfDeploy(deployid, taskType, taskId);
+		if (!viewConfDeploy.startsWith("error:")) {
+			return Result.getSuc();
+		} else {
+			return Result.getError(viewConfDeploy);
+		}
+	}
+
+	@Override
+	public String viewConfDeploy(Long deployid, CommandType taskType, Long taskId) {
 		String configName = null;
 		switch (taskType) {
 		case task:
@@ -80,12 +90,12 @@ public class DeployK8s implements IDeploy {
 		try {
 			V1ConfigMap selectConfigMap = k8sService.selectConfigMap(deployid, configName);
 			if (selectConfigMap == null) {
-				return Result.getError("查找失败");
+				return "error:没有配置";
 			} else {
-				return Result.getSuc();
+				return selectConfigMap.getKind();// TODO ........
 			}
 		} catch (Throwable e) {
-			return Result.getError("查找异常:" + e.getMessage());
+			return "error:" + e.getMessage();
 		}
 	}
 
@@ -96,6 +106,15 @@ public class DeployK8s implements IDeploy {
 				commonDumpMapper, commonMiddlewareMapper, commonInstanceMapper, commandType, taskId, params);
 		k8sService.deployConfigmap(deployid, configName, params);
 		return Result.getSuc();
+	}
+
+	@Override
+	public String viewConf(Long deployid, CommandType commandType, Long taskId) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		BusiTools.configContext(commonConsumerMapper, commonTaskMapper, commonCheckpointMapper, commonDumpMapper,
+				commonMiddlewareMapper, commonInstanceMapper, commandType, taskId, params);
+		String oriConfig = k8sService.OriConfig(deployid, params);
+		return oriConfig;
 	}
 
 	@Override

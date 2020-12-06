@@ -7,8 +7,8 @@
 </head>
 <body>
    <r:query id="q"  qBlock="query" queryUrl="/runing/TaskManager:query"  uBlock="save"   saveUrl="/runing/TaskManager:save" deleteUrl="/runing/TaskManager:del" opFormatter="showopt" 
-        columns="[[{field:'name',width:200,title:'监听任务名'},{field:'version1',width:100,title:'版本'},{field:'deployId1',width:150,title:'布署环境'},{field:'middlewareId1',width:150,title:'目的中间件'},{field:'instanceId1',width:350,title:'监听实例'},{field:'checkpoint1',width:200,title:'检查点'},{field:'taskStatus',width:130,title:'运行状态'},{field:'pos',width:120,title:'运行位点'},{field:'op',width:360,title:'操作'}]]" 
-        dialogStyle="width:900px;height:560px;" initAddHandle="initAdd" initSaveHandle="initUpdate"   saveCheckHandle="saveCheck" pagination="true"/>
+        columns="[[{field:'name',width:200,title:'监听任务名'},{field:'version1',width:100,title:'版本'},{field:'deployId1',width:150,title:'布署环境'},{field:'middlewareId1',width:150,title:'目的中间件'},{field:'instanceId1',width:350,title:'监听实例'},{field:'checkpoint1',width:200,title:'检查点'},{field:'taskStatus',width:130,title:'运行状态'},{field:'pos',width:120,title:'运行位点'},{field:'op',width:280,title:'操作'}]]" 
+        dialogStyle="width:900px;height:560px;" initAddHandle="initAdd" initSaveHandle="initUpdate"  queryButs="[{'id':'viewLogBut','iconCls':'icon-attach','text':'查看日志'},{'id':'viewConfigBut','iconCls':'icon-attach','text':'查看配置'}]"  saveCheckHandle="saveCheck" pagination="true"/>
    <t:block id="query">
        <table class="frame_table_list_4">
 		 <tr>
@@ -122,7 +122,24 @@
 			     			      
 	 </table>
    </t:block>
-
+   
+   <r:window id="configWindow" title="配置文件对比" width="1200" height="600"  resizable="false" maximizable="false" minimizable="false" collapsible="false">
+       <div  id="configview" class="easyui-layout" data-options="fit:true">
+			<div  data-options="region:'east',split:true" style="width:600px">
+			      dddd
+			</div>
+			<div data-options="region:'center'" style="padding:10px;">
+				jQuery EasyUI framework help you build your web page easily.
+			</div>
+			<div data-options="region:'south',border:false" style="text-align:right;padding:5px 0 5px;">
+			    <a class="easyui-linkbutton" data-options="iconCls:'icon-lightbulb',plain:true" href="javascript:void(0)"  style="width:400px"><font color="red">当前配置</font></a>
+			    <a class="easyui-linkbutton" data-options="iconCls:'icon-lightbulb',plain:true" href="javascript:void(0)"  style="width:400px"><font color="red">已发布配置</font></a>
+				<a class="easyui-linkbutton" data-options="iconCls:'icon-ok'" href="javascript:void(0)" onclick="javascript:addConfig()" style="width:200px">重新布署配置</a>
+				<a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" href="javascript:void(0)" onclick="javascript:$('#configWindow').window('close')" style="width:80px">关闭</a>
+			</div>
+		</div>
+   </r:window>
+ 
  
    
 <script>	
@@ -133,8 +150,8 @@
        	    var deletebut= '<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" data-options="disabled:'+opt+'" style="margin-right:10px" onclick="_doDelete('+index+') ">'+msg.delete_+'</a>';
        	    var deploybut= '<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" data-options="disabled:'+opt+'" style="margin-right:10px" onclick="doStart('+index+') ">启动</a>'; 
        	    var stopbut= '<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" data-options="disabled:'+!opt+'" style="margin-right:10px" onclick="doStop('+index+') ">停止</a>';  
-       	    var viewLogbut= '<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" data-options="disabled:'+!opt+'" style="margin-right:10px" onclick="viewLog('+index+') ">查看日志</a>';
-       	    return update+deletebut+deploybut+stopbut+viewLogbut;
+       	    //var viewLogbut= '<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" data-options="disabled:'+!opt+'" style="margin-right:10px" onclick="viewLog('+index+') ">查看日志</a>';
+       	    return update+deletebut+deploybut+stopbut;
      }
      
    function initAdd(){
@@ -182,7 +199,8 @@
 
    
     function viewLog(index){
-       var row=getRow(index);
+      // var row=getRow(index);       
+       var row = jQuery('#q_grid').datagrid('getSelected');
        var deploy= $.rjzjh.getcombogrid('deployId_save','deploy');
        var url = $.rjzjh.packurl('/tools/ViewPodLog?params=task:'+row.id+':'+row.deployId);
        var iWidth=1200;                          //弹出窗口的宽度;
@@ -199,6 +217,28 @@
       // $.post($.rjzjh.packurl('/runing/DumpManager:viewLog'),row,function(data){
 	  //     alert(data);
 	 //  },'json');
+   }
+   
+  function viewConfig(){
+      var row = jQuery('#q_grid').datagrid('getSelected');
+      $('#configview').layout('panel','east').panel('refresh',$.rjzjh.packurl('/tools/ViewPodLog:OldConfig/task/'+row.id+'/'+row.deployId));
+      $('#configview').layout('panel','center').panel('refresh',$.rjzjh.packurl('/tools/ViewPodLog:NewConfig/task/'+row.id+'/'+row.deployId));
+      $('#configWindow').window('open');
+   }
+   function addConfig(){
+        var row = jQuery('#q_grid').datagrid('getSelected');
+        $.rjzjh.confirm('你确定要重新布署配置文件吗？',function(){
+           $.messager.progress({
+		    	title:window.msg.hintwaiting,
+		    	msg:window.msg.hinthandling
+            });    
+           $.post($.rjzjh.packurl('/runing/TaskManager:AddConfig'),row,function(data){
+             $.messager.progress('close');
+             $.rjzjh.opt2(data,function(){
+			     //alert('布署成功');
+	         }); 
+	       },'json');
+       });
    }
    
    
@@ -311,6 +351,9 @@
         }
 	}
 	
+	
+
+	
    
   $(function(){
       $('#ruleEdit').blur(function(){
@@ -335,6 +378,22 @@
 				onDestroy: updateRuleInput,
 				onAfterEdit: updateRuleInput
       });
+      
+      
+      $('#viewLogBut').linkbutton('disable').bind('click', viewLog);
+      $('#viewConfigBut').linkbutton('disable');
+       $('#q_grid').datagrid({
+          onSelect: function(rowIndex, row){
+            var reg = RegExp(/未布署/);
+            var opt=!reg.test(row.taskStatus);
+            if(opt){
+               $('#viewLogBut').linkbutton('enable');
+            }else{
+               $('#viewLogBut').linkbutton('disable');
+            }
+            $('#viewConfigBut').linkbutton('enable').bind('click', viewConfig);
+          }
+       });
   });
    
     

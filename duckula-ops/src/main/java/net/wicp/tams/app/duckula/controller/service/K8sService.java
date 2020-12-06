@@ -254,6 +254,12 @@ public class K8sService {
 		}
 	}
 	
+	public String OriConfig(Long deployid, Map<String, Object> contextParams) {
+		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployid);
+		String configmapStr = DeployType.formateConfig(DeployType.valueOf(commonDeploy.getDeploy()), contextParams);
+		return  configmapStr;
+	}
+	
 	public V1Status deleteConfigmap(Long deployid, String configMapName) {
 		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployid);
 		ApiClient apiClient = getApiClient(commonDeploy);

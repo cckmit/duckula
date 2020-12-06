@@ -56,6 +56,21 @@ public class DeployService {
 		Result ret = Result.getSuc("布署成功");
 		return ret;
 	}
+	
+	public Result addConfig(CommandType commandType, Long taskId, Long deployId) {
+		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployId);
+		if (commonDeploy == null) {
+			return Result.getError("部署环境没有配置");
+		}
+		IDeploy deploy = (IDeploy) SpringAssit.context.getBean(commonDeploy.getDeploy());
+		try {
+			Result addConfig = deploy.addConfig(commonDeploy.getId(), commandType, taskId);
+			return addConfig;
+		} catch (Throwable e) {
+			log.error("布署配置文件失败", e);
+			return Result.getError(e.getMessage());
+		}
+	}
 
 	public Result stopTask(CommandType commandType, Long taskId, Long deployId) {
 		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployId);
@@ -85,6 +100,37 @@ public class DeployService {
 			return null;
 		}
 	}
+	
+	public String viewConf(CommandType commandType, Long taskId, Long deployId) {
+		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployId);
+		if (commonDeploy == null) {
+			return null;
+		}
+		IDeploy deploy = (IDeploy) SpringAssit.context.getBean(commonDeploy.getDeploy());
+		try {
+			String viewConf = deploy.viewConf(commonDeploy.getId(), commandType, taskId);
+			return viewConf;
+		} catch (Throwable e) {
+			log.error("查看日志错误", e);
+			return null;
+		}
+	}
+	
+	public String viewConfDeploy(CommandType commandType, Long taskId, Long deployId) {
+		CommonDeploy commonDeploy = commonDeployMapper.selectById(deployId);
+		if (commonDeploy == null) {
+			return null;
+		}
+		IDeploy deploy = (IDeploy) SpringAssit.context.getBean(commonDeploy.getDeploy());
+		try {
+			String viewConf = deploy.viewConfDeploy(commonDeploy.getId(), commandType, taskId);
+			return viewConf;
+		} catch (Throwable e) {
+			log.error("查看日志错误", e);
+			return null;
+		}
+	}
+	
 
 	////// TODO 查询状态
 	public String queryStatus(CommandType commandType, Long taskId, Long deployId) {
