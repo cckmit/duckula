@@ -7,7 +7,7 @@
 </head>
 <body>
    <r:query id="q"  qBlock="query" queryUrl="/runing/TaskManager:query"  uBlock="save"   saveUrl="/runing/TaskManager:save" deleteUrl="/runing/TaskManager:del" opFormatter="showopt" 
-        columns="[[{field:'name',width:200,title:'监听任务名'},{field:'version1',width:100,title:'版本'},{field:'deployId1',width:150,title:'布署环境'},{field:'middlewareId1',width:150,title:'目的中间件'},{field:'instanceId1',width:350,title:'监听实例'},{field:'checkpoint1',width:200,title:'检查点'},{field:'taskStatus',width:130,title:'运行状态'},{field:'pos',width:120,title:'运行位点'},{field:'op',width:280,title:'操作'}]]" 
+        columns="[[{field:'name',width:200,title:'监听任务名'},{field:'version1',width:80,title:'版本'},{field:'deployId1',width:150,title:'布署环境'},{field:'middlewareId1',width:150,title:'目的中间件'},{field:'instanceId1',width:350,title:'监听实例'},{field:'checkpoint1',width:140,title:'检查点'},{field:'taskStatus',width:100,title:'运行状态'},{field:'pos',width:120,title:'运行位点'},{field:'op',width:280,title:'操作'}]]" 
         dialogStyle="width:900px;height:560px;" initAddHandle="initAdd" initSaveHandle="initUpdate"  queryButs="[{'id':'viewLogBut','iconCls':'icon-attach','text':'查看日志'},{'id':'viewConfigBut','iconCls':'icon-attach','text':'查看配置'}]"  saveCheckHandle="saveCheck" pagination="true"/>
    <t:block id="query">
        <table class="frame_table_list_4">
@@ -380,16 +380,16 @@
       });
       
       
-      $('#viewLogBut').linkbutton('disable').bind('click', viewLog);
+      $('#viewLogBut').linkbutton('disable');
       $('#viewConfigBut').linkbutton('disable');
        $('#q_grid').datagrid({
           onSelect: function(rowIndex, row){
             var reg = RegExp(/未布署/);
             var opt=!reg.test(row.taskStatus);
             if(opt){
-               $('#viewLogBut').linkbutton('enable');
+               $('#viewLogBut').linkbutton('enable').bind('click', viewLog);
             }else{
-               $('#viewLogBut').linkbutton('disable');
+               $('#viewLogBut').linkbutton('disable').unbind('click',viewLog,false);
             }
             $('#viewConfigBut').linkbutton('enable').bind('click', viewConfig);
           }
