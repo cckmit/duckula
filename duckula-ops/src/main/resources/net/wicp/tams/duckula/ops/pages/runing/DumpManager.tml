@@ -290,9 +290,7 @@
         }
 	}
 	function selectDeploy(val){
-	    alert(1);
 	   var deploy= $.rjzjh.getcombogrid('deployId_save','deploy');
-      alert(deploy);
        if(deploy){
         $('#versionId_save').combogrid("readonly",true);
        }else{
