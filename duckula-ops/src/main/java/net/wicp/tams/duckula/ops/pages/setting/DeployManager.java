@@ -4,11 +4,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.tapestry5.SymbolConstants;
+import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.ioc.annotations.Inject;
+import org.apache.tapestry5.ioc.annotations.Symbol;
 import org.apache.tapestry5.services.Request;
 import org.apache.tapestry5.services.RequestGlobals;
 import org.apache.tapestry5.util.TextStreamResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -49,6 +51,11 @@ public class DeployManager {
 	private CommonVersionMapper commonVersionMapper;
 	@Inject
 	private DeployService deployService;
+	
+	@Property
+	@Inject
+	@Symbol(SymbolConstants.CONTEXT_PATH)
+	private String contextPath;
 
 	public TextStreamResponse onQuery() {
 		// ajax.req(key, params);
@@ -139,6 +146,19 @@ public class DeployManager {
 			commonDeployMapper.updateByPrimaryKeySelective(commonDeploy);
 		}
 		return TapestryAssist.getTextStreamResponse(result);
+	}
+
+	public void onSaveFile() {
+		List<String> uploadFiles = req.uploadFile();
+		if (CollectionUtils.isEmpty(uploadFiles)) {
+			return;
+		}
+		String id = request.getParameter("id");
+		CommonDeploy commonDeploy = new CommonDeploy();
+		commonDeploy.setId(Long.parseLong(id));
+		commonDeploy.setConfig(uploadFiles.get(0));
+		commonDeploy.setIsInit(YesOrNo.yes.name());
+		commonDeployMapper.updateByPrimaryKeySelective(commonDeploy);
 	}
 
 }

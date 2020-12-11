@@ -18,7 +18,7 @@
 				</td>
 				<td class="frame_table_list_4_righttext" colspan="6">
 				  <font color="red">
-				   <div align="left">1、需要初始化 </div>
+				   <div align="left">1、k8s需要上传config文件 </div>
 				   </font>
 				</td>
 		 </tr>
@@ -83,7 +83,25 @@
 	 </table>
    </t:block>
 
- 
+   <r:dialog id="uploadFile" width="440" height="300" title="上传k8s配置文件" toolbar="[{id:'uploadDo',text:'上传',iconCls:'icon-save'}]">
+         <form id="cfm" method="post"  enctype="multipart/form-data" action="${contextPath}/setting/DeployManager:saveFile">
+ 	   		<table class="frame_table_list_2">
+              　<tr>
+ 	   		 		<td class="frame_table_list_2_righttext">配置文件</td>
+ 	   		 		<td><span><r:upload id="upFile" multi="false"></r:upload></span></td>
+ 	   		 	</tr>		
+                <tr>
+         			<td  colspan="2" align="left">   
+	         			<font color="red">
+					       <div align="left">选择用户目录 ~/.kube/config文件 </div>
+					   </font>
+				      <input type="hidden" id="uploadId" name="id"/></td>
+         		</tr>
+         		
+ 	   		 </table>
+ 	   	</form>
+ 	</r:dialog>
+  
    
 <script>	
     function showopt(value,row,index){
@@ -94,16 +112,14 @@
        	    var deletebut= '<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" data-options="disabled:'+optCan+'" style="margin-right:10px" onclick="_doDelete('+index+') ">'+msg.delete_+'</a>'; 
        	    var initbut='<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-role" data-options="disabled:false" style="margin-right:10px" onclick="initServer(\''+index+'\') ">初始化</a>';
        	    var upbut='<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" data-options="disabled:false" style="margin-right:10px" onclick="upServer(\''+index+'\') ">版本升级</a>';
-       	    if(or(isK8s,initNot)){
-       	       if(initNot){
-       	          return update+deletebut+upbut;
-       	       }else{
-       	          return update+deletebut;
-       	       }
+       	    var uploadK8sConf='<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" data-options="disabled:false" style="margin-right:10px" onclick="uploadK8sConf(\''+index+'\') ">上传k8s配置</a>';
+       	    if(isK8s){
+       	        return update+deletebut+uploadK8sConf;
+       	    }else if(initNot){
+       	       return update+deletebut+upbut;
        	    }else{
        	       return update+deletebut+initbut;
-       	    }
-			
+       	    }	
      }
 
    function initAdd(row){
@@ -162,6 +178,12 @@
            }
 		});
    }
+   function uploadK8sConf(index){
+        var row=getRow(index);
+         $('#uploadId').val(row.id);
+         $.rjzjh.opendialog2("uploadFile");
+   }   
+   
    
    
    function saveCheck(){
@@ -181,10 +203,37 @@
      	 return rows[index];
    }
    
-  $(function(){
 
-   });
-   
+
+    function checkForm(){
+	        	var retValue=true;
+		        var uploadId=jQuery('#uploadId').val();
+		        if(uploadId==''){
+		           $.rjzjh.alert('需要id');
+		           return false;
+		        }
+				jQuery("input[filetag='rjzjhuploadfield']").each(function(i,n){
+				            if(n.value==''){
+				              retValue=false;
+				              $.rjzjh.alert('上传文件不能为空');
+				              return;
+				            }
+				            //if(!n.value.endWith('.tar')){
+				            //   retValue=false;
+				           //    $.rjzjh.alert('需要选择tar包上传');
+				            //  return;
+				           // }
+				 });
+				return retValue;
+	 }
+	 
+  $(function(){      
+       jQuery('#uploadDo').click(function(){
+			   	if(checkForm()){
+			   	   document.getElementById('cfm').submit();
+			   	}		   
+		});
+   });  
     
 </script>
 </body>
