@@ -8,14 +8,11 @@
 # @author: zhoujunhui
 # @email: rjzjh@163.com
 # @time:  2018-09-30
-# @配置好jdk,安装好yum install -y perl
+# @安装好jdk,安装好yum install -y perl
 ###########################################################################
 
 set -o nounset
 #set -o errexit
-
-readonly jdkhome="/usr/lib/jvm/jdk1.8"
-
 
 # check if the user exists
 checkExist() {
@@ -66,7 +63,12 @@ createUser() {
 }
 
 # create defautl dirs and authorize
-init() {		
+init() {
+    #url="/usr/lib/jvm/jdk1.8/bin/java"
+    #echo ${url: 1:0-8}	
+    java_path=$(which java)
+    jdkhome=${java_path: 1:0-8}
+    echo "the jdkhome:${jdkhome}"
 	#setting environment variables note: $JAVA_HOME not support
 	echo -e  "JAVA_HOME=${jdkhome}\nDUCKULA3_HOME=/opt/duckula\nDUCKULA3_DATA=/data/duckula-data\nPATH=$PATH:${jdkhome}/bin\nexport PATH JAVA_HOME DUCKULA3_HOME DUCKULA3_DATA" >  /etc/profile.d/duckula.sh
 	#source /etc/profile  
