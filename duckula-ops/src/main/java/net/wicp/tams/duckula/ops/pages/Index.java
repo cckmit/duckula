@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.tapestry5.Asset;
 import org.apache.tapestry5.annotations.InjectPage;
 import org.apache.tapestry5.annotations.OnEvent;
@@ -14,9 +15,13 @@ import org.apache.tapestry5.ioc.internal.util.CollectionFactory;
 import org.apache.tapestry5.services.Request;
 import org.apache.tapestry5.util.TextStreamResponse;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
+import net.wicp.tams.app.duckula.controller.bean.models.SysGlobal;
+import net.wicp.tams.app.duckula.controller.bean.models.SysGlobalExample;
+import net.wicp.tams.app.duckula.controller.dao.SysGlobalMapper;
 import net.wicp.tams.common.Result;
 import net.wicp.tams.common.apiext.StringUtil;
 import net.wicp.tams.common.constant.dic.YesOrNo;
@@ -44,6 +49,9 @@ public class Index {
 
 	@Inject
 	protected Request request;
+
+	@Inject
+	private SysGlobalMapper sysGlobalMapper;
 
 	@OnEvent(value = "switchMenu")
 	public List<Menu> switchMenu(String moudleId) throws IOException {
@@ -80,19 +88,34 @@ public class Index {
 	}
 
 	public TextStreamResponse onDataInit() {
-		String zkDataStr=null;//TODO 全局配置的初始化
-		if (StringUtil.isNull(zkDataStr)) {
-			zkDataStr = "{\"total\":4,\"rows\":[{\"name\":\"Email\",\"value\":\"***@163.com\",\"group\":\"管理员\",\"editor\":{\"type\":\"validatebox\",\"options\":{\"validType\":\"email\"}}},{\"name\":\"region\",\"value\":\"\",\"group\":\"AWS(亚马逊)\",\"editor\":\"text\"},{\"name\":\"accessKey\",\"value\":\"\",\"group\":\"AWS(亚马逊)\",\"editor\":\"text\"},{\"name\":\"secretKey\",\"value\":\"\",\"group\":\"AWS(亚马逊)\",\"editor\":\"text\"},{\"name\":\"bucketName\",\"value\":\"\",\"group\":\"AWS(亚马逊)\",\"editor\":\"text\"}]}";
+		List<SysGlobal> allConfig = sysGlobalMapper.selectByExample(new SysGlobalExample());
+		JSONArray rows = new JSONArray();
+		if (CollectionUtils.isNotEmpty(allConfig)) {
+			for (SysGlobal sysGlobal : allConfig) {
+				JSONObject parseObject = new JSONObject();
+				parseObject.put("name", sysGlobal.getName());
+				parseObject.put("value", sysGlobal.getValue());
+				parseObject.put("group", sysGlobal.getGroupName());
+				if (StringUtil.isNotNull(sysGlobal.getValidType())) {
+					parseObject.put("editor",
+							JSON.parseObject(String.format("{\"type\":\"%s\",\"options\":{\"validType\":\"%s\"}}",
+									sysGlobal.getType(), sysGlobal.getValidType())));
+				} else {
+					parseObject.put("editor", sysGlobal.getType());
+				}
+				rows.add(parseObject);
+			}
 		}
-		return TapestryAssist.getTextStreamResponse(zkDataStr);
+		JSONObject retjson = new JSONObject();
+		retjson.put("rows", rows);
+		retjson.put("total", retjson.size());
+		return TapestryAssist.getTextStreamResponse(rows.toJSONString());
 	}
+
 	public TextStreamResponse onLogout() {
-		sessionBean=null;
-		return TapestryAssist.getTextStreamResponse(Result.getSuc()); 
+		sessionBean = null;
+		return TapestryAssist.getTextStreamResponse(Result.getSuc());
 	}
-	
-	
-	
 
 	public Object onActivate() {
 		if (!sessionBeanExists || sessionBean == null || sessionBean.getIsLogin() == YesOrNo.no) {

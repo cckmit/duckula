@@ -6,7 +6,7 @@
   </r:dialog>
   <r:dialog id="settingDlg" title="请填写全局配置" width="450" height="720"  closable="true">
       <table id="pg" class="easyui-propertygrid" style="width:98%;height:98%"
-         data-options='url:"/duckula-ops/zh/index:dataInit",showGroup:true,scrollbarSize:0,columns:[[
+         data-options='url:"/zh/index:dataInit",showGroup:true,scrollbarSize:0,columns:[[
     		{field:"name",title:"属性名",width:40,sortable:true},
    		    {field:"value",title:"属性值",width:100,resizable:false}
         ]],toolbar: [{
@@ -19,7 +19,7 @@
   </r:dialog>
   <script>
      function addRow(){
-        alert("todo:新增行");
+        //alert("todo:新增行");
      }
      
      function exitAction(){
