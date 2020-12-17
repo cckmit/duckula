@@ -16,6 +16,7 @@
 		iconCls: "icon-help",
 		handler: function(){alert("可以双击要编辑的属性，自动保存。")}
 	}],onDestroy: updateRuleInput,onAfterEdit: updateRuleInput'></table>
+	<!-- ,onAfterEdit: updateRuleInput -->
   </r:dialog>
   <script>
      function addRow(){

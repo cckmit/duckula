@@ -1,10 +1,10 @@
 package net.wicp.tams.duckula.ops.pages;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.tapestry5.Asset;
 import org.apache.tapestry5.annotations.InjectPage;
 import org.apache.tapestry5.annotations.OnEvent;
@@ -20,7 +20,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import net.wicp.tams.app.duckula.controller.bean.models.SysGlobal;
-import net.wicp.tams.app.duckula.controller.bean.models.SysGlobalExample;
+import net.wicp.tams.app.duckula.controller.config.constant.ConfigGlobleName;
 import net.wicp.tams.app.duckula.controller.dao.SysGlobalMapper;
 import net.wicp.tams.common.Result;
 import net.wicp.tams.common.apiext.StringUtil;
@@ -83,33 +83,30 @@ public class Index {
 		JSONObject dgAll = JSONObject.parseObject(saveDataStr);
 		JSONArray rows = dgAll.getJSONArray("rows");
 		System.out.println("rows=" + rows.size());
-		// TODO 保存全局配置
+		SysGlobal save = new SysGlobal();
+		save.setId(1l);
+		save.setConfigGloble(dgAll.toJSONString());
+		save.setLastUpdatetime(new Date());
+		save.setLastUsername(sessionBean.getSysUser().getUsername());
+
+		SysGlobal selectById = sysGlobalMapper.selectById(1L);
+		if (selectById == null) {
+			sysGlobalMapper.insert(save);
+		} else {
+			sysGlobalMapper.updateByPrimaryKeySelective(save);
+		}
 		return TapestryAssist.getTextStreamResponse(Result.getSuc());
 	}
 
 	public TextStreamResponse onDataInit() {
-		List<SysGlobal> allConfig = sysGlobalMapper.selectByExample(new SysGlobalExample());
-		JSONArray rows = new JSONArray();
-		if (CollectionUtils.isNotEmpty(allConfig)) {
-			for (SysGlobal sysGlobal : allConfig) {
-				JSONObject parseObject = new JSONObject();
-				parseObject.put("name", sysGlobal.getName());
-				parseObject.put("value", sysGlobal.getValue());
-				parseObject.put("group", sysGlobal.getGroupName());
-				if (StringUtil.isNotNull(sysGlobal.getValidType())) {
-					parseObject.put("editor",
-							JSON.parseObject(String.format("{\"type\":\"%s\",\"options\":{\"validType\":\"%s\"}}",
-									sysGlobal.getType(), sysGlobal.getValidType())));
-				} else {
-					parseObject.put("editor", sysGlobal.getType());
-				}
-				rows.add(parseObject);
-			}
+		JSONObject retjson = null;
+		SysGlobal sysGlobal = sysGlobalMapper.selectById(1L);
+		if (sysGlobal != null) {
+			retjson = JSON.parseObject(sysGlobal.getConfigGloble());
+		} else {
+			retjson = ConfigGlobleName.retInitJsonObject();
 		}
-		JSONObject retjson = new JSONObject();
-		retjson.put("rows", rows);
-		retjson.put("total", retjson.size());
-		return TapestryAssist.getTextStreamResponse(rows.toJSONString());
+		return TapestryAssist.getTextStreamResponse(retjson.toJSONString());
 	}
 
 	public TextStreamResponse onLogout() {
