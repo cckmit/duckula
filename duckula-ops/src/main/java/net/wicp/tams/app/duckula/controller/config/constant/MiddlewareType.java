@@ -23,9 +23,9 @@ public enum MiddlewareType implements IEnumCombobox {
 					"net.wicp.tams.common.es.plugin.DumperEs7", "env:DUCKULA3_DATA:/plugins/duckula-plugin-es7" } },
 			new RuleItem[] { RuleItem.index, RuleItem.type, RuleItem.relakey, RuleItem.copynum, RuleItem.partitions }),
 
-	manticore("manticore搜索", "", new String[][] { { "3.5" } }, new RuleItem[] {}),
+	//manticore("manticore搜索", "", new String[][] { { "3.5" } }, new RuleItem[] {}),
 
-	cassandra("cassandra数据库", "", new String[][] { { "3" } }, new RuleItem[] { RuleItem.ks, RuleItem.table }),
+	//cassandra("cassandra数据库", "", new String[][] { { "3" } }, new RuleItem[] { RuleItem.ks, RuleItem.table }),
 
 	mysql("mysql数据库", "common.binlog.alone.plugin.jdbc.",
 			new String[][] { { "*", "net.wicp.tams.common.binlog.plugin.jdbc.ListenerJdbc",

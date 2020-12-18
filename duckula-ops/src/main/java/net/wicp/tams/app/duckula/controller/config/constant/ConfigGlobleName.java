@@ -16,27 +16,29 @@ import net.wicp.tams.common.constant.dic.intf.IEnumCombobox;
  */
 public enum ConfigGlobleName implements IEnumCombobox {
 
-	email("邮箱", "管理员", "validatebox", "email"),
+	email("邮箱", "管理员", "validatebox", "email", null),
 
-	region("区域(region)", "AWS(亚马逊)", "text", null),
+	region("区域(region)", "AWS(亚马逊)", "text", null, "cn-northwest-1"),
 
-	accessKey("accessKey", "AWS(亚马逊)", "text", null),
+	accessKey("accessKey", "AWS(亚马逊)", "text", null, null),
 
-	secretKey("secretKey", "AWS(亚马逊)", "text", null),
+	secretKey("secretKey", "AWS(亚马逊)", "text", null, null),
 
-	bucketName("bucketName", "AWS(亚马逊)", "text", null);
+	bucketName("bucketName", "AWS(亚马逊)", "text", null, null);
 
 	private final String desc;
 	private final String group;
 
 	private final String type;
 	private final String validType;
+	private final String defaultValue;
 
-	private ConfigGlobleName(String desc, String group, String type, String validType) {
+	private ConfigGlobleName(String desc, String group, String type, String validType, String defaultValue) {
 		this.desc = desc;
 		this.group = group;
 		this.type = type;
 		this.validType = validType;
+		this.defaultValue = defaultValue;
 	}
 
 	public static JSONObject retInitJsonObject() {
@@ -45,7 +47,7 @@ public enum ConfigGlobleName implements IEnumCombobox {
 		for (ConfigGlobleName configGlobleName : configs) {
 			JSONObject parseObject = new JSONObject();
 			parseObject.put("name", configGlobleName.getDesc());
-			parseObject.put("value", "");
+			parseObject.put("value", configGlobleName.getDefaultValue());
 			parseObject.put("group", configGlobleName.getGroup());
 			if (StringUtil.isNotNull(configGlobleName.getValidType())) {
 				parseObject.put("editor",
@@ -68,7 +70,7 @@ public enum ConfigGlobleName implements IEnumCombobox {
 			return "";
 		}
 		JSONObject object = JSON.parseObject(sysGlobal.getConfigGloble());
-		JSONArray jsonArray = object.getJSONArray("row");
+		JSONArray jsonArray = object.getJSONArray("rows");
 		for (int i = 0; i < jsonArray.size(); i++) {
 			String name = jsonArray.getJSONObject(i).getString("name");
 			if (this.getDesc().equals(name)) {
@@ -106,6 +108,10 @@ public enum ConfigGlobleName implements IEnumCombobox {
 
 	public String getValidType() {
 		return validType;
+	}
+
+	public String getDefaultValue() {
+		return defaultValue;
 	}
 
 }

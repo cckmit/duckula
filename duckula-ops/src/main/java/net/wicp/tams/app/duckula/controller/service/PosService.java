@@ -47,10 +47,10 @@ public class PosService {
 		case Mysql:
 			retpos = selectMaxPositionByMysql(checkpoint, clientId);
 			break;
-		case Zookeeper:
+		//case Zookeeper:
 			// String taskNameTrue = CommandType.task.formateTaskName(taskName);
 			// TODO
-			break;
+			//break;
 		default:
 			break;
 		}

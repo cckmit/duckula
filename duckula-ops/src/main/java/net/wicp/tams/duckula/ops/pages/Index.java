@@ -22,6 +22,7 @@ import com.alibaba.fastjson.JSONObject;
 import net.wicp.tams.app.duckula.controller.bean.models.SysGlobal;
 import net.wicp.tams.app.duckula.controller.config.constant.ConfigGlobleName;
 import net.wicp.tams.app.duckula.controller.dao.SysGlobalMapper;
+import net.wicp.tams.common.Conf;
 import net.wicp.tams.common.Result;
 import net.wicp.tams.common.apiext.StringUtil;
 import net.wicp.tams.common.constant.dic.YesOrNo;
@@ -88,7 +89,7 @@ public class Index {
 		save.setConfigGloble(dgAll.toJSONString());
 		save.setLastUpdatetime(new Date());
 		save.setLastUsername(sessionBean.getSysUser().getUsername());
-
+		putConfig(save);
 		SysGlobal selectById = sysGlobalMapper.selectById(1L);
 		if (selectById == null) {
 			sysGlobalMapper.insert(save);
@@ -98,12 +99,21 @@ public class Index {
 		return TapestryAssist.getTextStreamResponse(Result.getSuc());
 	}
 
+	private void putConfig(SysGlobal save) {
+		// aws配置
+		Conf.overProp("common.aws.region", ConfigGlobleName.region.getValue(save));
+		Conf.overProp("common.aws.profile.accessKey", ConfigGlobleName.accessKey.getValue(save));
+		Conf.overProp("common.aws.profile.secretKey", ConfigGlobleName.secretKey.getValue(save));
+		Conf.overProp("common.aws.sqs.s3.bucketName", ConfigGlobleName.bucketName.getValue(save));
+	}
+
 	public TextStreamResponse onDataInit() {
 		JSONObject retjson = null;
 		SysGlobal sysGlobal = sysGlobalMapper.selectById(1L);
 		if (sysGlobal != null) {
 			retjson = JSON.parseObject(sysGlobal.getConfigGloble());
 		} else {
+			putConfig(sysGlobal);
 			retjson = ConfigGlobleName.retInitJsonObject();
 		}
 		return TapestryAssist.getTextStreamResponse(retjson.toJSONString());

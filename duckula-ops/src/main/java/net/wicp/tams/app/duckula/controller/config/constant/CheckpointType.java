@@ -15,8 +15,10 @@ public enum CheckpointType implements IEnumCombobox {
 	Memory("纯内存模式", "net.wicp.tams.common.binlog.alone.checkpoint.CheckPointMemory"),
 
 	Mysql("mysql数据库", "net.wicp.tams.common.binlog.alone.checkpoint.CheckPointMysql"),
-
-	Zookeeper("Zookeeper中间件", "net.wicp.tams.common.binlog.alone.checkpoint.CheckPointZookeeper");
+//暂没测试
+	// Zookeeper("Zookeeper中间件",
+	// "net.wicp.tams.common.binlog.alone.checkpoint.CheckPointZookeeper")
+	;
 
 	private final String desc;
 	private final String SaveCheckPointClassName;
