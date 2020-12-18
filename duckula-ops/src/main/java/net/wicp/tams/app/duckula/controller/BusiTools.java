@@ -192,4 +192,31 @@ public abstract class BusiTools {
 
 		return tempmap;
 	}
+
+	public static void printAscill() {
+		System.out.println(
+				"                                                                                                                                            \r\n"
+						+ "            dddddddd                                                                                                                        \r\n"
+						+ "            d::::::d                                      kkkkkkkk                             lllllll                    333333333333333   \r\n"
+						+ "            d::::::d                                      k::::::k                             l:::::l                   3:::::::::::::::33 \r\n"
+						+ "            d::::::d                                      k::::::k                             l:::::l                   3::::::33333::::::3\r\n"
+						+ "            d:::::d                                       k::::::k                             l:::::l                   3333333     3:::::3\r\n"
+						+ "    ddddddddd:::::d uuuuuu    uuuuuu      cccccccccccccccc k:::::k    kkkkkkkuuuuuu    uuuuuu   l::::l   aaaaaaaaaaaaa               3:::::3\r\n"
+						+ "  dd::::::::::::::d u::::u    u::::u    cc:::::::::::::::c k:::::k   k:::::k u::::u    u::::u   l::::l   a::::::::::::a              3:::::3\r\n"
+						+ " d::::::::::::::::d u::::u    u::::u   c:::::::::::::::::c k:::::k  k:::::k  u::::u    u::::u   l::::l   aaaaaaaaa:::::a     33333333:::::3 \r\n"
+						+ "d:::::::ddddd:::::d u::::u    u::::u  c:::::::cccccc:::::c k:::::k k:::::k   u::::u    u::::u   l::::l            a::::a     3:::::::::::3  \r\n"
+						+ "d::::::d    d:::::d u::::u    u::::u  c::::::c     ccccccc k::::::k:::::k    u::::u    u::::u   l::::l     aaaaaaa:::::a     33333333:::::3 \r\n"
+						+ "d:::::d     d:::::d u::::u    u::::u  c:::::c              k:::::::::::k     u::::u    u::::u   l::::l   aa::::::::::::a             3:::::3\r\n"
+						+ "d:::::d     d:::::d u::::u    u::::u  c:::::c              k:::::::::::k     u::::u    u::::u   l::::l  a::::aaaa::::::a             3:::::3\r\n"
+						+ "d:::::d     d:::::d u:::::uuuu:::::u  c::::::c     ccccccc k::::::k:::::k    u:::::uuuu:::::u   l::::l a::::a    a:::::a             3:::::3\r\n"
+						+ "d::::::ddddd::::::ddu:::::::::::::::uuc:::::::cccccc:::::ck::::::k k:::::k   u:::::::::::::::uul::::::la::::a    a:::::a 3333333     3:::::3\r\n"
+						+ " d:::::::::::::::::d u:::::::::::::::u c:::::::::::::::::ck::::::k  k:::::k   u:::::::::::::::ul::::::la:::::aaaa::::::a 3::::::33333::::::3\r\n"
+						+ "  d:::::::::ddd::::d  uu::::::::uu:::u  cc:::::::::::::::ck::::::k   k:::::k   uu::::::::uu:::ul::::::l a::::::::::aa:::a3:::::::::::::::33 \r\n"
+						+ "   ddddddddd   ddddd    uuuuuuuu  uuuu    cccccccccccccccckkkkkkkk    kkkkkkk    uuuuuuuu  uuuullllllll  aaaaaaaaaa  aaaa 333333333333333   \r\n"
+						+ "                                                                                                                                            \r\n"
+						+ "                                                                                                                                            \r\n"
+						+ "                                                                                                                                            \r\n"
+						+ "                                                                                                                                            \r\n"
+						+ "                                                                                                                                            ");
+	}
 }

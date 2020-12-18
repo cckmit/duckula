@@ -9,6 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 
+import net.wicp.tams.app.duckula.controller.BusiTools;
 import net.wicp.tams.common.Conf;
 import net.wicp.tams.common.spring.autoconfig.annotation.EnableTams;
 
@@ -28,6 +29,7 @@ public class App extends SpringBootServletInitializer {
 		Conf.overProp("common.spring.autoconfig.property.path", "abs:/data/duckula-data/conf/application.properties");
 		SpringApplication application = new SpringApplication(App.class);
 		application.setApplicationContextClass(AnnotationConfigWebApplicationContext.class);
+		BusiTools.printAscill();
 		SpringApplication.run(App.class, args);
 	}
 }

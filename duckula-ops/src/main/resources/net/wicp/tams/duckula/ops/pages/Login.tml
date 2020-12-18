@@ -87,7 +87,7 @@
     <section class="duckula">
         <section class="top">
             <section class="logo">
-                <i>2</i>
+                <i>3</i>
                 <img src="${asset:resource/images/login/logo_01.png}"  height="38"/>
             </section>
             <section class="info">
