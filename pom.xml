@@ -42,11 +42,11 @@
 		<common.redis.version>3.6.3</common.redis.version>
 		<common.es.client.version>7.6.2</common.es.client.version>
 		<common.kubernetes.version>3.6.7</common.kubernetes.version>
-		<common.cassandra.version>3.6.7</common.cassandra.version>
-		<common.binlog.alone.version>3.6.14</common.binlog.alone.version>
-		<common.binlog.alone.api.version>3.6.14</common.binlog.alone.api.version>
-		<common.flink.source.binlog.version>3.6.6</common.flink.source.binlog.version>
-		<common.flink.sink.influxdb.version>3.6.6</common.flink.sink.influxdb.version>
+		<common.cassandra.version>3.6.14</common.cassandra.version>
+		<common.binlog.alone.version>3.6.15</common.binlog.alone.version>
+		<common.binlog.alone.api.version>3.6.15</common.binlog.alone.api.version>
+		<common.flink.source.binlog.version>3.6.14</common.flink.source.binlog.version>
+		<common.flink.sink.influxdb.version>3.6.14</common.flink.sink.influxdb.version>
 		<common.spring.autoconfig.version>3.6.14</common.spring.autoconfig.version>
 
 		<tams.component>1.2.5</tams.component>
