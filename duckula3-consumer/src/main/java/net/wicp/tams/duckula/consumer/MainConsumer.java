@@ -23,6 +23,10 @@ public class MainConsumer {
 		if (ArrayUtils.isNotEmpty(args)) {
 			relaPath = String.format("/conf/%s.properties", args[0]);
 		}
+
+		if (ArrayUtils.isNotEmpty(args)) {
+			relaPath = String.format("/conf/%s.properties", args[0]);
+		}
 		log.info("使用配置文件:{}", relaPath);
 		Properties props = IOUtil.fileToProperties(new File(IOUtil.mergeFolderAndFilePath(rootDir, relaPath)));
 		// Properties props = IOUtil.fileToProperties("/consumer-demo.properties",

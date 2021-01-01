@@ -2,7 +2,6 @@ package net.wicp.tams.duckula.consumer.impl;
 
 import java.lang.management.ManagementFactory;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.Executors;
@@ -11,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
+import javax.sql.DataSource;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 
@@ -19,14 +19,18 @@ import net.wicp.tams.common.Conf;
 import net.wicp.tams.common.Result;
 import net.wicp.tams.common.apiext.LoggerUtil;
 import net.wicp.tams.common.apiext.StringUtil;
+import net.wicp.tams.common.binlog.alone.Config;
 import net.wicp.tams.common.binlog.alone.DuckulaAssit;
-import net.wicp.tams.common.binlog.alone.ListenerConf.DuckulaEvent;
+import net.wicp.tams.common.binlog.alone.ListenerConf.DuckulaEvent.Builder;
 import net.wicp.tams.common.binlog.alone.binlog.bean.Rule;
+import net.wicp.tams.common.binlog.alone.binlog.bean.RuleFilter;
 import net.wicp.tams.common.binlog.alone.binlog.bean.RuleManager;
 import net.wicp.tams.common.binlog.alone.binlog.listener.AbsConsumerListener;
+import net.wicp.tams.common.binlog.alone.constant.FilterPattern;
 import net.wicp.tams.common.constant.JvmStatus;
 import net.wicp.tams.common.jdbc.DruidAssit;
 import net.wicp.tams.common.kafka.IConsumer;
+import net.wicp.tams.common.thread.threadlocal.PerthreadManager;
 import net.wicp.tams.duckula.consumer.jmx.ConsumerControl;
 
 @Slf4j
@@ -44,6 +48,12 @@ public class KafkaConsumer implements IConsumer<byte[]> {
 		this.isSplit = isSplit;
 		initMbean();
 		addTimer();
+		// 设置数据源
+		DataSource dataSourceNoConf = getDataSource(Config.globleDatasourceName);
+		PerthreadManager.getInstance().createValue(Config.globleDatasourceName, DataSource.class).set(dataSourceNoConf);
+		for (int i = 0; i < this.ruleManager.getRules().size(); i++) {
+			consumerListener.doInit(this.ruleManager.getRules().get(i), i);// 初始化consumer,Es会检查index并自动创建
+		}
 	}
 
 	@Override
@@ -51,14 +61,30 @@ public class KafkaConsumer implements IConsumer<byte[]> {
 		log.info("begin");
 		for (ConsumerRecord<String, byte[]> consumerRecord : consumerRecords) {
 			try {
-				DuckulaEvent duckulaEvent = DuckulaAssit.parse(consumerRecord.value());
-				Rule rule = ruleManager.findRule(duckulaEvent.getDb(), duckulaEvent.getTb());
-				if (duckulaEvent.getIsError()) {// 是单条发送或是幂等，无需顺序
-					String addProp = StringUtil.hasNull(duckulaEvent.getAddProp(), "_global");
-					Connection conn = getConn(addProp);
+				Builder duckulaEventBuilder = DuckulaAssit.parse(consumerRecord.value()).toBuilder();
+				Rule rule = ruleManager.findRule(duckulaEventBuilder.getDb(), duckulaEventBuilder.getTb());
+				String addProp = StringUtil.hasNull(duckulaEventBuilder.getAddProp(), "_global");
+				if (duckulaEventBuilder.getIsError()) {// 是单条发送或是幂等，无需顺序
+					Connection conn = getDataSource(addProp).getConnection();
 					// TODO 查一下数据 ,补全数据
 				}
-				consumerListener.doBui(rule, duckulaEvent, this.isSplit);// 它会重试发送
+				// 过滤处理
+				for (RuleFilter filterRulePo : rule.getFilterRules()) {
+					if (filterRulePo.getFilterPattern() == FilterPattern.sql) {// 初始化连接池
+						DataSource dataSourceNoConf = getDataSource(addProp);
+						PerthreadManager.getInstance().createValue(Config.CurThreadDatasourceName, DataSource.class)
+								.set(dataSourceNoConf);
+					}
+					filterRulePo.getFilterPattern().getFilter().doFilter(duckulaEventBuilder, rule, filterRulePo);
+					if (duckulaEventBuilder.getItemsCount() == 0) {
+						log.info("---------------------过滤后没有处理的数据-----------------------------");
+						break;
+					}
+				}
+				// 发送处理
+				if (duckulaEventBuilder.getItemsCount() > 0) {
+					consumerListener.doBui(rule, duckulaEventBuilder.build(), this.isSplit);// 它会重试发送
+				}
 			} catch (Exception e) {
 				log.error("parse error", e);
 				LoggerUtil.exit(JvmStatus.s15);
@@ -89,21 +115,16 @@ public class KafkaConsumer implements IConsumer<byte[]> {
 		}, 10, 3, TimeUnit.SECONDS);
 	}
 
-	private Connection getConn(String addProp) throws SQLException {
-		Connection connection = null;
-		if (StringUtil.isNotNull(addProp)) {
-			String sourceKey = "drds:" + addProp;
-			if (!DruidAssit.getDataSourceMap().containsKey(sourceKey)) {
-				Properties jdbcprops = Conf.getPreToProp("common.binlog.alone.plugin.jdbc." + addProp, true);
-				connection = DruidAssit.getDataSourceNoConf(sourceKey, jdbcprops).getConnection();
-			} else {
-				connection = DruidAssit.getDataSource(sourceKey).getConnection();
-			}
-
+	private DataSource getDataSource(String addProp) {
+		String sourceKey = "drds:" + addProp;
+		DataSource retDataSource;
+		if (!DruidAssit.getDataSourceMap().containsKey(sourceKey)) {
+			Properties jdbcprops = Conf.getPreToProp("common.binlog.alone.plugin.jdbc." + addProp, true);
+			retDataSource = DruidAssit.getDataSourceNoConf(sourceKey, jdbcprops);
 		} else {
-			connection = DruidAssit.getConnection();
+			retDataSource = DruidAssit.getDataSource(sourceKey);
 		}
-		return connection;
+		return retDataSource;
 	}
 
 }
