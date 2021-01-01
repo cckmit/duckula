@@ -23,7 +23,7 @@
 		<autoconfig.path>${user.home}/antx-config/${devModel}</autoconfig.path>
 		<common.apiext.version>3.6.14</common.apiext.version>
 		<common.aws.version>3.6.14</common.aws.version>
-		<common.kafka.version>3.6.14</common.kafka.version>
+		<common.kafka.version>3.6.15</common.kafka.version>
 		<common.connector.version>3.6.14</common.connector.version>
 		<common.http.version>3.6.14</common.http.version>
 		<common.metrics.version>3.6.8</common.metrics.version>
@@ -40,7 +40,7 @@
 		<common.jdbc.version>3.6.14</common.jdbc.version>
 		<common.os.version>3.6.14</common.os.version>
 		<common.redis.version>3.6.3</common.redis.version>
-		<common.es.client.version>7.6.2</common.es.client.version>
+		<common.es.client.version>7.6.3</common.es.client.version>
 		<common.kubernetes.version>3.6.7</common.kubernetes.version>
 		<common.cassandra.version>3.6.14</common.cassandra.version>
 		<common.binlog.alone.version>3.6.15</common.binlog.alone.version>
