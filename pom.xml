@@ -21,35 +21,6 @@
 	<properties>
 		<java.version>1.8</java.version>
 		<autoconfig.path>${user.home}/antx-config/${devModel}</autoconfig.path>
-		<common.apiext.version>3.6.14</common.apiext.version>
-		<common.aws.version>3.6.14</common.aws.version>
-		<common.kafka.version>3.6.15</common.kafka.version>
-		<common.connector.version>3.6.14</common.connector.version>
-		<common.http.version>3.6.14</common.http.version>
-		<common.metrics.version>3.6.8</common.metrics.version>
-		<common.micro.version>4.0.0</common.micro.version>
-		<common.spring.version>3.6.1</common.spring.version>
-		<common.others.version>3.6.7</common.others.version>
-		<common.web.version>3.6.13</common.web.version>
-		<common.grpc.version>3.6.0</common.grpc.version>
-		<common.binlog.version>3.6.13</common.binlog.version>
-		<common.binlog.self.version>3.6.0</common.binlog.self.version>
-		<common.tracer.version>3.6.0</common.tracer.version>
-		<common.hadoop.version>3.6.0</common.hadoop.version>
-		<common.scala.version>3.6.0</common.scala.version>
-		<common.jdbc.version>3.6.14</common.jdbc.version>
-		<common.os.version>3.6.14</common.os.version>
-		<common.redis.version>3.6.3</common.redis.version>
-		<common.es.client.version>7.6.3</common.es.client.version>
-		<common.kubernetes.version>3.6.7</common.kubernetes.version>
-		<common.cassandra.version>3.6.14</common.cassandra.version>
-		<common.binlog.alone.version>3.6.15</common.binlog.alone.version>
-		<common.binlog.alone.api.version>3.6.15</common.binlog.alone.api.version>
-		<common.flink.source.binlog.version>3.6.14</common.flink.source.binlog.version>
-		<common.flink.sink.influxdb.version>3.6.14</common.flink.sink.influxdb.version>
-		<common.spring.autoconfig.version>3.6.14</common.spring.autoconfig.version>
-
-		<tams.component>1.2.5</tams.component>
 		<!-- 与parent不同 -->
 		<log4j.version>2.6.2</log4j.version>
 		<!-- 与cassandra 3.7.2版本相配 -->
